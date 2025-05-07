@@ -1,0 +1,47 @@
+:root {
+  /* --border-color: #27272A; */
+  --border-color: #3b3b3b;
+  --secondary-text-color: #818181;
+  --btn-hover-background-color: #27272A;
+  --btn-2-hover-background-color: 116, 116, 116;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #111;
+  color: white;
+}
+
+a {
+  color: rgb(37, 37, 167);
+  text-decoration: none;
+}
+
+button {
+  outline: none;
+  border: none;
+  padding: .5rem .8rem;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+
+/* toastStyles.css */
+.Toastify__progress-bar {}
+
+/* For Tablets */
+@media (max-width: 1024px) {}
+
+/* For Mobiles */
+@media (max-width: 768px) {}

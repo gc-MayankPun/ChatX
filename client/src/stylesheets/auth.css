@@ -1,0 +1,291 @@
+.auth-page {
+    /* border: .1rem solid red; */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* padding: 0 2rem; */
+    padding: 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    /* border: .1rem solid red; */
+    /* margin-bottom: 1rem; */
+}
+
+.logo .logo-container {
+    height: 2rem;
+    width: auto;
+}
+
+.logo .logo-container img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #0af;
+    letter-spacing: 1px;
+}
+
+
+.form-container {
+    /* border: .1rem solid green; */
+    background-color: rgb(26, 26, 26);
+    text-align: center;
+    /* min-height: 30rem; */
+    width: 30rem;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    /* margin: 1rem 0; */
+    margin: 1rem 0 0;
+}
+
+.form-container svg {
+    margin-bottom: .3rem;
+}
+
+.form-container h2 {
+    font-weight: 600;
+}
+
+.form-container p {
+    margin: .6rem 0 1.4rem;
+    font-size: .8rem;
+    color: var(--secondary-text-color);
+}
+
+.form-container form {
+    /* border: .1rem solid red; */
+}
+
+.auth-btn-container {
+    /* border: .1rem solid red; */
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.auth-btn-container button {
+    background-color: transparent;
+    border: .1rem solid var(--border-color);
+    color: white;
+    transition: .3s ease-in-out;
+    /* font-size: 1rem; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.auth-btn-container button:hover {
+    background-color: var(--btn-hover-background-color);
+}
+
+.auth-btn-container button span {
+    font-size: 1.2rem;
+    /* border: .1rem solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: fit-content;
+    width: fit-content; */
+}
+
+.separator {
+    color: var(--secondary-text-color);
+    margin: 1.2rem 0;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    text-wrap: nowrap;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    display: block;
+    background-color: var(--secondary-text-color);
+    /* width: 37%; */
+    width: 100%;
+    height: .1rem;
+}
+
+.credentials-container {
+    /* border: .1rem solid blue; */
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    gap: 1rem;
+    /* margin: 1.2rem 0 0; */
+    /* margin: 1.2rem 0 ; */
+    /* align-items: flex-start; */
+}
+
+.credentials-container .form-group {
+    /* border: .1rem solid blue;     */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.credentials-container .form-group .label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* border: .1rem solid orange; */
+}
+
+.credentials-container .form-group label {
+    /* color: red; */
+    font-size: .9rem;
+    margin-bottom: .5rem;
+}
+
+.credentials-container .form-group a {
+    color: white;
+    font-size: .9rem;
+    transition: .3s ease;
+}
+
+.credentials-container .form-group a:hover {
+    color: var(--secondary-text-color);
+
+}
+
+.credentials-container .form-group input {
+    border-radius: .3rem;
+    background-color: transparent;
+    border: .1rem solid var(--border-color);
+    outline: none;
+    width: 100%;
+
+    padding: .5rem;
+    /* font-size: .8rem; */
+    color: var(--secondary-text-color);
+}
+
+.credentials-container .form-group input::placeholder {
+    color: var(--secondary-text-color);
+}
+
+.credentials-container button {
+    transition: .3s ease;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.credentials-container button:hover {
+    background-color: rgb(var(--btn-2-hover-background-color));
+}
+
+.credentials-container .reset-button {
+
+    /* background-color: rgb(var(--btn-2-background-color)); */
+    /* color: white; */
+}
+
+.credentials-container .reset-button:hover {
+    background-color: rgb(var(--btn-2-hover-background-color));
+}
+
+.account-recovery-anchor {
+    margin-top: .6rem;
+    font-size: .8rem;
+}
+
+.account-auth-anchor {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.account-auth-anchor a {
+    font-size: 1rem;
+    /* font-weight: 500; */
+    color: white;
+    transition: .3s ease;
+}
+
+.account-auth-anchor a:hover {
+    color: var(--secondary-text-color)
+}
+
+.account-recovery-anchor span a {
+    /* border: .1rem solid red; */
+    color: var(--secondary-text-color);
+    transition: .3s ease;
+}
+
+
+
+.form-type {
+    /* border: .1rem solid red; */
+    font-size: .8rem;
+    margin-top: 1.8rem;
+}
+
+.terms-container {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: .8rem;
+    font-size: .7rem;
+    width: 12rem;
+    /* border: .1rem solid red; */
+    color: var(--secondary-text-color);
+}
+
+.terms-container p a,
+.form-type a {
+    /* color: white; */
+    color: var(--secondary-text-color);
+    text-decoration: underline;
+    transition: .3s ease;
+}
+
+.terms-container p a:hover,
+.account-recovery-anchor span a:hover,
+.form-type a:hover {
+    color: white;
+}
+
+.back-to-login {
+    /* color: red; */
+    /* border: .1rem solid red; */
+    /* width: 30rem; */
+    /* margin-top: 1rem;
+    transition: .3s ease;
+    padding: .6rem 2rem; */
+    /* border-radius: .8rem; */
+}
+
+/* .back-to-login:hover {
+    background-color: rgb(102, 102, 102)
+}
+
+.back-to-login a {
+    color: black;
+    font-weight: 600;
+} */
+
+
+/* For Tablets */
+@media (max-width: 1024px) {}
+
+/* For Mobiles */
+@media (max-width: 768px) {
+    .form-container {
+        /* width: fit-content;
+        width: 20rem; */
+        width: 100%;
+    }
+}
