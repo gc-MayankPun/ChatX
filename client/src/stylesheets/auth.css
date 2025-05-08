@@ -132,7 +132,7 @@
 }
 
 .credentials-container .form-group {
-    /* border: .1rem solid blue;     */
+    /* border: .1rem solid blue; */
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -141,11 +141,12 @@
 .credentials-container .form-group .label-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     /* border: .1rem solid orange; */
+    justify-content: space-between;
 }
 
-.credentials-container .form-group label, .credentials-container .form-group a {
+.credentials-container .form-group label,
+.credentials-container .form-group a {
     /* color: red; */
     font-size: .9rem;
     margin-bottom: .5rem;
@@ -170,12 +171,55 @@
     width: 100%;
 
     padding: .5rem;
+    padding-right: 2rem;
     /* font-size: .8rem; */
     color: var(--secondary-text-color);
+    color: white;
 }
 
 .credentials-container .form-group input::placeholder {
     color: var(--secondary-text-color);
+}
+
+.credentials-container .form-group .input-error {
+    color: rgb(var(--error-color));
+    font-size: .8rem;
+    font-size: .9rem;
+    margin: 0;
+    margin-top: .5rem;
+    display: flex;
+    gap: .2rem;
+    align-items: center;
+}
+
+.credentials-container .form-group .input-error span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.credentials-container .form-group .input-container {
+    /* border: .1rem solid blue; */
+    position: relative;
+    /* padding-right: 2rem; */
+}
+
+.credentials-container .form-group .password-show-toggle {
+    /* border: .1rem solid red; */
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-45%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    width: 2rem;
+    z-index: 1;
+    /* background-color: rgb(26, 26, 26); */
+    font-size: 1.2rem;
 }
 
 .credentials-container button {

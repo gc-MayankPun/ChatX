@@ -1,32 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { validateToken } from "../../api/apiClient";
+import axios from "axios";
 
 const ProtectedRoutes = () => {
-  const [cookies] = useCookies(["token"]);
+  const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
 
-  const {data, isPending, isError, error } = useQuery({
-    queryKey: ["validateToken"],
-    queryFn: () => validateToken(cookies.token),
-    retry: false, // Don't retry on failure
-    enabled: !!cookies.token, // Only run if token exists
-  });
-  console.log("Cookies Token Data", cookies.token)
-
   useEffect(() => {
-    if (!cookies.token) {
-      navigate("/auth/login"); // No token → redirect
-    } else if (isError) {
-      navigate("/auth/login"); // Invalid token → redirect
-    }
-  }, [cookies.token, isError, navigate]);
+    const verifyAuth = async () => {
+      try {
+        await axios.get(`${import.meta.env.VITE_SERVER_BASE_URL}/`, {
+          withCredentials: true, // sends the cookie
+        });
+        setChecking(false); // Authenticated
+      } catch (err) {
+        navigate("/auth/login"); // Not authenticated
+      }
+    };
 
-  // Only render outlet if authenticated
-  return cookies.token ? <Outlet /> : null;
+    verifyAuth();
+  }, [navigate]);
+
+  // Optional: show loading until check completes
+  // if (checking) return <div>Checking auth...</div>;
+
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

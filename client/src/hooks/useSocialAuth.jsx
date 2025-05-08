@@ -1,4 +1,3 @@
-import React from "react";
 import { showToast } from "../utils/showToast";
 
 const useSocialAuth = () => {

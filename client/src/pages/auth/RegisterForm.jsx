@@ -3,8 +3,11 @@ import { NavLink } from "react-router-dom";
 import SocialAuthButtons from "../../components/ui/SocialAuthButtons";
 import useSocialAuth from "../../hooks/useSocialAuth";
 import Input from "../../components/ui/Input";
+import useAuthForm from "../../hooks/useAuthForm";
 
 const RegisterForm = () => {
+  const { register, handleSubmit, onSubmit, errors, isPending } =
+    useAuthForm("/register");
   const { onGithubClick, onGoogleClick } = useSocialAuth();
 
   return (
@@ -12,7 +15,7 @@ const RegisterForm = () => {
       <div className="form-container">
         <h2>Create your account</h2>
         <p>Sign up with your Github or Google account</p>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <SocialAuthButtons
             onGithubClick={onGithubClick}
             onGoogleClick={onGoogleClick}
@@ -20,12 +23,36 @@ const RegisterForm = () => {
           />
           <div className="separator">Or continue with</div>
           <div className="credentials-container">
-            <Input inputType={"username"} placeholder="Joe Mama" />
-            <Input inputType={"email"} placeholder="m@example.com" />
-            <Input inputType={"password"} />
-            <Input inputType={"confirmPassword"} />
+            <Input
+              inputType={"text"}
+              inputField={"username"}
+              placeholder="re_zero"
+              register={register}
+              errors={errors}
+            />
+            <Input
+              inputType={"email"}
+              inputField={"email"}
+              placeholder="m@example.com"
+              register={register}
+              errors={errors}
+            />
+            <Input
+              inputType={"password"}
+              inputField={"password"}
+              register={register}
+              errors={errors}
+            />
+            <Input
+              inputType={"password"}
+              inputField={"confirmPassword"}
+              register={register}
+              errors={errors}
+            />
 
-            <button type="submit">Sign Up</button>
+            <button disabled={isPending} type="submit">
+              Sign Up
+            </button>
           </div>
           <div className="form-type">
             <span>

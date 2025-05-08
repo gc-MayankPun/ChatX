@@ -1,13 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { showToast } from "../../utils/showToast";
-import Input from "../../components/ui/Input";
 
 const ForgotPasswordForm = () => {
   return (
     <>
       <div className="form-container">
-        <img src="/images/key.png" alt="Key Icon" width="80" height="80" />
+        <img src="/images/lock.png" alt="Key Icon" width="80" height="80" />
         <h3>Having trouble logging in?</h3>
         <p>
           Enter your email, phone number, or username and we'll send you a login
@@ -15,10 +14,15 @@ const ForgotPasswordForm = () => {
         </p>
         <form>
           <div className="credentials-container">
-            <Input
-              inputType="identifier"
-              placeholder="Email, phone number, or username"
-            />
+            <div className="form-group">
+              <input
+                type="identifier"
+                name="identifier"
+                id="identifier"
+                placeholder="Email, phone number, or username"
+                autoComplete="on"
+              />
+            </div>
             <button type="submit" className="reset-button">
               Send login link
             </button>

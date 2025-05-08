@@ -1,28 +1,29 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const authRoutes = require("./routes/authRoutes");
+const cookieParser = require("cookie-parser");
+const errorHandler = require("./middlewares/errorHandlerMiddleware");
 const dotenv = require("dotenv");
+const authMiddleware = require("./middlewares/authMiddleware");
 dotenv.config();
 
-const allowedOrigins = process.env.ORIGINS;
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: process.env.ORIGINS,
     credentials: true,
   })
 );
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  console.log("Hello Bitches");
-  res.send("Hello");
+app.get("/", authMiddleware, (req, res) => {
+  res.status(200).json({ message: "Authenticated", user: req.user });
 });
 
-app.get("/login", (req, res) => {
-  console.log("Hello There");
-});
+app.use("/", authRoutes);
 
-app.get("/validate", (req, res) => {
-  //   console.log(req.headers);
-});
+app.use(errorHandler);
 
 module.exports = app;

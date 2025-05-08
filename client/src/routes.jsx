@@ -6,6 +6,7 @@ import ProtectedRoutes from "./components/layout/ProtectedRoutes";
 import ForgotPasswordForm from "./pages/auth/ForgotPasswordForm";
 import LoginForm from "./pages/auth/LoginForm";
 import RegisterForm from "./pages/auth/RegisterForm";
+import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+    errorElement: <Error />,
     children: [
       {
         index: true, // default is login
@@ -40,10 +42,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/auth/password/reset",
-    element: <ForgotPasswordForm />,
-  },
+  // {
+  //   path: "/auth/password/reset",
+  //   element: <ForgotPasswordForm />,
+  // },
 ]);
 
 export default router;
