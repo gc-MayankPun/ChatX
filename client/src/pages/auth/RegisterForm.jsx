@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import SocialAuthButtons from "../../components/ui/SocialAuthButtons";
 import useSocialAuth from "../../hooks/useSocialAuth";
+import Input from "../../components/ui/Input";
 
 const RegisterForm = () => {
   const { onGithubClick, onGoogleClick } = useSocialAuth();
@@ -19,52 +20,11 @@ const RegisterForm = () => {
           />
           <div className="separator">Or continue with</div>
           <div className="credentials-container">
-            <div className="form-group">
-              <label htmlFor="email">Username</label>
-              <input
-                type="text"
-                name="username"
-                id="username"
-                autoComplete="off"
-                placeholder="Joe Mama"
-              />
-              {/* <span>error: </span> */}
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                autoComplete="off"
-                placeholder="m@example.com"
-              />
-              {/* <span>error: </span> */}
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">
-                <span>Password</span>
-              </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                autoComplete="off"
-              />
-              {/* <span>error: </span> */}
-            </div>
-            <div className="form-group">
-              <label htmlFor="confirmPassword">
-                <span>Confirm Password</span>
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                autoComplete="off"
-              />
-              {/* <span>error: </span> */}
-            </div>
+            <Input inputType={"username"} placeholder="Joe Mama" />
+            <Input inputType={"email"} placeholder="m@example.com" />
+            <Input inputType={"password"} />
+            <Input inputType={"confirmPassword"} />
+
             <button type="submit">Sign Up</button>
           </div>
           <div className="form-type">
@@ -77,8 +37,8 @@ const RegisterForm = () => {
       </div>
       <div className="terms-container">
         <p>
-          By clicking continue, you agree to our
-          <NavLink>Terms of Service</NavLink> and
+          By clicking Sign Up, you agree to our{" "}
+          <NavLink>Terms of Service</NavLink> and{" "}
           <NavLink>Privacy Policy</NavLink>.
         </p>
       </div>
