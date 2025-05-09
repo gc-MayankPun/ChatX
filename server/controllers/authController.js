@@ -1,8 +1,7 @@
 const { createUser, getUser } = require("../services/userService");
 const ApiError = require("../utils/ApiError");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -13,20 +12,19 @@ const registerUser = async (req, res) => {
   }
 
   // Create new user using the provided data
-  await createUser(username, email, password);
+  const newUser = await createUser(username, email, password);
 
   // Setting up a token
-  const token = jwt.sign({ email }, process.env.JWT_SECRET);
-  // res.cookie("token", "Boku_wa_token");
+  const token = jwt.sign(
+    { username, email, id: newUser.id },
+    process.env.JWT_SECRET
+  );
   res.cookie("token", token);
 
-  // Sending success message and redirect URL in JSON response
-//   res.status(201).json({ message: "Registered successfully", redirectTo: "/" });
-  //   res.redirect("/");
-  res.redirect("/")
+  res.status(201).json({ message: "Registered successfully" });
 };
 
-const loginUserDetails = async (req, res) => {
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   // Validate request body
@@ -35,25 +33,22 @@ const loginUserDetails = async (req, res) => {
   }
 
   // Find user using the provided data
-  await getUser(email, password);
+  const user = await getUser(email, password);
 
   // Setting up a token
-  const token = jwt.sign({ email }, process.env.JWT_SECRET);
+  const token = jwt.sign(
+    { email, username: user.username, id: user.id },
+    process.env.JWT_SECRET
+  );
   res.cookie("token", token);
 
-  // Sending success message and redirect URL in JSON response
-//   res.status(200).json({ message: "Logged in successfully", redirectTo: "/" });
-    // res.redirect("/login");
-    res.redirect("/")
-};
-
-const loginUser = (req, res) => {
-    res.send("Login")
+  res.status(200).json({ message: "Logged in successfully" });
 };
 
 const logoutUser = (req, res) => {
   res.cookie("token", "");
-  res.redirect("/");
+  // res.redirect("/");
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { registerUser, loginUserDetails, loginUser, logoutUser };
+module.exports = { registerUser, loginUser, loginUser, logoutUser };

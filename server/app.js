@@ -2,11 +2,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const appRoutes = require("./routes/appRoutes");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/errorHandlerMiddleware");
-const dotenv = require("dotenv");
-const authMiddleware = require("./middlewares/authMiddleware");
-dotenv.config();
+require("dotenv").config();
 
 app.use(
   cors({
@@ -18,11 +17,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", authMiddleware, (req, res) => {
-  res.status(200).json({ message: "Authenticated", user: req.user });
-});
-
-app.use("/", authRoutes);
+app.use("/", appRoutes);
+app.use("/auth", authRoutes);
 
 app.use(errorHandler);
 

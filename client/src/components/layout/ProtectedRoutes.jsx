@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Loader from "../ui/Loader";
 
 const ProtectedRoutes = () => {
   const [checking, setChecking] = useState(true);
@@ -9,20 +10,24 @@ const ProtectedRoutes = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        await axios.get(`${import.meta.env.VITE_SERVER_BASE_URL}/`, {
-          withCredentials: true, // sends the cookie
-        });
-        setChecking(false); // Authenticated
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response)
+
+        setChecking(false);
       } catch (err) {
-        navigate("/auth/login"); // Not authenticated
+        navigate("/auth/login");
       }
-    };
+    };  
 
     verifyAuth();
   }, [navigate]);
 
-  // Optional: show loading until check completes
-  // if (checking) return <div>Checking auth...</div>;
+  if (checking) return <Loader />;
 
   return <Outlet />;
 };

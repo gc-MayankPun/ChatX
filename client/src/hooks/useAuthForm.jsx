@@ -19,7 +19,7 @@ const useAuthForm = (endpoint) => {
   const mutation = useMutation({
     mutationFn: async (formData) => {
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_BASE_URL}${endpoint}`,
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth${endpoint}`,
         formData,
         {
           withCredentials: true,

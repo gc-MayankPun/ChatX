@@ -6,13 +6,8 @@ import Input from "../../components/ui/Input";
 import useAuthForm from "../../hooks/useAuthForm";
 
 const LoginForm = () => {
-  const {
-    register,
-    handleSubmit,
-    onSubmit,
-    errors,
-    isPending,
-  } = useAuthForm("/login");
+  const { register, handleSubmit, onSubmit, errors, isPending } =
+    useAuthForm("/login");
   const { onGithubClick, onGoogleClick } = useSocialAuth();
 
   return (
@@ -46,7 +41,9 @@ const LoginForm = () => {
               register={register}
               errors={errors}
             />
-            <button disabled={isPending} type="submit">Login</button>
+            <button disabled={isPending} type="submit">
+              Login
+            </button>
           </div>
           <div className="form-type">
             <span>
