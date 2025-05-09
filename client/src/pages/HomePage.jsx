@@ -1,37 +1,19 @@
-import React from "react";
-import { showToast } from "../utils/showToast";
-import { useNavigate } from "react-router-dom";
+import React, { useRef } from "react";
+import "../stylesheets/home-page.css";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import Sidebar from "../components/layout/Sidebar";
+import ChatBox from "../components/layout/ChatBox";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
-        {
-          method: "post",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        showToast("success", data.message);
-        navigate("/auth/login");
-      } else {
-        showToast("error", "Logout failed");
-      }
-    } catch (error) {
-      showToast("error", "An error occurred during logout");
-    }
-  };
+  const { user } = useContext(UserContext);
+  console.log("Mujhe kyu todha?")
 
   return (
-    <>
-      <h1>Hello, Welcome to the Home Page!</h1>
-      <button onClick={handleLogout}>Logout</button>
-    </>
+    <main className="app-wrapper">
+      <Sidebar />
+      <ChatBox />
+    </main>
   );
 };
 

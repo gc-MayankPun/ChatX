@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../ui/Loader";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const ProtectedRoutes = () => {
+  const { setUser } = useContext(UserContext);
   const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
 
@@ -16,13 +19,14 @@ const ProtectedRoutes = () => {
             withCredentials: true,
           }
         );
-        console.log(response)
+        // console.log(response);
+        setUser({ ...response.data.user });
 
         setChecking(false);
       } catch (err) {
         navigate("/auth/login");
       }
-    };  
+    };
 
     verifyAuth();
   }, [navigate]);

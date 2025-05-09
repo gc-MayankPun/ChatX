@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
   );
   res.cookie("token", token);
 
-  res.status(201).json({ message: "Registered successfully" });
+  res.status(201).json({ message: "Successfully registered. You're all set!" });
 };
 
 const loginUser = async (req, res) => {
@@ -42,13 +42,13 @@ const loginUser = async (req, res) => {
   );
   res.cookie("token", token);
 
-  res.status(200).json({ message: "Logged in successfully" });
+  res.status(200).json({ message: "Login successful. Welcome back!" });
 };
 
 const logoutUser = (req, res) => {
   res.cookie("token", "");
   // res.redirect("/");
-  res.status(200).json({ message: "Logged out successfully" });
+  res.status(200).json({ message: "Logged out successfully, See you soon" });
 };
 
 module.exports = { registerUser, loginUser, loginUser, logoutUser };

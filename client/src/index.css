@@ -52,6 +52,13 @@ input:-moz-autofill {
   color: white !important;
 }
 
+.center-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 /* toastStyles.css */
 .Toastify__progress-bar {}
 

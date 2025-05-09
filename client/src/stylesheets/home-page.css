@@ -1,0 +1,6 @@
+.app-wrapper {
+    /* border: .1rem solid red; */
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+}

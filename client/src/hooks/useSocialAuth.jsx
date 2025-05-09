@@ -1,12 +1,19 @@
 import { showToast } from "../utils/showToast";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useSocialAuth = () => {
+  const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  // console.log(user);
+
   const onGithubClick = () => {
-    showToast("info", "Using GitHub Auth");
+    // loginWithRedirect()
+    // logout()
+    showToast("info", "This feature is coming soon");
   };
 
   const onGoogleClick = () => {
-    showToast("info", "Using Google Auth");
+    // loginWithRedirect()
+    showToast("info", "This feature is coming soon");
   };
 
   return { onGithubClick, onGoogleClick };

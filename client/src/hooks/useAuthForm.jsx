@@ -48,6 +48,31 @@ const useAuthForm = (endpoint) => {
     },
   });
 
+  const handleLogout = async () => {
+    try {
+      const logoutConfirm = confirm("Are you sure you want to logout?");
+      if (!logoutConfirm) return;
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
+        {
+          method: "post",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        showToast("success", data.message);
+        navigate("/auth/login");
+      } else {
+        showToast("error", "Logout failed");
+      }
+    } catch (error) {
+      showToast("error", "An error occurred during logout");
+    }
+  };
+
   const onSubmit = async (formData) => {
     mutation.mutate(formData);
   };
@@ -55,6 +80,7 @@ const useAuthForm = (endpoint) => {
   return {
     register,
     handleSubmit,
+    handleLogout,
     onSubmit,
     errors,
     isPending: mutation.isPending,

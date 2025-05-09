@@ -1,0 +1,8 @@
+.chat-box {
+    /* border: .3rem solid green; */
+    background-color: black;
+    /* flex-grow: 1; */
+    width: 80%;
+    width: 100%;
+    padding: 3rem 2rem;
+}
