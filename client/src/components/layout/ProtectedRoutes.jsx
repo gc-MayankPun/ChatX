@@ -28,10 +28,10 @@ const ProtectedRoutes = () => {
       }
     };
 
-    verifyAuth();
+    // verifyAuth();
   }, [navigate]);
 
-  if (checking) return <Loader />;
+  // if (checking) return <Loader />;
 
   return <Outlet />;
 };

@@ -1,32 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useContext } from "react";
 import "../../stylesheets/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import { FaPlus } from "react-icons/fa6";
+import { FcGlobe } from "react-icons/fc";
 import useAuthForm from "../../hooks/useAuthForm";
-import { gsap } from "gsap";
 import { showToast } from "../../utils/showToast";
+import { UserContext } from "../../context/UserContext";
+import useSidebarToggler from "../../hooks/useSidebarToggler";
 
 const Sidebar = () => {
-  const [isSidebarClosed, setIsSidebarClosed] = useState(false);
   const { handleLogout } = useAuthForm();
-  const sidebarRef = useRef(null);
-
-  const handleSidebarMenu = () => {
-    const isMobile = window.innerWidth <= 768;
-    const expandedWidth = isMobile ? "10rem" : "20rem";
-
-    gsap.to(sidebarRef.current, {
-      width: isSidebarClosed ? expandedWidth : "2.5rem",
-      onComplete: () => {
-        setIsSidebarClosed((prev) => !prev);
-      },
-    });
-  };
+  const { getClickedChat } = useContext(UserContext);
+  const { handleSidebarMenu, isSidebarClosed } = useSidebarToggler();
 
   return (
-    <aside ref={sidebarRef} className="sidebar">
+    <aside className="sidebar">
       <span className="toggle-sidebar center-icon" onClick={handleSidebarMenu}>
         {isSidebarClosed ? <GoSidebarCollapse /> : <GoSidebarExpand />}
       </span>
@@ -34,7 +24,7 @@ const Sidebar = () => {
         <div className="user">
           <div className="user-logo-container">
             <img
-              src="https://imgs.search.brave.com/j5LM16TLCwSaSsi7q38kOH0TlC-PXW-O2Rs7N2G6ihc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvY3V0/ZS1hbmltZS1naXJs/LXBmcC15dWkteWFt/YWRhLXVzaW5nLXBo/b25lLWttYWI5M2ly/dGRkY2YwMm8uanBn"
+              src="https://imgs.search.brave.com/BN-PxGdAhUuBkFHUQYdDLX98Y-pXzKd0ZW_zoiniG-w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvYW5pbWUtcGZw/LXBpY3R1cmVzLXN0/Nnh6YW95MjU2bm8y/aHcuanBn"
               alt="user logo"
             />
           </div>
@@ -42,6 +32,9 @@ const Sidebar = () => {
             gc_mayankpun
           </p>
         </div>
+        <p className="general-chat" onClick={getClickedChat}>
+          <FcGlobe /> General
+        </p>
         <nav className="sidebar-nav">
           <div className="sidebar-nav__header">
             <p className="sidebar-nav__title">My chatroom</p>
@@ -50,16 +43,36 @@ const Sidebar = () => {
             </span>
           </div>
           <ul className="sidebar-nav__list">
-            <li className="sidebar-nav__item">Chat 1</li>
-            <li className="sidebar-nav__item">Chat 2</li>
-            <li className="sidebar-nav__item">Chat 3</li>
-            <li className="sidebar-nav__item">Chat 4</li>
-            <li className="sidebar-nav__item">Chat 5</li>
-            <li className="sidebar-nav__item">Chat 6</li>
-            <li className="sidebar-nav__item">Chat 7</li>
-            <li className="sidebar-nav__item">Chat 8</li>
-            <li className="sidebar-nav__item">Chat 9</li>
-            <li className="sidebar-nav__item">Chat 10</li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 1
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 2
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 3
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 4
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 5
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 6
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 7
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 8
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 9
+            </li>
+            <li onClick={getClickedChat} className="sidebar-nav__item">
+              Chat 10
+            </li>
           </ul>
         </nav>
         <div className="sidebar-nav__footer">
