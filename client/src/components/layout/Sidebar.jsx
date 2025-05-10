@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import "../../stylesheets/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
@@ -8,15 +8,22 @@ import { FcGlobe } from "react-icons/fc";
 import useAuthForm from "../../hooks/useAuthForm";
 import { showToast } from "../../utils/showToast";
 import { UserContext } from "../../context/UserContext";
-import useSidebarToggler from "../../hooks/useSidebarToggler";
+import { SidebarContext } from "../../context/sidebarContext";
 
 const Sidebar = () => {
   const { handleLogout } = useAuthForm();
   const { getClickedChat } = useContext(UserContext);
-  const { handleSidebarMenu, isSidebarClosed } = useSidebarToggler();
+  const { closeSidebar } = useContext(SidebarContext);
+  const { sidebarRef, handleSidebarMenu, isSidebarClosed } =
+    useContext(SidebarContext);
+
+  const selectChatRoom = (event) => {
+    getClickedChat(event);
+    closeSidebar();
+  };
 
   return (
-    <aside className="sidebar">
+    <aside ref={sidebarRef} className="sidebar">
       <span className="toggle-sidebar center-icon" onClick={handleSidebarMenu}>
         {isSidebarClosed ? <GoSidebarCollapse /> : <GoSidebarExpand />}
       </span>
@@ -32,7 +39,7 @@ const Sidebar = () => {
             gc_mayankpun
           </p>
         </div>
-        <p className="general-chat" onClick={getClickedChat}>
+        <p className="general-chat" onClick={selectChatRoom}>
           <FcGlobe /> General
         </p>
         <nav className="sidebar-nav">
@@ -43,34 +50,34 @@ const Sidebar = () => {
             </span>
           </div>
           <ul className="sidebar-nav__list">
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 1
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 2
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 3
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 4
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 5
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 6
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 7
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 8
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 9
             </li>
-            <li onClick={getClickedChat} className="sidebar-nav__item">
+            <li onClick={selectChatRoom} className="sidebar-nav__item">
               Chat 10
             </li>
           </ul>

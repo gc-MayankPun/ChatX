@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import "../stylesheets/home-page.css";
 import Sidebar from "../components/layout/Sidebar";
 import ChatRoom from "../components/layout/ChatRoom";

@@ -1,17 +1,16 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import "../../stylesheets/chat-room.css";
 import { UserContext } from "../../context/UserContext";
 import { GoSidebarCollapse } from "react-icons/go";
 import { FaUsers } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import ChatMessage from "../ui/ChatMessage";
-import { gsap } from "gsap";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
-import useSidebarToggler from "../../hooks/useSidebarToggler";
+import { SidebarContext } from "../../context/sidebarContext";
 
 const ChatRoom = () => {
   const { user, currentChatRoom } = useContext(UserContext);
-  const { openSidebar } = useSidebarToggler();
+  const { openSidebar } = useContext(SidebarContext);
 
   if (!currentChatRoom) return <ChatRoomSkeleton />;
 

@@ -1,10 +1,10 @@
-import React from "react";
+import { useContext } from "react";
 import "../../stylesheets/chat-room-skeleton.css";
 import { GoSidebarCollapse } from "react-icons/go";
-import useSidebarToggler from "../../hooks/useSidebarToggler";
+import { SidebarContext } from "../../context/sidebarContext";
 
 const ChatRoomSkeleton = () => {
-  const { openSidebar } = useSidebarToggler();
+  const { openSidebar } = useContext(SidebarContext);
 
   return (
     <div className="chat-room_skeleton">
