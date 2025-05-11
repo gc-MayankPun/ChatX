@@ -7,10 +7,12 @@ import { IoSend } from "react-icons/io5";
 import ChatMessage from "../ui/ChatMessage";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import { SidebarContext } from "../../context/sidebarContext";
+import useMessageHandler from "../../hooks/useMessageHandler";
 
 const ChatRoom = () => {
   const { user, currentChatRoom } = useContext(UserContext);
   const { openSidebar } = useContext(SidebarContext);
+  const { sendMessage, messages } = useMessageHandler();
 
   if (!currentChatRoom) return <ChatRoomSkeleton />;
 
@@ -21,30 +23,31 @@ const ChatRoom = () => {
       </span>
       <h1 className="chat-room__title">
         {/* <FaUsers /> Chat Room */}
-        <FaUsers /> {currentChatRoom}
+        {/* <FaUsers /> {currentChatRoom} */}
+        {currentChatRoom}
       </h1>
 
       <div className="chat-room__messages-wrapper">
         <div className="chat-room__messages">
-          <ChatMessage />
-          <ChatMessage />
-          <ChatMessage />
-          <ChatMessage />
+          {messages.map((msg, index) => (
+            <ChatMessage key={index} message={msg.message} />
+          ))}
         </div>
       </div>
 
       <div className="chat-room__input-section">
-        <div className="chat-room__input-wrapper">
+        <form onSubmit={sendMessage} className="chat-room__input-wrapper">
           <input
             type="text"
-            name="chat-input"
+            name="chatInput"
             id="chat-input"
             placeholder="Type a message..."
+            autoComplete="off"
           />
           <button className="chat-room__send-button">
             <IoSend />
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

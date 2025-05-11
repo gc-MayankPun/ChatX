@@ -4,7 +4,6 @@ import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import { FaPlus } from "react-icons/fa6";
-import { FcGlobe } from "react-icons/fc";
 import useAuthForm from "../../hooks/useAuthForm";
 import { showToast } from "../../utils/showToast";
 import { UserContext } from "../../context/UserContext";
@@ -40,7 +39,7 @@ const Sidebar = () => {
           </p>
         </div>
         <p className="general-chat" onClick={selectChatRoom}>
-          <FcGlobe /> General
+          🌍 General
         </p>
         <nav className="sidebar-nav">
           <div className="sidebar-nav__header">

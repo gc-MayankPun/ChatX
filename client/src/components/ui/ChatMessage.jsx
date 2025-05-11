@@ -1,14 +1,11 @@
 import React from "react";
 
-const ChatMessage = () => {
+const ChatMessage = ({ message }) => {
   return (
     <div className="chat-message">
       <div className="chat-message__content">
         <p className="chat-message__sender-name">gc_mayank_pun</p>
-        <div className="chat-message__text">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt,
-          nemo.
-        </div>
+        <div className="chat-message__text">{message}</div>
       </div>
       <div className="chat-message__avatar">
         <img
