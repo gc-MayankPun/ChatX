@@ -1,0 +1,100 @@
+.Toastify__progress-bar {}
+
+.custom-toast__actions {
+    margin-top: 1rem;
+}
+
+.custom-toast__button {
+    font-weight: bold;
+    width: 5rem;
+    transition: .3s ease-in-out;
+    will-change: transform;
+}
+
+.custom-toast__button:hover,
+.custom-toast__button:hover {
+    transform: scale(1.1);
+}
+
+.input-toast__error {
+    color: rgb(var(--error-color));
+    font-size: .9rem;
+    margin: 0;
+    margin-top: .5rem;
+    display: flex;
+    gap: .2rem;
+    align-items: center;
+}
+
+.input-toast__error span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+/* Input Decision Toast CSS */
+.decision-toast {
+    /* border: .1rem solid red; */
+    width: 100%;
+    text-align: center;
+}
+
+.decision-toast__title {
+    font-weight: 500;
+}
+
+#decision-toast__input {
+    background-color: transparent;
+    margin-top: 1rem;
+    color: white;
+    outline: none;
+    border: .1rem solid var(--border-color);
+    padding: .5rem .8rem;
+    width: 100%;
+}
+
+.decision-toast__button--primary {
+    background-color: #2563eb;
+    color: black;
+}
+
+.decision-toast__button--secondary {
+    margin-left: 1rem;
+    background-color: #22c55e;
+    color: black;
+}
+
+
+/* Confirm Toast CSS */
+.confirm-toast {
+    width: 100%;
+    text-align: center;
+}
+
+.confirm-toast__icon {
+    font-size: 3rem;
+    color: #F6BE8C;
+}
+
+.confirm-toast__title {
+    font-size: 1.4rem;
+    margin: 0 0 1rem;
+    color: #F6BE8C
+}
+
+.confirm-toast__description {
+    font-size: .8rem;
+    margin-bottom: 1.5rem;
+}
+
+.confirm-toast__button--ok {
+    background-color: #DF6B50;
+    color: white;
+}
+
+.confirm-toast__button--cancel {
+    margin-left: 1rem;
+    /* background-color: #DF6B50;
+    color: white; */
+}

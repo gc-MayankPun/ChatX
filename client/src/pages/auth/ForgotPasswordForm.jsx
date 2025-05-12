@@ -1,8 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { showToast } from "../../utils/showToast";
+import useToast from "../../hooks/useToast";
 
 const ForgotPasswordForm = () => {
+  const {showToast} = useToast();
+
   return (
     <>
       <div className="form-container">
@@ -32,7 +34,7 @@ const ForgotPasswordForm = () => {
             <span>
               <NavLink
                 onClick={() =>
-                  showToast("info", "Password recovery support is coming soon.")
+                  showToast({type: "info", payload: "Password recovery support is coming soon."})
                 }
               >
                 Can't reset your password?

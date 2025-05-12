@@ -58,10 +58,6 @@ input:-moz-autofill {
   align-items: center;
 }
 
-
-/* toastStyles.css */
-.Toastify__progress-bar {}
-
 /* For Tablets */
 @media (max-width: 1024px) {}
 

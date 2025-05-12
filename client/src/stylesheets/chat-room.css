@@ -61,6 +61,14 @@
     display: none;
 }
 
+.chat-room__skeleton-p{
+    background-color: #111;
+    color: lightseagreen;
+    border-radius: .5rem;
+    padding: .8rem;
+    text-align: center;
+}
+
 .chat-message {
     width: 70%;
     display: flex;

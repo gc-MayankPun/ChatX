@@ -3,8 +3,10 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getValidationSchema } from "../utils/yupValidationSchema";
-import { showToast } from "../utils/showToast";
 import { useNavigate } from "react-router-dom";
+import useToast from "./useToast";
+import { useContext } from "react";
+import { ChatContext } from "../context/chatContext";
 
 const useAuthForm = (endpoint) => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ const useAuthForm = (endpoint) => {
     setError,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+  const { isActionInProgress, setIsActionInProgress } = useContext(ChatContext);
+  const { showToast, confirmToast } = useToast();
 
   const mutation = useMutation({
     mutationFn: async (formData) => {
@@ -31,7 +35,7 @@ const useAuthForm = (endpoint) => {
       return response.data;
     },
     onSuccess: (data) => {
-      showToast("success", data.message);
+      showToast({ type: "success", payload: data.message });
       navigate("/");
     },
     onError: (error) => {
@@ -44,13 +48,19 @@ const useAuthForm = (endpoint) => {
         });
       }
 
-      showToast("error", message);
+      showToast({ type: "error", payload: message });
     },
   });
 
   const handleLogout = async () => {
+    if (isActionInProgress) return; // Prevent action if one is in progress
+    setIsActionInProgress(true); // Disable further actions
+
     try {
-      const logoutConfirm = confirm("Are you sure you want to logout?");
+      const logoutConfirm = await confirmToast({
+        payload: "You will be logout!",
+      });
+      setIsActionInProgress(false); // Re-enabling the action if the current action is completed
       if (!logoutConfirm) return;
 
       const response = await fetch(
@@ -63,13 +73,14 @@ const useAuthForm = (endpoint) => {
 
       if (response.ok) {
         const data = await response.json();
-        showToast("success", data.message);
+        showToast({ type: "success", payload: data.message });
         navigate("/auth/login");
       } else {
-        showToast("error", "Logout failed");
+        showToast({ type: "error", payload: "Logout failed" });
       }
     } catch (error) {
-      showToast("error", "An error occurred during logout");
+      console.log(error);
+      showToast({ type: "error", payload: "An error occurred during logout" });
     }
   };
 

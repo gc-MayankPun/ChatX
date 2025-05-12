@@ -1,9 +1,12 @@
 import "../stylesheets/home-page.css";
 import Sidebar from "../components/layout/Sidebar";
 import ChatRoom from "../components/layout/ChatRoom";
+import { useEffect } from "react";
 
 const HomePage = () => {
-  console.log("Mujhe kyu todha?");
+  useEffect(() => {
+    console.log("Mujhe kyu todha?");
+  }, []);
 
   return (
     <main className="app-wrapper">

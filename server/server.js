@@ -2,7 +2,7 @@ const connectDB = require("./config/dbConfig");
 const http = require("http");
 const { Server } = require("socket.io");
 const app = require("./app");
-const socketHandler = require("./socketHandler");
+const socketHandler = require("./utils/socketHandler");
 require("dotenv").config();
 
 const PORT = process.env.PORT;
@@ -19,7 +19,7 @@ connectDB(); // Connect the DB
 
 app.set("io", io); //  Make the io instance accessible throughout the app
 
-socketHandler(io); // Attach custom handler
+socketHandler(io);
 
 server.listen(PORT, () => {
   console.log(`Server listening at Port: ${PORT}`);

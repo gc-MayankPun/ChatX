@@ -1,18 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import "../../stylesheets/chat-room.css";
-import { UserContext } from "../../context/UserContext";
 import { GoSidebarCollapse } from "react-icons/go";
-import { FaUsers } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import ChatMessage from "../ui/ChatMessage";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import { SidebarContext } from "../../context/sidebarContext";
-import useMessageHandler from "../../hooks/useMessageHandler";
+import { ChatContext } from "../../context/chatContext";
 
 const ChatRoom = () => {
-  const { user, currentChatRoom } = useContext(UserContext);
+  useEffect(() => {
+    console.log("Chatroom Mounted");
+  }, []);
+
+  const { currentChatRoom } = useContext(ChatContext);
   const { openSidebar } = useContext(SidebarContext);
-  const { sendMessage, messages } = useMessageHandler();
 
   if (!currentChatRoom) return <ChatRoomSkeleton />;
 
@@ -24,19 +25,30 @@ const ChatRoom = () => {
       <h1 className="chat-room__title">
         {/* <FaUsers /> Chat Room */}
         {/* <FaUsers /> {currentChatRoom} */}
-        {currentChatRoom}
+        {currentChatRoom.roomName}
       </h1>
 
       <div className="chat-room__messages-wrapper">
         <div className="chat-room__messages">
-          {messages.map((msg, index) => (
-            <ChatMessage key={index} message={msg.message} />
-          ))}
+          {currentChatRoom.messages.length === 0 ? (
+            <p className="chat-room__skeleton-p">
+              No chats yet. You're the one to kick it off! 🚀
+            </p>
+          ) : (
+            currentChatRoom.messages.map((msg, index) => {
+              return (
+                <ChatMessage
+                  key={`${msg.roomName} | ${msg.roomID} | ${index}`}
+                  message={msg.message}
+                />
+              );
+            })
+          )}
         </div>
       </div>
 
       <div className="chat-room__input-section">
-        <form onSubmit={sendMessage} className="chat-room__input-wrapper">
+        <form className="chat-room__input-wrapper">
           <input
             type="text"
             name="chatInput"

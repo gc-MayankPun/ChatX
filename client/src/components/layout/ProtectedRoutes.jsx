@@ -3,7 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../ui/Loader";
 import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../../context/userContext";
+import { setItem } from "../../utils/localStorage";
 
 const ProtectedRoutes = () => {
   const { setUser } = useContext(UserContext);
@@ -19,8 +20,9 @@ const ProtectedRoutes = () => {
             withCredentials: true,
           }
         );
-        // console.log(response);
-        setUser({ ...response.data.user });
+        // setUser({ ...response.data.user });
+        setUser(response.data.user);
+        setItem("user", response.data.user);
 
         setChecking(false);
       } catch (err) {
@@ -28,10 +30,10 @@ const ProtectedRoutes = () => {
       }
     };
 
-    // verifyAuth();
+    verifyAuth();
   }, [navigate]);
 
-  // if (checking) return <Loader />;
+  if (checking) return <Loader />;
 
   return <Outlet />;
 };

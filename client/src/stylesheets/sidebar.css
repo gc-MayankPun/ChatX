@@ -32,13 +32,13 @@
     margin-top: .5rem;
 }
 
-.user .user-logo-container {
+.user .user_avatar {
     height: 4rem;
     width: 4rem;
     margin-left: .5rem;
 }
 
-.user .user-logo-container img {
+.user .user_avatar img {
     height: 100%;
     width: 100%;
     object-fit: cover;
@@ -86,7 +86,16 @@
 
 .sidebar-nav__add-icon {
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    background-color: transparent;
+    color: white;
+    padding: 0;
+    transition: .3s ease-in-out
+}
+
+.sidebar-nav__add-icon:hover {
+    transform: scale(1.2);
+    color: var(--secondary-text-color)
 }
 
 .sidebar-nav__list {
@@ -96,6 +105,11 @@
     scrollbar-width: thin;
     scroll-behavior: smooth;
     scrollbar-color: #ccc transparent;
+}
+
+.sidebar-nav__skeleton-p {
+    margin-left: 1rem;
+    text-wrap: wrap;
 }
 
 .sidebar-nav__item {

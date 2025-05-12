@@ -27,7 +27,7 @@ const createUser = async (username, email, password) => {
 
     // If creation fails
     if (!newUser) {
-      throw new ApiError("User could not be created. Please try again", 500);
+      throw new ApiError("Registration failed. Please try again", 500);
     }
 
     // Return user data
