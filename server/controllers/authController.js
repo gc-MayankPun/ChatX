@@ -19,7 +19,12 @@ const registerUser = async (req, res) => {
     { username, email, id: newUser.id },
     process.env.JWT_SECRET
   );
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    domain: ".devtunnels.ms",
+  });
 
   res.status(201).json({ message: "Successfully registered. You're all set!" });
 };
@@ -40,7 +45,12 @@ const loginUser = async (req, res) => {
     { email, username: user.username, id: user.id },
     process.env.JWT_SECRET
   );
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    domain: ".inc1.devtunnels.ms",
+  });
 
   res.status(200).json({ message: "Login successful. Welcome back!" });
 };

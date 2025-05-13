@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import useToast from "./useToast";
 
 const useSocialAuth = () => {
-  const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  // const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const { showToast } = useToast();
   // console.log(user);
 

@@ -7,9 +7,10 @@ const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/errorHandlerMiddleware");
 require("dotenv").config();
 
+const allowedOrigins = JSON.parse(process.env.CORS_ORIGINS)
 app.use(
   cors({
-    origin: process.env.ORIGINS,
+    origin: allowedOrigins,
     credentials: true,
   })
 );

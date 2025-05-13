@@ -1,5 +1,9 @@
 .Toastify__progress-bar {}
 
+.Toastify__toast{
+    /* background-color: #272727; */
+}
+
 .custom-toast__actions {
     margin-top: 1rem;
 }

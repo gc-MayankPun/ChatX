@@ -5,10 +5,14 @@ import Loader from "../ui/Loader";
 import { useContext } from "react";
 import { UserContext } from "../../context/userContext";
 import { setItem } from "../../utils/localStorage";
+import { ChatContext } from "../../context/chatContext";
+import useToast from "../../hooks/useToast";
 
 const ProtectedRoutes = () => {
   const { setUser } = useContext(UserContext);
+  const { setIsActionInProgress } = useContext(ChatContext);
   const [checking, setChecking] = useState(true);
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,17 +25,26 @@ const ProtectedRoutes = () => {
           }
         );
         // setUser({ ...response.data.user });
-        setUser(response.data.user);
-        setItem("user", response.data.user);
+        setUser({ ...response.data.user, avatar: "/images/blank-user.webp" });
+        setItem("user", {
+          ...response.data.user,
+          avatar: "/images/blank-user.webp",
+        });
 
         setChecking(false);
       } catch (err) {
+        const message = err?.response?.data?.message || "Something went wrong!";
+        showToast({type: "error", payload: message})
         navigate("/auth/login");
       }
     };
-
     verifyAuth();
   }, [navigate]);
+
+  // useEffect(() => {
+  //   setIsActionInProgress(false); // Re-enabling the action if there is a re-render
+  //   console.log("Somehow I got rendered");
+  // }, []);
 
   if (checking) return <Loader />;
 

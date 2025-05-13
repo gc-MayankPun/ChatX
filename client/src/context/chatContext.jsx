@@ -1,30 +1,26 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import useToast from "../hooks/useToast";
 import { getItem, setItem } from "../utils/localStorage";
+import { v4 as uuidv4 } from "uuid";
+import useChatRoomHandler from "../hooks/useChatRoomHandler";
 
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children }) => {
   const [isActionInProgress, setIsActionInProgress] = useState(false);
-  const [generalChat, setGeneralChat] = useState(
-    getItem("generalChat") || null
-  );
+  const { createRoom, joinRoom } = useChatRoomHandler();
   const [currentChatRoom, setCurrentChatRoom] = useState(
     getItem("currentChatRoom") || null
   );
-  // const [chatRooms, setChatRooms] = useState([
-  //   {
-  //     roomName: "Chat 1",
-  //     roomID: "RANDOM_STRING_1",
-  //     messages: [{ message: "Hello", sender: "", senderPic: "" }],
-  //   },
-  //   {
-  //     roomName: "Chat 2",
-  //     roomID: "RANDOM_STRING_2",
-  //     messages: [{ message: "Hello from chat 2", sender: "", senderPic: "" }],
-  //   },
-  // ]);
-  const [chatRooms, setChatRooms] = useState(getItem("chatRooms") || []);
+  const [chatRooms, setChatRooms] = useState(
+    getItem("chatRooms") || {
+      "🌍 General": {
+        roomName: "🌍 General",
+        roomID: "🌍 General",
+        messages: [],
+      },
+    }
+  );
   const { inputDecisionToast } = useToast();
 
   // Handle selecting a room
@@ -59,26 +55,49 @@ export const ChatContextProvider = ({ children }) => {
     setIsActionInProgress(false); // Re-enabling the action if the current action is completed
     if (!action || !value) return;
 
-    const updatedRooms = [
-      ...chatRooms,
-      {
-        roomName: value,
-        roomID: "RANDOM_STRING",
-        messages: [],
-      },
-    ];
+    if (chatRooms[value]) {
+      setCurrentChatRoom(chatRooms[value]);
+      setItem("currentChatRoom", chatRooms[value]);
+      return;
+    }
+
+    const randomID = uuidv4().replace(/-/g, "");
+    let updatedRooms;
+    if (action === "Create") {
+      const roomID = `${randomID}::${value}`;
+      createRoom(roomID, value);
+
+      updatedRooms = {
+        ...chatRooms,
+        [roomID]: { roomName: value, roomID, messages: [] },
+      };
+
+      setCurrentChatRoom({ roomName: value, roomID, messages: [] });
+      setItem("currentChatRoom", { roomName: value, roomID, messages: [] });
+    } else {
+      joinRoom(value);
+      const roomID = value;
+      const roomName = value.split("::")[1];
+
+      updatedRooms = {
+        ...chatRooms,
+        [roomID]: { roomName, roomID, messages: [] },
+      };
+
+      setCurrentChatRoom({ roomName, roomID, messages: [] });
+      setItem("currentChatRoom", { roomName, roomID, messages: [] });
+    }
+
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
-
     setIsActionInProgress(false); // Re-enabling the action if the current action is completed
   };
 
   return (
     <ChatContext.Provider
       value={{
-        generalChat,
-        setGeneralChat,
         currentChatRoom,
+        setCurrentChatRoom,
         chatRooms,
         setChatRooms,
         getClickedChat,

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import "../../stylesheets/sidebar.css";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
@@ -11,10 +11,6 @@ import { UserContext } from "../../context/userContext";
 import useToast from "../../hooks/useToast";
 
 const Sidebar = () => {
-  useEffect(() => {
-    console.log("Sidebar Mounted");
-  }, []);
-
   const { handleLogout } = useAuthForm();
   const { chatRooms, getClickedChat, onRoomIconClick } =
     useContext(ChatContext);
@@ -29,17 +25,6 @@ const Sidebar = () => {
     closeSidebar();
   };
 
-  const selectGeneralChatRoom = () => {
-    getClickedChat("🌍 General", "GENERAL_CHAT_BOLTE", [
-      { message: "Hello", sender: "", senderPic: "" },
-      { message: "Hola", sender: "", senderPic: "" },
-      { message: "Hi", sender: "", senderPic: "" },
-      { message: "Konnichiwa", sender: "", senderPic: "" },
-      { message: "Namaste", sender: "", senderPic: "" },
-    ]);
-    closeSidebar();
-  };
-
   return (
     <aside ref={sidebarRef} className="sidebar">
       <span className="toggle-sidebar center-icon" onClick={handleSidebarMenu}>
@@ -49,7 +34,7 @@ const Sidebar = () => {
         <div className="user">
           <div className="user_avatar">
             <img
-              src={user.avatar || "/images/blank-user.webp"}
+              src={user.avatar}
               alt="user avatr img"
             />
           </div>
@@ -58,7 +43,10 @@ const Sidebar = () => {
           </p>
         </div>
 
-        <p className="general-chat" onClick={selectGeneralChatRoom}>
+        <p
+          className="general-chat"
+          onClick={() => selectChatRoom(chatRooms["🌍 General"])}
+        >
           🌍 General
         </p>
         <nav className="sidebar-nav">
@@ -72,26 +60,20 @@ const Sidebar = () => {
             </button>
           </div>
           <ul className="sidebar-nav__list">
-            {chatRooms.length === 0 ? (
-              <>
-                <p className="sidebar-nav__skeleton-p">
-                  It's a bit lonely here... Add a room to get started! 👀
-                </p>
-              </>
-            ) : (
-              chatRooms.map((room) => {
-                return (
-                  <li
-                    test={`${room.roomName} | ${room.roomID}`}
-                    key={`${room.roomName} | ${room.roomID}`}
-                    onClick={() => selectChatRoom(room)}
-                    className="sidebar-nav__item"
-                  >
-                    {room.roomName}
-                  </li>
-                );
-              })
-            )}
+            {Object.keys(chatRooms).map((key, index) => {
+              if (key === "🌍 General") return;
+              const room = chatRooms[key];
+              return (
+                <li
+                  test={`${room.roomName} | ${room.roomID} | ${index}`}
+                  key={`${room.roomName} | ${room.roomID}`}
+                  onClick={() => selectChatRoom(room)}
+                  className="sidebar-nav__item"
+                >
+                  {room.roomName}
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <div className="sidebar-nav__footer">
