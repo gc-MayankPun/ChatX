@@ -135,7 +135,76 @@ const useToast = () => {
     });
   };
 
-  return { showToast, inputDecisionToast, confirmToast };
+  const shareToast = ({ payload, config = {} }) => {
+    const { shareURL } = payload;
+
+    const ShareComponent = () => {
+      const [copied, setCopied] = useState(false);
+
+      const handleShare = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: "Join my room!",
+              text: `Here's the room ID: ${shareURL}`,
+              // url: shareURL,
+            });
+            showToast({ type: "success", payload: "Shared successfully" });
+          } catch (error) {
+            showToast({ type: "error", payload: "Failed to share" });
+          }
+        } else {
+          showToast({
+            type: "info",
+            payload: "Sharing is not supported on this device.",
+          });
+        }
+      };
+
+      const handleCopy = async () => {
+        try {
+          await navigator.clipboard.writeText(shareURL);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+          showToast({
+            type: "success",
+            payload: "Room ID copied to clipboard!",
+          });
+        } catch (error) {
+          showToast({ type: "error", payload: "Failed to copy room ID." });
+        }
+      };
+
+      return (
+        <div className="share-toast">
+          <div className="share-toast__buttons-container">
+            <button
+              onClick={handleShare}
+              className="share-toast__buttons share-toast__share"
+            >
+              <span className="share-toast__span center-icon">📤</span> Share
+            </button>
+            <button
+              onClick={handleCopy}
+              className="share-toast__buttons share-toast__copy"
+            >
+              <span className="share-toast__span center-icon">📋</span> Copy
+            </button>
+          </div>
+          {copied && <span className="share-toast__copied">Copied!</span>}
+        </div>
+      );
+    };
+
+    toast(ShareComponent, {
+      autoClose: false,
+      closeButton: true,
+      closeOnClick: false,
+      ...config,
+    });
+  };
+
+  return { showToast, inputDecisionToast, confirmToast, shareToast };
 };
 
 export default useToast;

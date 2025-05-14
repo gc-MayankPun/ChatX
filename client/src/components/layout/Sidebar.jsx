@@ -27,8 +27,9 @@ const Sidebar = () => {
 
   return (
     <aside ref={sidebarRef} className="sidebar">
-      <span className="toggle-sidebar center-icon" onClick={handleSidebarMenu}>
-        {isSidebarClosed ? <GoSidebarCollapse /> : <GoSidebarExpand />}
+      <span className="toggle-sidebar center-icon" onClick={closeSidebar}>
+        {/* {isSidebarClosed ? <GoSidebarCollapse /> : <GoSidebarExpand />} */}
+        <GoSidebarExpand/>
       </span>
       <div className="sidebar-links">
         <div className="user">

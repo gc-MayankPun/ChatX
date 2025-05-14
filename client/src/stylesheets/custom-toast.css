@@ -1,6 +1,6 @@
 .Toastify__progress-bar {}
 
-.Toastify__toast{
+.Toastify__toast {
     /* background-color: #272727; */
 }
 
@@ -101,4 +101,60 @@
     margin-left: 1rem;
     /* background-color: #DF6B50;
     color: white; */
+}
+
+/* Share Toast CSS */
+.share-toast {
+    /* flex items-center gap-3  */
+    /* border: .1rem solid red; */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 1rem
+}
+
+.share-toast__buttons-container {
+    /* border: .1rem solid blue; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem
+}
+
+.share-toast__share {
+    /* text-blue-600 hover:text-blue-800  */
+    background-color: #2563eb;
+    text-wrap: nowrap;
+    color: white;
+}
+
+.share-toast__copy {
+    /* text-green-600 hover:text-green-800  */
+    background-color: #22c55e;
+}
+
+.share-toast__buttons {
+    transition: .3s ease-in-out;
+    will-change: scale;
+    font-weight: 600;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem
+}
+
+.share-toast__buttons:hover {
+    transform: scale(1.1);
+}
+
+.share-toast__span {
+    /* border: .1rem solid red; */
+    font-size: 1.2rem;
+}
+
+.share-toast__copied {
+    /* text-green-500 text-sm  */
+    color: green;
 }

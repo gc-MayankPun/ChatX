@@ -5,9 +5,11 @@
     background-color: #111;
     background-color: black;
     border-right: .1rem solid var(--border-color);
+    z-index: 100;
 }
 
 .sidebar .toggle-sidebar {
+    display: none;
     position: absolute;
     right: .5rem;
     /* top: 2.3rem; */
@@ -170,5 +172,9 @@
         width: 0;
         position: absolute;
         z-index: 999;
+    }
+
+    .sidebar .toggle-sidebar {
+        display: inline-block;
     }
 }

@@ -1,17 +1,22 @@
 import { useContext, useEffect, useRef } from "react";
 import "../../stylesheets/chat-room.css";
-import { GoSidebarCollapse } from "react-icons/go";
+import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { IoSend } from "react-icons/io5";
 import ChatMessage from "../ui/ChatMessage";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import { SidebarContext } from "../../context/sidebarContext";
 import { ChatContext } from "../../context/chatContext";
 import useMessageHandler from "../../hooks/useMessageHandler";
+import useToast from "../../hooks/useToast";
 
 const ChatRoom = () => {
   const { currentChatRoom, chatRooms } = useContext(ChatContext);
-  const { openSidebar } = useContext(SidebarContext);
+  const { openSidebar, handleSidebarMenu, isSidebarClosed, isMobile } =
+    useContext(SidebarContext);
   const { sendMessage } = useMessageHandler();
+  const { showToast, shareToast } = useToast();
 
   const scrollRef = useRef(null);
 
@@ -27,10 +32,37 @@ const ChatRoom = () => {
 
   return (
     <div className="chat-room">
-      <span className="toggle-sidebar center-icon" onClick={openSidebar}>
-        <GoSidebarCollapse />
-      </span>
-      <h1 className="chat-room__title">{room.roomName}</h1>
+      <div className="chat-room__title-container">
+        <button
+          className="chat-room__buttons toggle-sidebar"
+          onClick={handleSidebarMenu}
+        >
+          <span className="center-icon">
+            {isMobile ? (
+              <GoSidebarCollapse />
+            ) : isSidebarClosed ? (
+              <GoSidebarCollapse />
+            ) : (
+              <GoSidebarExpand />
+            )}
+          </span>
+        </button>
+        {/* <span className="toggle-sidebar center-icon" >
+          <GoSidebarCollapse />
+        </span> */}
+        <h1 className="chat-room__title">{room.roomName}</h1>
+        {room.roomID !== "🌍 General" && (
+          <button
+            className="chat-room__buttons chat-room__options"
+            onClick={() => shareToast({ payload: { shareURL: room.roomID } })}
+          >
+            <span className="center-icon">
+              {/* <BsThreeDotsVertical /> */}
+              <PiDotsThreeOutlineVerticalFill />
+            </span>
+          </button>
+        )}
+      </div>
 
       <div className="chat-room__messages-wrapper">
         <div className="chat-room__messages">

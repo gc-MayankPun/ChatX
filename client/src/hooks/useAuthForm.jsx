@@ -73,6 +73,11 @@ const useAuthForm = (endpoint) => {
 
       if (response.ok) {
         const data = await response.json();
+
+        localStorage.removeItem("currentChatRoom");
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("chatRooms");
+
         showToast({ type: "success", payload: data.message });
         navigate("/auth/login");
       } else {

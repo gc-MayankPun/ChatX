@@ -13,12 +13,13 @@ export const SidebarContextProvider = ({ children }) => {
 
     if (isMobile) {
       gsap.to(sidebarRef.current, {
-        width: "0",
+        width: "20rem",
         duration: 0.4,
+        onComplete: () => setIsSidebarClosed(true),
       });
     } else {
       gsap.to(sidebarRef.current, {
-        width: isSidebarClosed ? "20rem" : "2.5rem",
+        width: isSidebarClosed ? "20rem" : "0",
         duration: 0.4,
         onComplete: () => setIsSidebarClosed((prev) => !prev),
       });
@@ -35,12 +36,12 @@ export const SidebarContextProvider = ({ children }) => {
   };
 
   const closeSidebar = () => {
-    if (isMobile && sidebarRef?.current) {
-      gsap.to(sidebarRef.current, {
-        width: "0",
-        duration: 0.4,
-      });
-    }
+    if (!sidebarRef?.current) return;
+    gsap.to(sidebarRef.current, {
+      width: "0",
+      duration: 0.4,
+      onComplete: () => setIsSidebarClosed(true),
+    });
   };
 
   return (
@@ -51,6 +52,7 @@ export const SidebarContextProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         isSidebarClosed,
+        isMobile,
       }}
     >
       {children}

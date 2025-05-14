@@ -18,7 +18,7 @@ const useMessageHandler = () => {
           messages: [...prevRooms[roomID].messages, newMessage],
         },
       };
-      setItem("chatRooms", updatedRooms);
+      // setItem("chatRooms", updatedRooms);
       return updatedRooms;
     });
   };
