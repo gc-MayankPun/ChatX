@@ -15,7 +15,6 @@ export const SidebarContextProvider = ({ children }) => {
       gsap.to(sidebarRef.current, {
         width: "20rem",
         duration: 0.4,
-        onComplete: () => setIsSidebarClosed(true),
       });
     } else {
       gsap.to(sidebarRef.current, {
@@ -29,7 +28,7 @@ export const SidebarContextProvider = ({ children }) => {
   const openSidebar = () => {
     if (isMobile && sidebarRef?.current) {
       gsap.to(sidebarRef.current, {
-        width: "15rem",
+        width: "20rem",
         duration: 0.4,
       });
     }
@@ -40,7 +39,7 @@ export const SidebarContextProvider = ({ children }) => {
     gsap.to(sidebarRef.current, {
       width: "0",
       duration: 0.4,
-      onComplete: () => setIsSidebarClosed(true),
+      onComplete: () => setIsSidebarClosed((prev) => !prev),
     });
   };
 

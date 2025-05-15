@@ -16,10 +16,6 @@ const ChatRoomSkeleton = () => {
         <p>
           👋 Welcome to <strong>ChatX</strong> — where chaos meets conversation.
         </p>
-        {/* <p>
-          💬 Feeling lonely? Click on a chatroom already, it won't bite (we
-          think).
-        </p> */}
         <p>
           🌍 Want to shout into the void? Try <strong>General Chat</strong> —
           everyone's invited, even that one weird kid.

@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import SocialAuthButtons from "../../components/ui/SocialAuthButtons";
 import useSocialAuth from "../../hooks/useSocialAuth";
@@ -40,12 +39,6 @@ const RegisterForm = () => {
             <Input
               inputType={"password"}
               inputField={"password"}
-              register={register}
-              errors={errors}
-            />
-            <Input
-              inputType={"password"}
-              inputField={"confirmPassword"}
               register={register}
               errors={errors}
             />

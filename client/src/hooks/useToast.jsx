@@ -24,11 +24,16 @@ const useToast = () => {
 
       const InputToast = ({ closeToast }) => {
         const [inputValue, setInputValue] = useState("");
+        const roomIDPattern = /^[^\s::]+::[^\s]+$/;
         const [error, setError] = useState("");
 
         const handleClick = (action) => {
           if (inputValue.trim() === "") {
-            setError("Input cannot be only spaces 🥲");
+            setError("Your input is as empty as my fridge at 3AM 🧊🍽️");
+            return;
+          }
+          if (!roomIDPattern.test(inputValue)) {
+            setError("Invalid room ID.");
             return;
           }
           resolved = true;

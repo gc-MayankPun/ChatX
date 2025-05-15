@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "../../stylesheets/sidebar.css";
-import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
+import { GoSidebarExpand } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import { FaPlus } from "react-icons/fa6";
@@ -15,8 +15,7 @@ const Sidebar = () => {
   const { chatRooms, getClickedChat, onRoomIconClick } =
     useContext(ChatContext);
   const { user } = useContext(UserContext);
-  const { sidebarRef, handleSidebarMenu, isSidebarClosed, closeSidebar } =
-    useContext(SidebarContext);
+  const { sidebarRef, closeSidebar } = useContext(SidebarContext);
   const { showToast } = useToast();
 
   const selectChatRoom = (room) => {
@@ -28,16 +27,12 @@ const Sidebar = () => {
   return (
     <aside ref={sidebarRef} className="sidebar">
       <span className="toggle-sidebar center-icon" onClick={closeSidebar}>
-        {/* {isSidebarClosed ? <GoSidebarCollapse /> : <GoSidebarExpand />} */}
-        <GoSidebarExpand/>
+        <GoSidebarExpand />
       </span>
       <div className="sidebar-links">
         <div className="user">
           <div className="user_avatar">
-            <img
-              src={user.avatar}
-              alt="user avatr img"
-            />
+            <img src={user.avatar} alt="user avatr img" />
           </div>
           <p className="user-username" title={user.username}>
             {user.username}

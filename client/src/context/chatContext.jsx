@@ -1,8 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import useToast from "../hooks/useToast";
 import { getItem, setItem } from "../utils/localStorage";
 import { v4 as uuidv4 } from "uuid";
 import useChatRoomHandler from "../hooks/useChatRoomHandler";
+import { gsap } from "gsap";
 
 export const ChatContext = createContext();
 
@@ -88,6 +89,13 @@ export const ChatContextProvider = ({ children }) => {
       setItem("currentChatRoom", { roomName, roomID, messages: [] });
     }
 
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      const sidebar = document.querySelector(".sidebar");
+      gsap.to(sidebar, {
+        width: "0",
+        duration: 0.4,
+      });
+    }
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
     setIsActionInProgress(false); // Re-enabling the action if the current action is completed

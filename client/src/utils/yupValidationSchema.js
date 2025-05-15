@@ -1,10 +1,5 @@
 import * as yup from "yup";
 
-// identifier: yup
-//   .string()
-//   .trim()
-//   .required("Choose at least one source to receive reset password link"),
-
 const registerSchema = yup.object().shape({
   username: yup
     .string()
@@ -26,11 +21,6 @@ const registerSchema = yup.object().shape({
     .matches(/[0-9]/, "Must contain at least one number")
     .matches(/[@$!%*?&]/, "Must contain at least one special character")
     .min(8, "Must be at least 8 characters long"),
-  confirmPassword: yup
-    .string()
-    .trim()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Please confirm your password"),
 });
 
 const loginSchema = yup.object().shape({

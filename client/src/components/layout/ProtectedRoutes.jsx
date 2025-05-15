@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../ui/Loader";
 import { useContext } from "react";
 import { UserContext } from "../../context/userContext";
 import { setItem } from "../../utils/localStorage";
-import { ChatContext } from "../../context/chatContext";
 import useToast from "../../hooks/useToast";
 
 const ProtectedRoutes = () => {
   const { setUser } = useContext(UserContext);
-  const { setIsActionInProgress } = useContext(ChatContext);
   const [checking, setChecking] = useState(true);
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -40,11 +38,6 @@ const ProtectedRoutes = () => {
     };
     verifyAuth();
   }, [navigate]);
-
-  // useEffect(() => {
-  //   setIsActionInProgress(false); // Re-enabling the action if there is a re-render
-  //   console.log("Somehow I got rendered");
-  // }, []);
 
   if (checking) return <Loader />;
 

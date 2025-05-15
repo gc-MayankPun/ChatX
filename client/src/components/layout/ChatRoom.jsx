@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import "../../stylesheets/chat-room.css";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { IoSend } from "react-icons/io5";
 import ChatMessage from "../ui/ChatMessage";
@@ -13,10 +12,10 @@ import useToast from "../../hooks/useToast";
 
 const ChatRoom = () => {
   const { currentChatRoom, chatRooms } = useContext(ChatContext);
-  const { openSidebar, handleSidebarMenu, isSidebarClosed, isMobile } =
+  const { handleSidebarMenu, isSidebarClosed, isMobile } =
     useContext(SidebarContext);
   const { sendMessage } = useMessageHandler();
-  const { showToast, shareToast } = useToast();
+  const { shareToast } = useToast();
 
   const scrollRef = useRef(null);
 
@@ -47,9 +46,6 @@ const ChatRoom = () => {
             )}
           </span>
         </button>
-        {/* <span className="toggle-sidebar center-icon" >
-          <GoSidebarCollapse />
-        </span> */}
         <h1 className="chat-room__title">{room.roomName}</h1>
         {room.roomID !== "🌍 General" && (
           <button
@@ -57,7 +53,6 @@ const ChatRoom = () => {
             onClick={() => shareToast({ payload: { shareURL: room.roomID } })}
           >
             <span className="center-icon">
-              {/* <BsThreeDotsVertical /> */}
               <PiDotsThreeOutlineVerticalFill />
             </span>
           </button>
