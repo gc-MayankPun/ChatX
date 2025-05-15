@@ -7,8 +7,11 @@ import { useNavigate } from "react-router-dom";
 import useToast from "./useToast";
 import { useContext } from "react";
 import { ChatContext } from "../context/chatContext";
+import { UserContext } from "../context/userContext";
+import { setItem } from "../utils/localStorage";
 
-const useAuthForm = (endpoint) => {
+const useAuthForm = ({ endpoint, imageSet = "default" }) => {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const schema = getValidationSchema(endpoint);
   const {
@@ -27,15 +30,14 @@ const useAuthForm = (endpoint) => {
         formData,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
       return response.data;
     },
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
+      setUser(data.user);
+      setItem("user", data.user);
       navigate("/");
     },
     onError: (error) => {
@@ -90,7 +92,17 @@ const useAuthForm = (endpoint) => {
   };
 
   const onSubmit = async (formData) => {
-    mutation.mutate(formData);
+    const form = new FormData();
+    const { username, password } = formData;
+
+    if (imageSet !== "default") {
+      form.append("avatar", imageSet["original"].file);
+    }
+
+    form.append("username", username);
+    form.append("password", password);
+
+    mutation.mutate(form);
   };
 
   return {

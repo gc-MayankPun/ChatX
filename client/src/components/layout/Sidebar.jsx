@@ -11,7 +11,7 @@ import { UserContext } from "../../context/userContext";
 import useToast from "../../hooks/useToast";
 
 const Sidebar = () => {
-  const { handleLogout } = useAuthForm();
+  const { handleLogout } = useAuthForm({ endpoint: "/logout" });
   const { chatRooms, getClickedChat, onRoomIconClick } =
     useContext(ChatContext);
   const { user } = useContext(UserContext);
@@ -21,7 +21,9 @@ const Sidebar = () => {
   const selectChatRoom = (room) => {
     const { roomName, roomID, messages } = room;
     getClickedChat(roomName, roomID, messages);
-    closeSidebar();
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      closeSidebar();
+    }
   };
 
   return (

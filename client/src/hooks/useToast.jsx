@@ -32,7 +32,7 @@ const useToast = () => {
             setError("Your input is as empty as my fridge at 3AM 🧊🍽️");
             return;
           }
-          if (!roomIDPattern.test(inputValue)) {
+          if (!roomIDPattern.test(inputValue) && action === "Join") {
             setError("Invalid room ID.");
             return;
           }

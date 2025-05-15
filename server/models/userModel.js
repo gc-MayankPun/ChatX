@@ -7,16 +7,9 @@ const UserSchema = new Schema(
       unique: true,
       required: true,
       minLength: 3,
-      maxLength: 50,
+      maxLength: 15,
       trim: true,
-      lowercase: true
-    },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-      trim: true,
-      lowercase: true
+      lowercase: true,
     },
     password: {
       type: String,
@@ -24,6 +17,7 @@ const UserSchema = new Schema(
       minLength: 8,
       trim: true,
     },
+    avatarURL: String,
   },
   { timestamps: true }
 );

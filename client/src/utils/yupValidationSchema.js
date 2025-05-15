@@ -1,18 +1,19 @@
 import * as yup from "yup";
 
+// email: yup
+//   .string()
+//   .trim()
+//   .required("Email is required")
+//   .email("Invalid email address")
+//   .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+
 const registerSchema = yup.object().shape({
   username: yup
     .string()
     .matches(/^\S*$/, "Must not contain spaces")
     .required("Username is required")
     .min(3, "Must be at least 3 characters long")
-    .max(50, "Must not be more than 50 characters long"),
-  email: yup
-    .string()
-    .trim()
-    .required("Email is required")
-    .email("Invalid email address")
-    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+    .max(15, "Must not be more than 15 characters long"),
   password: yup
     .string()
     .required("Password is required")
@@ -24,12 +25,12 @@ const registerSchema = yup.object().shape({
 });
 
 const loginSchema = yup.object().shape({
-  email: yup
+  username: yup
     .string()
-    .trim()
-    .required("Email is required")
-    .email("Invalid email address")
-    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+    .matches(/^\S*$/, "Must not contain spaces")
+    .required("Username is required")
+    .min(3, "Must be at least 3 characters long")
+    .max(15, "Must not be more than 15 characters long"),
   password: yup.string().trim().required("Please confirm your password"),
 });
 

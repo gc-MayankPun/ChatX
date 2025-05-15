@@ -2,9 +2,9 @@ const bcrypt = require("bcrypt");
 const UserModel = require("../models/userModel");
 const ApiError = require("../utils/ApiError");
 
-const createUser = async (username, email, password) => {
+const createUser = async (username, password, avatarURL) => {
+  // Check if user exists
   try {
-    // Check if user exists
     const existingUser = await UserModel.findOne({ username });
     if (existingUser) {
       throw new ApiError(
@@ -12,17 +12,14 @@ const createUser = async (username, email, password) => {
         409
       );
     }
-
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Feature: "Add a link which is sent to their email and on clicking that link they will be asked to enter the password and after that they will be authenticated"
 
     // Create a user from UserModel
     const newUser = await UserModel.create({
       username,
-      email,
       password: hashedPassword,
+      avatarURL,
     });
 
     // If creation fails
@@ -33,27 +30,21 @@ const createUser = async (username, email, password) => {
     // Return user data
     return {
       username: newUser.username,
-      email: newUser.email,
       id: newUser._id,
+      avatar: avatarURL,
     };
   } catch (error) {
-    // if (error.code === 11000) {
-    //   const duplicateField = Object.keys(error.keyPattern)[0];
-    //   throw new ApiError(
-    //     `An account with this ${duplicateField} already exists.`,
-    //     409
-    //   );
-    // }
-
-    // Default fallback for unexpected errors
-    throw new ApiError("Something went wrong during registration.", 500);
+    throw new ApiError(
+      error.message || "Something went wrong during registration.",
+      error.statusCode || 500
+    );
   }
 };
 
-const getUser = async (email, password) => {
+const getUser = async (username, password) => {
   try {
     // Check if user exists
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await UserModel.findOne({ username });
     if (!existingUser) {
       throw new ApiError("Invalid credentials", 401);
     }
@@ -70,7 +61,7 @@ const getUser = async (email, password) => {
     // Return user data
     return {
       username: existingUser.username,
-      email: existingUser.email,
+      avatar: existingUser.avatarURL,
       id: existingUser._id,
     };
   } catch (error) {
