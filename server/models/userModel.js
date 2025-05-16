@@ -18,6 +18,12 @@ const UserSchema = new Schema(
       trim: true,
     },
     avatarURL: String,
+    generalMessages: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "GeneralChat",
+      },
+    ],
   },
   { timestamps: true }
 );

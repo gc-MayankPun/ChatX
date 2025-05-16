@@ -4,11 +4,11 @@ import useSocket from "./useSocket";
 const useChatRoomHandler = () => {
   const { socket } = useSocket();
 
-  useEffect(() => {
-    if (!socket) return;
+  // useEffect(() => {
+  //   if (!socket) return;
 
-    joinRoom("🌍 General");
-  }, [socket]);
+  //   joinRoom("🌍 General");
+  // }, [socket]);
 
   const createRoom = (roomID, roomName) => {
     if (!socket) return;

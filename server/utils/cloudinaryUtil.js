@@ -11,7 +11,11 @@ cloudinary.config({
 const uploadToCloudinary = async ({ file, publicId }) => {
   // Upload an image
   const uploadResult = await cloudinary.uploader
-    .upload(file, { public_id: publicId })
+    .upload(file, {
+      public_id: publicId,
+      overwrite: true,
+      invalidate: true,
+    })
     .catch((error) => {
       console.log(error);
     });
@@ -20,6 +24,7 @@ const uploadToCloudinary = async ({ file, publicId }) => {
   const optimizeUrl = cloudinary.url(uploadResult.public_id, {
     fetch_format: "auto",
     quality: "auto",
+    version: uploadResult.version,
   });
 
   // Transform the image: auto-crop to square aspect_ratio
@@ -28,6 +33,7 @@ const uploadToCloudinary = async ({ file, publicId }) => {
     gravity: "auto",
     width: 500,
     height: 500,
+    version: uploadResult.version,
   });
 
   return autoCropUrl;

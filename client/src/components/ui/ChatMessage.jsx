@@ -1,4 +1,4 @@
-const ChatMessage = ({ username, avatar, message, self = false }) => {
+const ChatMessage = ({ username, avatar, message, self = false, time}) => {
   return (
     <div className={`chat-message ${self ? "chat-message-self" : ""}`}>
       <div
@@ -14,7 +14,7 @@ const ChatMessage = ({ username, avatar, message, self = false }) => {
           {username}
         </p>
         <div className="chat-message__text">{message}</div>
-        <span className="chat-message__time">12:00</span>
+        <span className="chat-message__time">{time}</span>
       </div>
       <div
         className={`chat-message__avatar ${

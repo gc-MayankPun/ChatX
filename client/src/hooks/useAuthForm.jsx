@@ -50,6 +50,8 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
         });
       }
 
+      setUser(null);
+      setItem("user", null);
       showToast({ type: "error", payload: message });
     },
   });

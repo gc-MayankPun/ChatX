@@ -9,12 +9,13 @@ import { SidebarContext } from "../../context/sidebarContext";
 import { ChatContext } from "../../context/chatContext";
 import useMessageHandler from "../../hooks/useMessageHandler";
 import useToast from "../../hooks/useToast";
+import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
 
 const ChatRoom = () => {
   const { currentChatRoom, chatRooms } = useContext(ChatContext);
   const { handleSidebarMenu, isSidebarClosed, isMobile } =
     useContext(SidebarContext);
-  const { sendMessage } = useMessageHandler();
+  const { sendMessage, fetchGeneralMessages } = useMessageHandler();
   const { shareToast } = useToast();
 
   const scrollRef = useRef(null);
@@ -25,7 +26,13 @@ const ChatRoom = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [room?.messages]);
+  }, [room?.messages.length]);
+
+  useEffect(() => {
+    if (room?.roomID === "🌍 General") {
+      fetchGeneralMessages();
+    }
+  }, [room]);
 
   if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
 
@@ -66,7 +73,18 @@ const ChatRoom = () => {
               No chats yet. You're the one to kick it off! 🚀
             </p>
           ) : (
-            room.messages.map((msg, index) => {
+            insertDateDividers(room.messages).map((msg, index) => {
+              if (msg.type === "date") {
+                return (
+                  <div
+                    key={`date-${index}`}
+                    className="chat-room__date-divider"
+                  >
+                    <span>{msg.date}</span>
+                  </div>
+                );
+              }
+
               return (
                 <ChatMessage
                   key={`${msg.roomName} | ${msg.roomID} | ${index}`}
@@ -74,10 +92,12 @@ const ChatRoom = () => {
                   username={msg.username}
                   avatar={msg.avatar}
                   message={msg.message}
+                  time={formatTime(msg.time)}
                 />
               );
             })
           )}
+
           <div ref={scrollRef} />
         </div>
       </div>
