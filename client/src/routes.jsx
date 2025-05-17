@@ -6,6 +6,7 @@ import ForgotPasswordForm from "./pages/auth/ForgotPasswordForm";
 import LoginForm from "./pages/auth/LoginForm";
 import RegisterForm from "./pages/auth/RegisterForm";
 import Error from "./pages/Error";
+import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 
 const router = createBrowserRouter([
   {
@@ -42,10 +43,11 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // {
-  //   path: "/auth/password/reset",
-  //   element: <ForgotPasswordForm />,
-  // },
+  {
+    path: "/legal/:info",
+    element: <TermsAndPrivacy />,
+    errorElement: <Error />,
+  },
 ]);
 
 export default router;

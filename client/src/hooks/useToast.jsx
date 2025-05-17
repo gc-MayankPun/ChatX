@@ -24,7 +24,7 @@ const useToast = () => {
 
       const InputToast = ({ closeToast }) => {
         const [inputValue, setInputValue] = useState("");
-        const roomIDPattern = /^[^\s::]+::[^\s]+$/;
+        const roomIDPattern = /^[^:]+::[^:]+$/;
         const [error, setError] = useState("");
 
         const handleClick = (action) => {
@@ -58,10 +58,9 @@ const useToast = () => {
             />
             {error && (
               <p className="input-toast__error">
-                <span>
-                  <RiErrorWarningLine />
-                </span>{" "}
-                {error}
+                {/* <span>
+                </span>{" "} */}
+                <RiErrorWarningLine /> {error}
               </p>
             )}
             <div className="custom-toast__actions">

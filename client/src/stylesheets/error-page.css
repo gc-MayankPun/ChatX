@@ -1,0 +1,76 @@
+.error__type {
+    border-bottom: .1rem solid var(--border-color);
+    text-align: center;
+    padding: 1rem;
+    height: 5rem;
+}
+
+.error__type h1 {
+  animation: glitch 1.5s infinite;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 2px red; }
+  20% { text-shadow: -2px -2px lime; }
+  40% { text-shadow: 2px -2px blue; }
+  60% { text-shadow: -2px 2px red; }
+  100% { text-shadow: none; }
+}
+
+.error__chat-wrapper {
+    padding: 2rem;
+    height: calc(100dvh - 5rem);
+    position: relative;
+    background-image: none;
+}
+
+.error__chat-wrapper::before {
+    background-image: url("/images/robot-mascot-Photoroom.png");
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    z-index: -1;
+    display: none;
+}
+
+.error__chat-div {
+    opacity: 0;
+    will-change: opacity;
+}
+
+.error__chat {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
+.error__back-button {
+    margin-left: 2.5rem;
+    transition: .3s ease-in-out;
+    background-color: rgb(0, 58, 124);
+    color: white;
+    font-weight: 500;
+    padding: 1rem 2rem;
+}
+
+.error__back-button:hover {
+    background-color: rgb(1, 74, 156);
+}
+
+/* For Tablets */
+@media (max-width: 1024px) {
+     .error__chat-wrapper {
+        padding: 2rem 1.5rem !important;
+    }
+}
+
+/* For Mobiles */
+@media (max-width: 768px) {
+    .error__chat-wrapper {
+        padding: 1rem;
+    }
+}

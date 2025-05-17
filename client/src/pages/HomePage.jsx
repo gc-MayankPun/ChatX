@@ -1,16 +1,18 @@
+import { useEffect } from "react";
 import "../stylesheets/home-page.css";
 import Sidebar from "../components/layout/Sidebar";
 import ChatRoom from "../components/layout/ChatRoom";
-import { useContext, useEffect } from "react";
-import { ChatContext } from "../context/chatContext";
+import { useSocket } from "../context/socketContext";
+import Loader from "../components/ui/Loader";
 
 const HomePage = () => {
-  const { setIsActionInProgress } = useContext(ChatContext);
+  const { socket, isConnected } = useSocket();
 
   useEffect(() => {
     console.log("Mujhe kyu todha?");
-    setIsActionInProgress(false);
   }, []);
+
+  if (!socket || !isConnected) return <Loader />;
 
   return (
     <main className="app-wrapper">

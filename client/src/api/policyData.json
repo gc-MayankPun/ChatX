@@ -1,0 +1,43 @@
+{
+  "header": {
+    "title": "🔒 Privacy Policy",
+    "subheading": "Welcome to ChatX! ",
+    "listHead": "This chat application respects your privacy. Here's what you need to know:"
+  },
+  "content": [
+    {
+      "title": "What We Collect",
+      "body": {
+        "1": "Only your chosen username and messages posted in the General Chat are stored temporarily.",
+        "2": "No emails, passwords, or personal identifying information are collected."
+      }
+    },
+    {
+      "title": "Why We Collect It",
+      "body": "These details are necessary for the basic functionality of the application — to display usernames and chat messages."
+    },
+    {
+      "title": "How It's Stored",
+      "body": {
+        "1": "Messages and usernames may be stored in local storage or in the temporary backend database as part of the development environment.",
+        "2": "These are not shared or used for analytics, advertising, or any commercial purpose."
+      }
+    },
+    {
+      "title": "Data Security",
+      "body": "While efforts are made to protect the stored data, this is a learning project and may not implement production-grade security."
+    },
+    {
+      "title": "Third-Party Sharing",
+      "body": "No information is shared with any third parties. This application is entirely self-contained for learning purposes"
+    },
+    {
+      "title": "User Rights",
+      "body": "As this is a test project, users may clear their data by clearing browser storage or contacting the developer for manual removal."
+    }
+  ],
+  "footer": {
+    "title": "Contact",
+    "body": "If you have any questions or concerns, feel free to reach out to the developer Mayank Pun(gc_mayankpun) through the project repository or personal contact (if provided)."
+  }
+}

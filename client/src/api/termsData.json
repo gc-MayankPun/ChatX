@@ -1,0 +1,32 @@
+{
+  "header": {
+    "title": "📃 Terms of Service",
+    "subheading": "Welcome to ChatX! This project has been developed by Mayank Pun aka (gc_mayankpun) for learning and educational purposes only.",
+    "listHead": "By using this application, you agree to the following terms:"
+  },
+  "content": [
+    {
+      "title": "Educational Use Only",
+      "body": "This application is a non-commercial project created to explore and learn about web development technologies. It is not intended for public use, nor does it provide any real service or guarantee."
+    },
+    {
+      "title": "No Guarantee of Service",
+      "body": "The application may be modified or taken down at any time. There is no assurance of uptime, performance, or data preservation."
+    },
+    {
+      "title": "User Conduct",
+      "body": "Users are expected to behave respectfully. Any abusive, illegal, or inappropriate use is not allowed and may result in restricted access."
+    },
+    {
+      "title": "Data Use",
+      "body": "Only the username you provide and the messages sent in the General Chat are temporarily stored. No sensitive personal data is collected or used."
+    },
+    {
+      "title": "Liability",
+      "body": "The developer is not liable for any damages or losses resulting from the use of this application."
+    }
+  ],
+  "footer": {
+    "body": "If you do not agree with these terms, please discontinue using the application."
+  }
+}

@@ -1,8 +1,12 @@
 import { useEffect, useContext, useCallback } from "react";
-import useSocket from "./useSocket";
+// import useSocket from "./useSocket";
 import { ChatContext } from "../context/chatContext";
+import { setItem } from "../utils/localStorage";
 import { UserContext } from "../context/userContext";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useSocket } from "../context/socketContext";
+// import { formatTime } from "../utils/formatTime";
 
 const useMessageHandler = () => {
   const { user } = useContext(UserContext);
@@ -26,7 +30,9 @@ const useMessageHandler = () => {
     [setChatRooms]
   );
 
-  const sendGeneralMessage = async (messageContent) => {
+  // FIX: Messages are not being sent or received properly
+
+  const sendGeneralMessage = async (currentChatRoom, messageContent) => {
     const response = await axios.post(
       `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/send`,
       { message: messageContent },
@@ -35,17 +41,34 @@ const useMessageHandler = () => {
       }
     );
 
-    // Handle if a message is failed to send then show it to the user
+    const { message, sender, createdAt, updatedAt } =
+      response.data.generalChat.newMessage;
+
+    const newMessage = {
+      roomID: currentChatRoom.roomID,
+      message,
+      username: sender.username,
+      avatar: sender.avatarURL,
+      self: true,
+      time: createdAt,
+    };
+
+    // console.log(newMessage);
+    socket.emit("send_message", newMessage);
+
+    // fetchGeneralMessages()
+    updateChatRoomsWithMessage(currentChatRoom.roomID, newMessage);
   };
 
   const sendMessage = useCallback(
-    (event, currentChatRoom) => {
+    async (event, currentChatRoom) => {
       event.preventDefault();
       const messageContent = event.target.chatInput.value.trim();
       if (!socket || messageContent === "") return;
 
       if (currentChatRoom.roomID === "🌍 General") {
-        sendGeneralMessage(messageContent);
+        await sendGeneralMessage(currentChatRoom, messageContent);
+        // await fetchGeneralMessages()
         event.target.chatInput.value = "";
         return;
       }
@@ -60,6 +83,7 @@ const useMessageHandler = () => {
         time: timestamp,
       };
 
+      socket.emit("send_message", newMessage);
       updateChatRoomsWithMessage(currentChatRoom.roomID, newMessage);
 
       event.target.chatInput.value = "";
@@ -67,11 +91,13 @@ const useMessageHandler = () => {
     [socket, user.username, updateChatRoomsWithMessage]
   );
 
-  const fetchGeneralMessages = async () => {
+  const fetchGeneralMessages = useCallback(async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
       { withCredentials: true }
     );
+
+    console.log(response);
 
     const messages = response.data.messages.map((msg) => ({
       roomID: "🌍 General",
@@ -89,20 +115,25 @@ const useMessageHandler = () => {
         messages,
       },
     }));
-  };
+  });
 
   useEffect(() => {
     if (!socket) return;
 
     const handleReceiveMessage = (data) => {
+      console.log("Received message data:", data);
       const newMessage = {
         message: data.message,
         avatar: data.avatar,
         username: data.username,
-        self: false,
+        self: data.id === user.id,
+        time: data.time,
       };
+
       updateChatRoomsWithMessage(data.roomID, newMessage);
     };
+
+    console.log("message received");
 
     socket.on("receive_message", handleReceiveMessage);
     return () => {

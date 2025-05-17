@@ -7,6 +7,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { UserContextProvider } from "./context/userContext";
 import { SidebarContextProvider } from "./context/sidebarContext";
 import { ChatContextProvider } from "./context/chatContext";
+import { SocketProvider } from "./context/socketContext";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -21,27 +22,29 @@ const App = () => {
     >
       <QueryClientProvider client={queryClient}>
         <UserContextProvider>
-          <ChatContextProvider>
-            <SidebarContextProvider>
-              <CookiesProvider>
-                <RouterProvider router={router} />
-                <ToastContainer
-                  position="top-right"
-                  autoClose={1000}
-                  hideProgressBar={false}
-                  newestOnTop
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="dark"
-                  limit={1}
-                  transition={Bounce}
-                />
-              </CookiesProvider>
-            </SidebarContextProvider>
-          </ChatContextProvider>
+          <SocketProvider>
+            <ChatContextProvider>
+              <SidebarContextProvider>
+                <CookiesProvider>
+                  <RouterProvider router={router} />
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={1000}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                    limit={1}
+                    transition={Bounce}
+                  />
+                </CookiesProvider>
+              </SidebarContextProvider>
+            </ChatContextProvider>
+          </SocketProvider>
         </UserContextProvider>
       </QueryClientProvider>
     </Auth0Provider>

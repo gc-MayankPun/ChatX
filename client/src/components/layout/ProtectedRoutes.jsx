@@ -3,9 +3,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../ui/Loader";
 import useToast from "../../hooks/useToast";
+import { useSocket } from "../../context/socketContext";
+// import useSocket from "../../hooks/useSocket";
 
 const ProtectedRoutes = () => {
   const [checking, setChecking] = useState(true);
+  const { isConnected } = useSocket();
   const { showToast } = useToast();
   const navigate = useNavigate();
 

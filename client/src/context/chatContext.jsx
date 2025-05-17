@@ -8,7 +8,6 @@ import { gsap } from "gsap";
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children }) => {
-  const [isActionInProgress, setIsActionInProgress] = useState(false);
   const { createRoom, joinRoom } = useChatRoomHandler();
   const [currentChatRoom, setCurrentChatRoom] = useState(
     getItem("currentChatRoom") || null
@@ -26,21 +25,13 @@ export const ChatContextProvider = ({ children }) => {
 
   // Handle selecting a room
   const getClickedChat = (roomName, roomID, messages) => {
-    if (isActionInProgress) return; // Prevent action if one is in progress
-    setIsActionInProgress(true); // Disable further actions
-
     // Simulating an action (like selecting a room)
     const updatedRoom = { roomName, roomID, messages };
     setCurrentChatRoom(updatedRoom);
     setItem("currentChatRoom", updatedRoom);
-
-    setIsActionInProgress(false); // Re-enabling the action if the current action is completed
   };
 
   const onRoomIconClick = async () => {
-    if (isActionInProgress) return; // Prevent action if one is in progress
-    setIsActionInProgress(true); // Disable further actions
-
     const roomAction = await inputDecisionToast({
       payload: {
         title: "Enter room name",
@@ -52,8 +43,6 @@ export const ChatContextProvider = ({ children }) => {
       config: { position: "top-center" },
     });
     const { action, value } = roomAction;
-
-    setIsActionInProgress(false); // Re-enabling the action if the current action is completed
     if (!action || !value) return;
 
     if (chatRooms[value]) {
@@ -98,7 +87,6 @@ export const ChatContextProvider = ({ children }) => {
     }
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
-    setIsActionInProgress(false); // Re-enabling the action if the current action is completed
   };
 
   return (
@@ -110,8 +98,6 @@ export const ChatContextProvider = ({ children }) => {
         setChatRooms,
         getClickedChat,
         onRoomIconClick,
-        isActionInProgress,
-        setIsActionInProgress,
       }}
     >
       {children}

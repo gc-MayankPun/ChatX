@@ -30,9 +30,9 @@ const ChatRoom = () => {
 
   useEffect(() => {
     if (room?.roomID === "🌍 General") {
-      fetchGeneralMessages();
+      // fetchGeneralMessages();
     }
-  }, [room]);
+  }, [room?.messages.length]);
 
   if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
 

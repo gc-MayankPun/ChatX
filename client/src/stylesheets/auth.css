@@ -275,7 +275,7 @@
     margin-top: 1.8rem;
 }
 
-.terms-container {
+.legal-info-container {
     margin-top: 2rem;
     text-align: center;
     font-size: .8rem;
@@ -284,14 +284,14 @@
     color: var(--secondary-text-color);
 }
 
-.terms-container p a,
+.legal-info-container p a,
 .form-type a {
     color: var(--secondary-text-color);
     text-decoration: underline;
     transition: .3s ease;
 }
 
-.terms-container p a:hover,
+.legal-info-container p a:hover,
 .form-recovery span a:hover,
 .form-type a:hover {
     color: white;

@@ -1,0 +1,98 @@
+.legal__wrapper {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.legal__wrapper h1 {
+    margin-bottom: .5rem;
+}
+
+.legal__overlay {
+    width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+    max-height: 90dvh;
+}
+
+.legal__subhead {
+    margin-bottom: 1.5rem;
+}
+
+.legal__list-overlay {
+    height: 70dvh;
+    overflow: hidden auto;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    scrollbar-color: #ccc transparent;
+}
+
+.legal-list__head {
+    margin-bottom: .5rem;
+}
+
+.legal__list {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.legal__wrapper ol {
+    margin-top: .5rem;
+    margin-left: 1rem;
+}
+
+.legal__wrapper li strong {
+    display: block;
+}
+
+.legal__footer {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-top: 1.5rem;
+}
+
+.legal__go-back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.legal__go-back button {
+    transition: .3s ease-in-out;
+    background-color: rgb(55, 162, 233);
+    font-weight: 500;
+    width: 10rem;
+    margin-top: .5rem;
+}
+
+.legal__go-back button:hover {
+    background-color: rgb(55, 97, 233);
+}
+
+/* For Tablets */
+@media (max-width: 1024px) {
+    .legal__overlay {
+        padding: 4rem;
+    }
+
+    .legal__list-overlay {
+        height: 50dvh;
+    }
+}
+
+/* For Mobiles */
+@media (max-width: 768px) {
+    .legal__overlay {
+        width: 100%;
+    }
+
+    .legal__wrapper p,
+    .legal__wrapper li {
+        font-size: .8rem;
+    }
+}

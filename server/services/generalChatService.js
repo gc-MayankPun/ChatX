@@ -14,7 +14,9 @@ const createMessage = async (message, senderID) => {
       throw new ApiError("Failed to send message.", 500);
     }
 
-    const createdMessage = await GeneralChatModel.findById(newMessage._id);
+    const createdMessage = await GeneralChatModel.findById(
+      newMessage._id
+    ).populate("sender", "username avatarURL _id");
 
     return {
       newMessage: createdMessage,

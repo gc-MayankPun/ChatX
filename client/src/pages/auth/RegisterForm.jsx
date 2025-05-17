@@ -4,6 +4,7 @@ import useAuthForm from "../../hooks/useAuthForm";
 import { useRef, useState } from "react";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { processImageFile } from "../../utils/optimseImageConverter";
+import LegalInfo from "../../components/ui/LegalInfo";
 
 const RegisterForm = () => {
   const [preview, setPreview] = useState(
@@ -100,13 +101,7 @@ const RegisterForm = () => {
           </div>
         </form>
       </div>
-      <div className="terms-container">
-        <p>
-          By clicking Sign Up, you agree to our{" "}
-          <NavLink>Terms of Service</NavLink> and{" "}
-          <NavLink>Privacy Policy</NavLink>.
-        </p>
-      </div>
+      <LegalInfo />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import useAuthForm from "../../hooks/useAuthForm";
+import LegalInfo from "../../components/ui/LegalInfo";
 
 const LoginForm = () => {
   const { register, handleSubmit, onSubmit, errors, isPending } = useAuthForm({
@@ -45,13 +46,7 @@ const LoginForm = () => {
           </div>
         </form>
       </div>
-      <div className="terms-container">
-        <p>
-          By clicking Login, you agree to our{" "}
-          <NavLink>Terms of Service</NavLink> and{" "}
-          <NavLink>Privacy Policy</NavLink>.
-        </p>
-      </div>
+      <LegalInfo />
     </>
   );
 };

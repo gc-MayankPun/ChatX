@@ -6,7 +6,6 @@ import { getValidationSchema } from "../utils/yupValidationSchema";
 import { useNavigate } from "react-router-dom";
 import useToast from "./useToast";
 import { useContext } from "react";
-import { ChatContext } from "../context/chatContext";
 import { UserContext } from "../context/userContext";
 import { setItem } from "../utils/localStorage";
 
@@ -20,7 +19,6 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
     setError,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-  const { isActionInProgress, setIsActionInProgress } = useContext(ChatContext);
   const { showToast, confirmToast } = useToast();
 
   const mutation = useMutation({
@@ -57,14 +55,10 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
   });
 
   const handleLogout = async () => {
-    if (isActionInProgress) return; // Prevent action if one is in progress
-    setIsActionInProgress(true); // Disable further actions
-
     try {
       const logoutConfirm = await confirmToast({
         payload: "You will be logout!",
       });
-      setIsActionInProgress(false); // Re-enabling the action if the current action is completed
       if (!logoutConfirm) return;
 
       const response = await fetch(
@@ -88,7 +82,6 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
         showToast({ type: "error", payload: "Logout failed" });
       }
     } catch (error) {
-      console.log(error);
       showToast({ type: "error", payload: "An error occurred during logout" });
     }
   };
