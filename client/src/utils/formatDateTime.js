@@ -36,6 +36,7 @@ export const insertDateDividers = (messages) => {
       result.push({
         type: "date",
         date: dateLabel,
+        id: `divider-${dateLabel}`
       });
 
       lastDate = messageDate;

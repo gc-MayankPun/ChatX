@@ -1,8 +1,8 @@
 import { useNavigate, useRouteError } from "react-router-dom";
 import ChatMessage from "../components/ui/ChatMessage";
 import "../stylesheets/error-page.css";
-import { gsap } from "gsap";
 import { useEffect } from "react";
+import { gsap } from "gsap";
 
 const glitchedTime = [
   "12:0_",

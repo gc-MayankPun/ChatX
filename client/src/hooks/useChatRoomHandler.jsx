@@ -1,39 +1,34 @@
-import React, { useEffect } from "react";
+import { useCallback } from "react";
 import { useSocket } from "../context/socketContext";
-import { getItem } from "../utils/localStorage";
-// import useSocket from "./useSocket";
 
 const useChatRoomHandler = () => {
   const { socket } = useSocket();
-  const chatRooms = getItem("chatRooms")
 
-  // useEffect(() => {
-  //   if (!socket) return;
+  const emitCreateRoom = useCallback(
+    (roomID, roomName) => {
+      if (!socket) return;
+      socket.emit("createRoom", { roomID, roomName });
+    },
+    [socket]
+  );
 
-  //   joinRoom("🌍 General");
-  // }, [socket]);
+  const emitJoinRoom = useCallback(
+    (roomID) => {
+      if (!socket) return;
+      socket.emit("joinRoom", roomID);
+    },
+    [socket]
+  );
 
-  useEffect(() => {
-    if (chatRooms) {
-      Object.keys(chatRooms).map((roomID) => {
-        joinRoom(roomID);
-      });
-    }
-  }, [chatRooms]);
+  const emitLeaveRoom = useCallback(
+    (roomID) => {
+      if (!socket) return;
+      socket.emit("leaveRoom", roomID);
+    },
+    [socket]
+  );
 
-  const createRoom = (roomID, roomName) => {
-    if (!socket) return;
-
-    socket.emit("createRoom", { roomID, roomName });
-  };
-
-  const joinRoom = (roomID) => {
-    if (!socket) return;
-
-    socket.emit("joinRoom", roomID);
-  };
-
-  return { createRoom, joinRoom };
+  return { emitCreateRoom, emitJoinRoom, emitLeaveRoom };
 };
 
 export default useChatRoomHandler;

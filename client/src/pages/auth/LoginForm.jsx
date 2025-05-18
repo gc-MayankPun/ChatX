@@ -1,7 +1,7 @@
-import { NavLink } from "react-router-dom";
-import Input from "../../components/ui/Input";
-import useAuthForm from "../../hooks/useAuthForm";
 import LegalInfo from "../../components/ui/LegalInfo";
+import useAuthForm from "../../hooks/useAuthForm";
+import Input from "../../components/ui/Input";
+import { NavLink } from "react-router-dom";
 
 const LoginForm = () => {
   const { register, handleSubmit, onSubmit, errors, isPending } = useAuthForm({

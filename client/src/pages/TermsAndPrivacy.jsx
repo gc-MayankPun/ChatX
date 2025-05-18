@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import "../stylesheets/legal-info.css";
 import legalData from "../api/termsData.json";
 import policyData from "../api/policyData.json";
+import "../stylesheets/legal-info.css";
 
 const legalAndPrivacy = () => {
   const { info } = useParams();

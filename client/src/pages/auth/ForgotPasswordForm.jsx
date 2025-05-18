@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import useToast from "../../hooks/useToast";
+import { NavLink } from "react-router-dom";
 
 const ForgotPasswordForm = () => {
   const {showToast} = useToast();

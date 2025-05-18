@@ -1,0 +1,14 @@
+.app-wrapper {
+    height: 100dvh;
+    width: 100%;
+    position: relative;
+}
+
+.app-wrapper::before {
+    background-color: #111;
+    position: absolute;
+    opacity: 0;
+    content: "";
+    inset: 0;
+    z-index: -1; 
+}

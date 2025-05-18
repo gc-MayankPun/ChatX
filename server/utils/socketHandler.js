@@ -21,9 +21,20 @@ const socketHandler = (io) => {
       );
     });
 
+    // Leave Room
+    socket.on("leaveRoom", (roomID) => {
+      socket.leave(roomID);
+      console.log(`User ${socket.user.username} left ${roomID} room`);
+      socket
+        .to(roomID)
+        .emit("user-left", { roomID, username: socket.user.username });
+    });
+
     // Room Chat
     socket.on("send_message", (data) => {
-      console.log(`Data received: ${data.message} by ${data.username} on ${data.roomID}`);
+      console.log(
+        `Data received: ${data.message} by ${data.username} on ${data.roomID}`
+      );
       socket.to(data.roomID).emit("receive_message", data);
     });
   });

@@ -1,10 +1,10 @@
-import { createContext, useState } from "react";
-import { getItem } from "../utils/localStorage";
+import { createContext, useContext, useState } from "react";
+import { getItem } from "../utils/storage";
 
-export const UserContext = createContext();
+const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
-const [user, setUser] = useState(getItem("user") || null);
+  const [user, setUser] = useState(getItem("user") || null);
 
   return (
     <UserContext.Provider
@@ -17,3 +17,5 @@ const [user, setUser] = useState(getItem("user") || null);
     </UserContext.Provider>
   );
 };
+
+export const useUser = () => useContext(UserContext);

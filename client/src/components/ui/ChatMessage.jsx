@@ -1,4 +1,6 @@
-const ChatMessage = ({ username, avatar, message, self = false, time}) => {
+import { memo } from "react";
+
+const ChatMessage = ({ username, avatar, message, self = false, time }) => {
   return (
     <div className={`chat-message ${self ? "chat-message-self" : ""}`}>
       <div
@@ -23,7 +25,6 @@ const ChatMessage = ({ username, avatar, message, self = false, time}) => {
       >
         <img
           className="chat-message__avatar-img"
-          // src="https://imgs.search.brave.com/Urjknjp4X5z14_Ssyf_rKZwjwH4aecAYXQmq1gNKgEM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvcmV0/cm8tZ2lybC1hbmlt/ZS1wZnAtNzRrNDQ4/ZXl5NmFlbmFhdy5q/cGc"
           src={avatar}
           alt={`${username} avatar`}
         />
@@ -32,4 +33,4 @@ const ChatMessage = ({ username, avatar, message, self = false, time}) => {
   );
 };
 
-export default ChatMessage;
+export default memo(ChatMessage);

@@ -1,10 +1,27 @@
 import { useState } from "react";
-import "../stylesheets/custom-toast.css";
-import { toast } from "react-toastify";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { CiCircleAlert } from "react-icons/ci";
+import "../stylesheets/custom-toast.css";
+import { toast } from "react-toastify";
+import { gsap } from "gsap";
+import CSSRulePlugin from "gsap/CSSRulePlugin";
+import ShareComponent from "../components/ui/ShareComponent";
+
+gsap.registerPlugin(CSSRulePlugin);
 
 const useToast = () => {
+  const toastAnimation = (isToastCalled) => {
+    const rule = CSSRulePlugin.getRule(".app-wrapper::before");
+    gsap.to(rule, {
+      cssRule: {
+        opacity: isToastCalled ? 0.4 : 0,
+        zIndex: isToastCalled ? 102 : -1,
+      },
+      ease: "power3.out",
+      duration: 0.3,
+    });
+  };
+
   const showToast = ({ type, payload, messages, config = {} }) => {
     if (type === "promise" && payload instanceof Promise) {
       toast[type](payload, messages, config);
@@ -38,7 +55,8 @@ const useToast = () => {
           }
           resolved = true;
           closeToast();
-          resolve({ action, value: inputValue });
+          toastAnimation(false);
+          resolve({ action, inputValue });
         };
 
         return (
@@ -90,11 +108,14 @@ const useToast = () => {
         onClose: () => {
           if (!resolved) {
             resolved = true;
+            toastAnimation(false);
             resolve({ action: null, value: null });
           }
         },
         ...config,
       });
+
+      toastAnimation(true);
     });
   };
 
@@ -112,6 +133,7 @@ const useToast = () => {
               onClick={() => {
                 resolve(true);
                 closeToast();
+                toastAnimation(false);
               }}
               className="custom-toast__button confirm-toast__button--ok"
             >
@@ -121,6 +143,7 @@ const useToast = () => {
               onClick={() => {
                 resolve(false);
                 closeToast();
+                toastAnimation(false);
               }}
               className="custom-toast__button confirm-toast__button--cancel"
             >
@@ -136,76 +159,29 @@ const useToast = () => {
         closeOnClick: false,
         ...config,
       });
+
+      toastAnimation(true);
     });
   };
 
   const shareToast = ({ payload, config = {} }) => {
     const { shareURL } = payload;
 
-    const ShareComponent = () => {
-      const [copied, setCopied] = useState(false);
-
-      const handleShare = async () => {
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: "Join my room!",
-              text: `Here's the room ID: ${shareURL}`,
-              // url: shareURL,
-            });
-            showToast({ type: "success", payload: "Shared successfully" });
-          } catch (error) {
-            showToast({ type: "error", payload: "Failed to share" });
-          }
-        } else {
-          showToast({
-            type: "info",
-            payload: "Sharing is not supported on this device.",
-          });
-        }
-      };
-
-      const handleCopy = async () => {
-        try {
-          await navigator.clipboard.writeText(shareURL);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2000);
-          showToast({
-            type: "success",
-            payload: "Room ID copied to clipboard!",
-          });
-        } catch (error) {
-          showToast({ type: "error", payload: "Failed to copy room ID." });
-        }
-      };
-
-      return (
-        <div className="share-toast">
-          <div className="share-toast__buttons-container">
-            <button
-              onClick={handleShare}
-              className="share-toast__buttons share-toast__share"
-            >
-              <span className="share-toast__span center-icon">📤</span> Share
-            </button>
-            <button
-              onClick={handleCopy}
-              className="share-toast__buttons share-toast__copy"
-            >
-              <span className="share-toast__span center-icon">📋</span> Copy
-            </button>
-          </div>
-          {copied && <span className="share-toast__copied">Copied!</span>}
-        </div>
-      );
+    const toastContent = ({ closeToast }) => {
+      return <ShareComponent shareURL={shareURL} closeToast={closeToast} />;
     };
 
-    toast(ShareComponent, {
+    toast(toastContent, {
       autoClose: false,
       closeButton: true,
       closeOnClick: false,
+      onClose: () => {
+        toastAnimation(false);
+      },
       ...config,
     });
+
+    toastAnimation(true);
   };
 
   return { showToast, inputDecisionToast, confirmToast, shareToast };

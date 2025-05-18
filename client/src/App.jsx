@@ -1,13 +1,14 @@
-import { RouterProvider } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
-import router from "./routes";
-import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Bounce, ToastContainer } from "react-toastify";
-import { UserContextProvider } from "./context/userContext";
 import { SidebarContextProvider } from "./context/sidebarContext";
-import { ChatContextProvider } from "./context/chatContext";
+import { RoomContextProvider } from "./context/chatRoomContext";
+import { UserContextProvider } from "./context/userContext";
 import { SocketProvider } from "./context/socketContext";
+import { Bounce, ToastContainer } from "react-toastify";
+import AppWrapper from "./components/layout/AppWrapper";
+import { Auth0Provider } from "@auth0/auth0-react";
+import { RouterProvider } from "react-router-dom";
+import { CookiesProvider } from "react-cookie";
+import router from "./routes";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -23,10 +24,12 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <UserContextProvider>
           <SocketProvider>
-            <ChatContextProvider>
+            <RoomContextProvider>
               <SidebarContextProvider>
                 <CookiesProvider>
-                  <RouterProvider router={router} />
+                  <AppWrapper>
+                    <RouterProvider router={router} />
+                  </AppWrapper>
                   <ToastContainer
                     position="top-right"
                     autoClose={1000}
@@ -38,12 +41,12 @@ const App = () => {
                     draggable
                     pauseOnHover
                     theme="dark"
-                    limit={1}
+                    // limit={1}
                     transition={Bounce}
                   />
                 </CookiesProvider>
               </SidebarContextProvider>
-            </ChatContextProvider>
+            </RoomContextProvider>
           </SocketProvider>
         </UserContextProvider>
       </QueryClientProvider>

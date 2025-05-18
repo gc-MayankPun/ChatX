@@ -1,5 +1,5 @@
-import { FaGoogle } from "react-icons/fa";
 import { TbBrandGithubFilled } from "react-icons/tb";
+import { FaGoogle } from "react-icons/fa";
 
 const SocialAuthButtons = ({
   onGithubClick,

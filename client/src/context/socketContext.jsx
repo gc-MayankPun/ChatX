@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-// import { ChatContext } from "./chatContext";
 
 const SocketContext = createContext(null);
 
@@ -12,7 +11,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     const socketInstance = io(import.meta.env.VITE_SOCKET_SERVER_BASE_URL, {
       withCredentials: true,
-      transports: ["websocket"], // Force WebSocket
+      transports: ["websocket"],
       autoConnect: true,
     });
 
@@ -29,9 +28,7 @@ export const SocketProvider = ({ children }) => {
       console.log("⚠️ Socket disconnected");
     });
 
-    return () => {
-      socketInstance.disconnect();
-    };
+    return () => socketInstance.disconnect();
   }, []);
 
   return (

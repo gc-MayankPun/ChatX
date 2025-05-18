@@ -2,7 +2,7 @@
 
 .Toastify__toast {
     /* background-color: #272727; */
-    width: 30rem;
+    width: 25rem;
 }
 
 .custom-toast__actions {
@@ -117,42 +117,59 @@
     gap: 1rem
 }
 
-.share-toast__buttons-container {
+.share-toast__action {
+    /* border: .1rem solid red; */
+    /* width: 80%; */
+    /* width: 70%; */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.share-toast__row {
     /* border: .1rem solid blue; */
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 1rem
+    gap: 1rem;
 }
 
-.share-toast__share {
+.share-toast__button {
+    transition: .3s ease-in-out;
+    will-change: scale;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem;
+    font-weight: 500;
+    width: 8rem;
+}
+
+.share-toast__button:hover {
+    transform: scale(1.1);
+}
+
+.share-toast__action .share {
     /* text-blue-600 hover:text-blue-800  */
     background-color: #2563eb;
     text-wrap: nowrap;
     color: white;
 }
 
-.share-toast__copy {
+.share-toast__action .copy {
     /* text-green-600 hover:text-green-800  */
     background-color: #22c55e;
 }
 
-.share-toast__buttons {
-    transition: .3s ease-in-out;
-    will-change: scale;
-    font-weight: 600;
-    font-size: .8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: .3rem
+.share-toast__action .leave {
+    background-color: red;
+    width: 100%;
+    color: white;
 }
 
-.share-toast__buttons:hover {
-    transform: scale(1.1);
-}
-
-.share-toast__span {
+.share-toast__icon {
     /* border: .1rem solid red; */
     font-size: 1.2rem;
 }

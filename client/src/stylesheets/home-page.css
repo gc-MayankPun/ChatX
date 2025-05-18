@@ -1,9 +1,8 @@
-.app-wrapper {
-    /* height: 100%; */
+.home {
     height: 100dvh;
     width: 100%;
     display: flex;
     position: relative;
-    /* border: .1rem solid green; */
     overflow: hidden;
+    will-change: opacity;
 }

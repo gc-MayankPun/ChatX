@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Loader from "../ui/Loader";
 import useToast from "../../hooks/useToast";
-import { useSocket } from "../../context/socketContext";
-// import useSocket from "../../hooks/useSocket";
+import Loader from "../ui/Loader";
+import axios from "axios";
 
 const ProtectedRoutes = () => {
   const [checking, setChecking] = useState(true);
-  const { isConnected } = useSocket();
   const { showToast } = useToast();
   const navigate = useNavigate();
 

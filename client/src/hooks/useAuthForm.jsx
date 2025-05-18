@@ -1,17 +1,14 @@
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { getValidationSchema } from "../utils/yupValidationSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { useUser } from "../context/userContext";
+import { setItem } from "../utils/storage";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import useToast from "./useToast";
-import { useContext } from "react";
-import { UserContext } from "../context/userContext";
-import { setItem } from "../utils/localStorage";
+import axios from "axios";
 
 const useAuthForm = ({ endpoint, imageSet = "default" }) => {
-  const { setUser } = useContext(UserContext);
-  const navigate = useNavigate();
   const schema = getValidationSchema(endpoint);
   const {
     register,
@@ -20,6 +17,8 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const { showToast, confirmToast } = useToast();
+  const { setUser } = useUser();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: async (formData) => {

@@ -1,12 +1,12 @@
-import { createContext, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { gsap } from "gsap";
 
-export const SidebarContext = createContext();
+const SidebarContext = createContext();
 
 export const SidebarContextProvider = ({ children }) => {
-  const sidebarRef = useRef(null);
-  const [isSidebarClosed, setIsSidebarClosed] = useState(false);
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+  const [isSidebarClosed, setIsSidebarClosed] = useState(false);
+  const sidebarRef = useRef(null);
 
   const handleSidebarMenu = () => {
     if (!sidebarRef?.current) return;
@@ -58,3 +58,5 @@ export const SidebarContextProvider = ({ children }) => {
     </SidebarContext.Provider>
   );
 };
+
+export const useSidebar = () => useContext(SidebarContext);

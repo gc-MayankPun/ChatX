@@ -1,10 +1,10 @@
-import { NavLink } from "react-router-dom";
-import Input from "../../components/ui/Input";
-import useAuthForm from "../../hooks/useAuthForm";
 import { useRef, useState } from "react";
-import { RiErrorWarningLine } from "react-icons/ri";
 import { processImageFile } from "../../utils/optimseImageConverter";
 import LegalInfo from "../../components/ui/LegalInfo";
+import { RiErrorWarningLine } from "react-icons/ri";
+import useAuthForm from "../../hooks/useAuthForm";
+import Input from "../../components/ui/Input";
+import { NavLink } from "react-router-dom";
 
 const RegisterForm = () => {
   const [preview, setPreview] = useState(

@@ -1,26 +1,26 @@
-import { useContext } from "react";
-import "../../stylesheets/sidebar.css";
+import { useChatRoom } from "../../context/chatRoomContext";
+import { useSidebar } from "../../context/sidebarContext";
+import { useUser } from "../../context/userContext";
+import useAuthForm from "../../hooks/useAuthForm";
 import { GoSidebarExpand } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
-import { ImExit } from "react-icons/im";
-import { FaPlus } from "react-icons/fa6";
-import useAuthForm from "../../hooks/useAuthForm";
-import { SidebarContext } from "../../context/sidebarContext";
-import { ChatContext } from "../../context/chatContext";
-import { UserContext } from "../../context/userContext";
 import useToast from "../../hooks/useToast";
+import { FaPlus } from "react-icons/fa6";
+import { ImExit } from "react-icons/im";
+import "../../stylesheets/sidebar.css";
+import { memo } from "react";
 
 const Sidebar = () => {
+  console.log("Sidebar")
   const { handleLogout } = useAuthForm({ endpoint: "/logout" });
-  const { chatRooms, getClickedChat, onRoomIconClick } =
-    useContext(ChatContext);
-  const { user } = useContext(UserContext);
-  const { sidebarRef, closeSidebar } = useContext(SidebarContext);
+  const { chatRooms, selectRoom, joinOrCreateRoom } = useChatRoom();
+  const { sidebarRef, closeSidebar } = useSidebar();
   const { showToast } = useToast();
+  const { user } = useUser();
 
   const selectChatRoom = (room) => {
     const { roomName, roomID, messages } = room;
-    getClickedChat(roomName, roomID, messages);
+    selectRoom(roomName, roomID, messages);
     if (typeof window !== "undefined" && window.innerWidth <= 768) {
       closeSidebar();
     }
@@ -52,7 +52,7 @@ const Sidebar = () => {
             <p className="sidebar-nav__title">My chatroom</p>
             <button
               className="sidebar-nav__add-icon center-icon"
-              onClick={onRoomIconClick}
+              onClick={joinOrCreateRoom}
             >
               <FaPlus />
             </button>
@@ -61,9 +61,9 @@ const Sidebar = () => {
             {Object.keys(chatRooms).map((key, index) => {
               if (key === "🌍 General") return;
               const room = chatRooms[key];
+              console.log(room.roomName)
               return (
                 <li
-                  test={`${room.roomName} | ${room.roomID} | ${index}`}
                   key={`${room.roomName} | ${room.roomID}`}
                   onClick={() => selectChatRoom(room)}
                   className="sidebar-nav__item"
@@ -95,4 +95,6 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+// export default Sidebar;
+export default memo(Sidebar);
+

@@ -1,38 +1,40 @@
-import { useContext, useEffect, useRef } from "react";
-import "../../stylesheets/chat-room.css";
+import { memo, useEffect, useMemo, useRef } from "react";
+import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
-import { IoSend } from "react-icons/io5";
-import ChatMessage from "../ui/ChatMessage";
-import ChatRoomSkeleton from "./ChatRoomSkeleton";
-import { SidebarContext } from "../../context/sidebarContext";
-import { ChatContext } from "../../context/chatContext";
 import useMessageHandler from "../../hooks/useMessageHandler";
+import { useChatRoom } from "../../context/chatRoomContext";
+import { useSidebar } from "../../context/sidebarContext";
+import ChatRoomSkeleton from "./ChatRoomSkeleton";
+import ChatMessage from "../ui/ChatMessage";
 import useToast from "../../hooks/useToast";
-import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
+import DateDivider from "../ui/DateDivider";
+import { IoSend } from "react-icons/io5";
+import "../../stylesheets/chat-room.css";
 
 const ChatRoom = () => {
-  const { currentChatRoom, chatRooms } = useContext(ChatContext);
-  const { handleSidebarMenu, isSidebarClosed, isMobile } =
-    useContext(SidebarContext);
+  console.log("Chat Room");
+  const { handleSidebarMenu, isSidebarClosed, isMobile } = useSidebar();
   const { sendMessage, fetchGeneralMessages } = useMessageHandler();
+  const { currentChatRoom, chatRooms } = useChatRoom();
   const { shareToast } = useToast();
 
   const scrollRef = useRef(null);
 
   const room = currentChatRoom ? chatRooms[currentChatRoom.roomID] : null;
+  const processedMessages = useMemo(() => {
+    return room ? insertDateDividers(room?.messages) : [];
+  }, [room?.messages]);
 
   useEffect(() => {
+    // if (room?.roomID === "🌍 General") {
+    //   fetchGeneralMessages();
+    // }
+
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [room?.messages.length]);
-
-  useEffect(() => {
-    if (room?.roomID === "🌍 General") {
-      // fetchGeneralMessages();
-    }
-  }, [room?.messages.length]);
+  }, [room?.messages.length, room?.roomID, fetchGeneralMessages]);
 
   if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
 
@@ -68,26 +70,19 @@ const ChatRoom = () => {
 
       <div className="chat-room__messages-wrapper">
         <div className="chat-room__messages">
-          {room.messages.length === 0 ? (
+          {processedMessages.length === 0 ? (
             <p className="chat-room__skeleton-p">
               No chats yet. You're the one to kick it off! 🚀
             </p>
           ) : (
-            insertDateDividers(room.messages).map((msg, index) => {
+            processedMessages.map((msg) => {
               if (msg.type === "date") {
-                return (
-                  <div
-                    key={`date-${index}`}
-                    className="chat-room__date-divider"
-                  >
-                    <span>{msg.date}</span>
-                  </div>
-                );
+                return <DateDivider key={msg.id} date={msg.date} />;
               }
-
               return (
                 <ChatMessage
-                  key={`${msg.roomName} | ${msg.roomID} | ${index}`}
+                  messageID={msg.messageID}
+                  key={msg.messageID}
                   self={msg.self}
                   username={msg.username}
                   avatar={msg.avatar}
@@ -123,4 +118,4 @@ const ChatRoom = () => {
   );
 };
 
-export default ChatRoom;
+export default memo(ChatRoom);
