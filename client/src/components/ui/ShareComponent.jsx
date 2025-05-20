@@ -1,8 +1,8 @@
-import { useChatRoom } from "../../context/chatRoomContext";
+import { useChatRoomActions } from "../../context/chatRoomContext";
 import useToast from "../../hooks/useToast";
 
 const ShareComponent = ({ roomID, roomName, closeToast }) => {
-  const { leaveRoom } = useChatRoom();
+  const { leaveRoom } = useChatRoomActions();
   const { showToast } = useToast();
 
   const handleShare = async () => {

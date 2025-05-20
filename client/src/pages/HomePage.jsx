@@ -1,22 +1,24 @@
-import { useEffect } from "react";
+import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
+import { ThemeContextProvider } from "../context/ThemeContext";
 import useChatRoomListener from "../hooks/useChatRoomListener";
 import useMessageHandler from "../hooks/useMessageHandler";
-import { useChatRoom } from "../context/chatRoomContext";
 import ChatRoom from "../components/layout/ChatRoom";
 import { useSocket } from "../context/socketContext";
 import Sidebar from "../components/layout/Sidebar";
 import Loader from "../components/ui/Loader";
 import "../stylesheets/home-page.css";
+import { useEffect } from "react";
 
 const HomePage = () => {
   const { fetchGeneralMessages } = useMessageHandler();
+  const { joinRoomThroughUrl } = useChatRoomActions();
   const { emitJoinRoom } = useChatRoomListener();
   const { socket, isConnected } = useSocket();
-  const { chatRooms, joinRoomThroughUrl } = useChatRoom();
+  const { chatRooms } = useChatRooms();
 
   useEffect(() => {
     if (socket && isConnected && chatRooms) {
-      Object.keys(chatRooms).forEach((roomID) => {
+      Object.keys(chatRooms).forEach(async (roomID) => {
         if (roomID === "🌍 General") {
           fetchGeneralMessages();
         }
@@ -33,7 +35,7 @@ const HomePage = () => {
       console.log("Yes");
       joinRoomThroughUrl(roomID);
 
-      // Remove the roomID from URL (optional cleanup)
+      // Remove the roomID from URL
       const newURL = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, newURL);
     }
@@ -44,7 +46,9 @@ const HomePage = () => {
   return (
     <main className="home">
       <Sidebar />
-      <ChatRoom />
+      <ThemeContextProvider>
+        <ChatRoom />
+      </ThemeContextProvider>
     </main>
   );
 };

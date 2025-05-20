@@ -4,7 +4,6 @@ import Input from "../../components/ui/Input";
 import { NavLink } from "react-router-dom";
 
 const LoginForm = () => {
-  console.log("Rendering Login Page...")
   const { register, handleSubmit, onSubmit, errors, isPending } = useAuthForm({
     endpoint: "/login",
   });

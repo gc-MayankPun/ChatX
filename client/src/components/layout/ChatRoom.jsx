@@ -1,34 +1,32 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { applyPseudoBackgroundStyle } from "../../utils/applyPseudoBackgroundStyle";
+import { useChatRooms, useCurrentRoom } from "../../context/chatRoomContext";
 import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
-import AutoExpandingTextarea from "../ui/AutoExpandingTextarea";
 import useMessageListener from "../../hooks/useMessageListener";
-import useMessageHandler from "../../hooks/useMessageHandler";
-import { useChatRoom } from "../../context/chatRoomContext";
 import { useSidebar } from "../../context/sidebarContext";
+import { memo, useEffect, useMemo, useRef } from "react";
+import { useTheme } from "../../context/ThemeContext";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import { isMobile } from "../../utils/responsive";
 import ChatMessage from "../ui/ChatMessage";
 import useToast from "../../hooks/useToast";
 import ChatDivider from "../ui/ChatDivider";
-import { ImSpinner2 } from "react-icons/im";
-import { IoSend } from "react-icons/io5";
 import "../../stylesheets/chat-room.css";
+import ChatForm from "../ui/ChatForm";
 
 const ChatRoom = () => {
-  console.log("Rendering ChatRoom...")
   const { handleSidebarMenu, isSidebarClosed } = useSidebar();
-  const { currentChatRoom, chatRooms } = useChatRoom();
-  const [isSending, setIsSending] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const { sendMessage } = useMessageHandler();
+  const { chatRooms } = useChatRooms();
+  const { currentChatRoom } = useCurrentRoom();
+  const { activeTheme } = useTheme();
   const { shareToast } = useToast();
   useMessageListener();
 
   const scrollRef = useRef(null);
 
   const room = currentChatRoom ? chatRooms[currentChatRoom.roomID] : null;
+
   const processedMessages = useMemo(() => {
     return room ? insertDateDividers(room?.messages) : [];
   }, [room?.messages]);
@@ -39,15 +37,16 @@ const ChatRoom = () => {
     }
   }, [room?.messages.length, room?.roomID]);
 
+  useEffect(() => {
+    if (activeTheme) {
+      applyPseudoBackgroundStyle(
+        ".chat-room__messages-wrapper",
+        activeTheme.link
+      );
+    }
+  }, [activeTheme.link]);
+
   if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
-
-  const handleSendMessage = (event) => {
-    event.preventDefault();
-    const trimmedValue = inputValue.trim();
-    if (!trimmedValue) return;
-
-    if (!isSending) sendMessage(inputValue, setInputValue, room, setIsSending);
-  };
 
   return (
     <div className="chat-room">
@@ -120,24 +119,7 @@ const ChatRoom = () => {
       </div>
 
       <div className="chat-room__input-section">
-        <form className="chat-room__input-wrapper" onSubmit={handleSendMessage}>
-          <AutoExpandingTextarea
-            value={inputValue}
-            onChange={setInputValue}
-            onSubmit={handleSendMessage}
-            isSending={isSending}
-          />
-          <button
-            type="submit"
-            disabled={!inputValue.trim() || isSending}
-            title={isSending ? "Sending..." : "Send message"}
-            className={`chat-room__send-button center-icon ${
-              !inputValue.trim() ? "disabled" : ""
-            }`}
-          >
-            {isSending ? <ImSpinner2 className="spin" /> : <IoSend />}
-          </button>
-        </form>
+        <ChatForm room={room} />
       </div>
     </div>
   );

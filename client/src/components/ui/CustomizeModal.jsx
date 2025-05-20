@@ -1,17 +1,17 @@
-import { useRef, useState } from "react";
 import { applyPseudoBackgroundStyle } from "../../utils/applyPseudoBackgroundStyle";
 import { autoCloseSidebarOnMobile, isMobile } from "../../utils/responsive";
 import { useUploadBgImage } from "../../hooks/useUploadTheme";
+import { useTheme } from "../../context/ThemeContext";
 import { MdOutlineClose } from "react-icons/md";
+import { memo, useRef, useState } from "react";
 import { setItem } from "../../utils/storage";
 import useToast from "../../hooks/useToast";
 import { BsUpload } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import "../../stylesheets/modal.css";
-import { useTheme } from "../../context/ThemeContext";
 
 const CustomizeModal = ({ closeToast }) => {
-  const { backgroundThemes, setBackgroundThemes } = useTheme();
+  const { backgroundThemes, setBackgroundThemes, activeTheme } = useTheme();
   const [activeTab, setActiveTab] = useState("background");
   const { uploadImage } = useUploadBgImage();
   const backgroundRef = useRef(null);
@@ -36,6 +36,11 @@ const CustomizeModal = ({ closeToast }) => {
   };
 
   const handleSelectTheme = (selectedTheme) => {
+    // If the theme is already selected then don't select it again
+    if (activeTheme.link === selectedTheme.link) {
+      return;
+    }
+
     const updatedThemes = Object.fromEntries(
       Object.entries(backgroundThemes).map(([key, value]) => [
         key,
@@ -199,4 +204,5 @@ const CustomizeModal = ({ closeToast }) => {
   );
 };
 
-export default CustomizeModal;
+export default memo(CustomizeModal);
+// export default CustomizeModal;

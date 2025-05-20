@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { setItem } from "../../utils/storage";
+import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
 import Loader from "../ui/Loader";
 import axios from "axios";

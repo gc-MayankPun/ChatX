@@ -1,17 +1,18 @@
-import { createContext, useContext, useState } from "react";
 import useChatRoomListener from "../hooks/useChatRoomListener";
 import { autoCloseSidebarOnMobile } from "../utils/responsive";
 import { generateRandomID } from "../utils/generateRandomID";
+import { createContext, useContext, useState } from "react";
 import { getItem, setItem } from "../utils/storage";
 import useToast from "../hooks/useToast";
 
-const RoomContext = createContext(null);
+const ChatRoomActionsContext = createContext();
+const CurrentRoomContext = createContext();
+const ChatRoomsContext = createContext();
 
 export const RoomContextProvider = ({ children }) => {
   const { emitCreateRoom, emitJoinRoom, emitLeaveRoom } = useChatRoomListener();
   const [currentChatRoom, setCurrentChatRoom] = useState(
     getItem("currentChatRoom") || {}
-    // getItem("currentChatRoom") || null
   );
   const [chatRooms, setChatRooms] = useState(
     getItem("chatRooms") || {
@@ -175,22 +176,26 @@ export const RoomContextProvider = ({ children }) => {
   };
 
   return (
-    <RoomContext.Provider
-      value={{
-        setChatRooms,
-        chatRooms,
-        setCurrentChatRoom,
-        currentChatRoom,
-        selectRoom,
-        joinOrCreateRoom,
-        joinRoomThroughUrl,
-        leaveRoom,
-        updateRooms,
-      }}
-    >
-      {children}
-    </RoomContext.Provider>
+    <ChatRoomsContext.Provider value={{ chatRooms, setChatRooms }}>
+      <CurrentRoomContext.Provider
+        value={{ currentChatRoom, setCurrentChatRoom }}
+      >
+        <ChatRoomActionsContext.Provider
+          value={{
+            joinOrCreateRoom,
+            joinRoomThroughUrl,
+            selectRoom,
+            leaveRoom,
+            updateRooms,
+          }}
+        >
+          {children}
+        </ChatRoomActionsContext.Provider>
+      </CurrentRoomContext.Provider>
+    </ChatRoomsContext.Provider>
   );
 };
 
-export const useChatRoom = () => useContext(RoomContext);
+export const useChatRoomActions = () => useContext(ChatRoomActionsContext);
+export const useCurrentRoom = () => useContext(CurrentRoomContext);
+export const useChatRooms = () => useContext(ChatRoomsContext);

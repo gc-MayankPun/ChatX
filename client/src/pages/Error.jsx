@@ -97,7 +97,6 @@ const errorFoundChat = [
 ];
 
 const Error = () => {
-  console.log("Rendering Error Page...")
   const error = useRouteError();
   const navigate = useNavigate();
 

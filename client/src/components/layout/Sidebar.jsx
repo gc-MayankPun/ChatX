@@ -1,4 +1,3 @@
-import { useChatRoom } from "../../context/chatRoomContext";
 import { useSidebar } from "../../context/sidebarContext";
 import { useUser } from "../../context/userContext";
 import useAuthForm from "../../hooks/useAuthForm";
@@ -10,22 +9,33 @@ import { FaPlus } from "react-icons/fa6";
 import { ImExit } from "react-icons/im";
 import "../../stylesheets/sidebar.css";
 import { memo } from "react";
+import {
+  useChatRoomActions,
+  useChatRooms,
+  useCurrentRoom,
+} from "../../context/chatRoomContext";
 
 const Sidebar = () => {
-  console.log("Rendering Sidebar...")
-  const { chatRooms, selectRoom, joinOrCreateRoom } = useChatRoom();
+  const { chatRooms } = useChatRooms();
+  const { currentChatRoom } = useCurrentRoom();
+  const { selectRoom, joinOrCreateRoom } = useChatRoomActions();
   const { handleLogout } = useAuthForm({ endpoint: "/logout" });
-  // const handleLogout = () => {}
   const { sidebarRef, closeSidebar } = useSidebar();
   const { customizeToast } = useToast();
   const { user } = useUser();
 
   const selectChatRoom = (room) => {
     const { roomName, roomID, messages } = room;
+    if (currentChatRoom.roomID === roomID) return;
+
     selectRoom(roomName, roomID, messages);
     if (isMobile()) {
       closeSidebar();
     }
+  };
+
+  const handleCustomizeToast = () => {
+    customizeToast({ config: { position: "top-center" } });
   };
 
   return (
@@ -90,9 +100,7 @@ const Sidebar = () => {
         <div className="sidebar-nav__footer">
           <button
             className="sidebar-nav__button"
-            onClick={() =>
-              customizeToast({ config: { position: "top-center" } })
-            }
+            onClick={handleCustomizeToast}
           >
             <IoMdSettings /> Customize
           </button>

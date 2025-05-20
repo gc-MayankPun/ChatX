@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { autoCloseSidebarOnMobile } from "../utils/responsive";
+import { ThemeContextProvider } from "../context/ThemeContext";
 import ShareComponent from "../components/ui/ShareComponent";
 import CustomizeModal from "../components/ui/CustomizeModal";
 import CSSRulePlugin from "gsap/CSSRulePlugin";
 import { CiCircleAlert } from "react-icons/ci";
 import "../stylesheets/custom-toast.css";
 import { toast } from "react-toastify";
+import { useState } from "react";
 import { gsap } from "gsap";
-import { ThemeContextProvider } from "../context/ThemeContext";
 
 gsap.registerPlugin(CSSRulePlugin);
 

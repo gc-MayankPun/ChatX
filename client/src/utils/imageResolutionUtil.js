@@ -10,12 +10,15 @@ export const resizeImage = (
     img.onload = function () {
       const canvas = document.createElement("canvas");
       const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
+      
       const ctx = canvas.getContext("2d");
+
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      // const base64String = canvas.toDataURL("image/jpeg", 0.9); // 0.9 = high quality
-      const base64String = canvas.toDataURL("image/png"); // 0.9 = high quality
+      const base64String = canvas.toDataURL("image/jpeg", 0.9); // 0.9 = high quality
+      
       callback(base64String);
     };
     img.src = e.target.result;

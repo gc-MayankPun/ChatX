@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import { generateRandomID } from "../utils/generateRandomID";
-import { useChatRoom } from "../context/chatRoomContext";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
+import { useEffect } from "react";
 
 const useMessageListener = () => {
-  const { chatRooms, updateRooms } = useChatRoom();
+  const { updateRooms } = useChatRoomActions();
+  const { chatRooms } = useChatRooms();
   const { socket } = useSocket();
   const { user } = useUser();
 

@@ -1,14 +1,15 @@
-import { useCallback } from "react";
+import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import { generateRandomID } from "../utils/generateRandomID";
-import { useChatRoom } from "../context/chatRoomContext";
 import { censorMessage } from "../utils/censorMessage";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
+import { useCallback } from "react";
 import useToast from "./useToast";
 import axios from "axios";
 
 const useMessageHandler = () => {
-  const { updateRooms, setChatRooms } = useChatRoom();
+  const { updateRooms } = useChatRoomActions();
+  const { setChatRooms } = useChatRooms();
   const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useUser();
@@ -83,28 +84,35 @@ const useMessageHandler = () => {
   };
 
   const fetchGeneralMessages = useCallback(async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
-      { withCredentials: true }
-    );
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
+        { withCredentials: true }
+      );
 
-    const messages = response.data.messages.map((msg) => ({
-      roomID: "🌍 General",
-      message: msg.message,
-      username: msg.sender.username,
-      avatar: msg.sender.avatarURL,
-      self: msg.sender._id === user.id,
-      time: msg.createdAt,
-      messageID: msg._id,
-    }));
+      const messages = response.data.messages.map((msg) => ({
+        roomID: "🌍 General",
+        message: msg.message,
+        username: msg.sender.username,
+        avatar: msg.sender.avatarURL,
+        self: msg.sender._id === user.id,
+        time: msg.createdAt,
+        messageID: msg._id,
+      }));
 
-    setChatRooms((prev) => ({
-      ...prev,
-      ["🌍 General"]: {
-        ...prev["🌍 General"],
-        messages,
-      },
-    }));
+      setChatRooms((prev) => ({
+        ...prev,
+        ["🌍 General"]: {
+          ...prev["🌍 General"],
+          messages,
+        },
+      }));
+    } catch (error) {
+      showToast({
+        type: "error",
+        payload: "Failed to fetch general message. Try refreshing",
+      });
+    }
   }, [user.id, setChatRooms]);
 
   return { sendMessage, fetchGeneralMessages };

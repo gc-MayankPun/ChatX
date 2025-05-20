@@ -1,17 +1,16 @@
-import { useRef, useState } from "react";
 import LegalInfo from "../../components/ui/LegalInfo";
 import { RiErrorWarningLine } from "react-icons/ri";
 import useAuthForm from "../../hooks/useAuthForm";
 import Input from "../../components/ui/Input";
 import { ImSpinner2 } from "react-icons/im";
 import { NavLink } from "react-router-dom";
+import { useRef, useState } from "react";
 import {
   base64ToFile,
   resizeAndCropImage,
 } from "../../utils/imageResolutionUtil";
 
 const RegisterForm = () => {
-  console.log("Rendering Register Page...")
   const [preview, setPreview] = useState(
     "https://res.cloudinary.com/dozdj2yha/image/upload/f_auto,q_auto/v1747328460/blank-profile-picture-973460_1280_ybew2z.png"
   );
@@ -19,7 +18,6 @@ const RegisterForm = () => {
   const [imageSet, setImageSet] = useState("default");
   const [isUploaded, setIsUploaded] = useState(true);
   const avatarRef = useRef(null);
-
   const { register, handleSubmit, onSubmit, errors, isPending } = useAuthForm({
     endpoint: "/register",
     imageSet,
