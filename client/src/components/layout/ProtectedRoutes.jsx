@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { setItem } from "../../utils/storage";
 import useToast from "../../hooks/useToast";
 import Loader from "../ui/Loader";
 import axios from "axios";
@@ -23,6 +24,8 @@ const ProtectedRoutes = () => {
       } catch (err) {
         const message = err?.response?.data?.message || "Something went wrong!";
         showToast({ type: "error", payload: message });
+        const currentUrl = window.location.href;
+        setItem("redirectAfterAuth", currentUrl);
         navigate("/auth/login");
       }
     };

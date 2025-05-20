@@ -7,7 +7,7 @@ const UserSchema = new Schema(
       unique: true,
       required: true,
       minLength: 3,
-      maxLength: 15,
+      maxLength: 20,
       trim: true,
       lowercase: true,
     },
@@ -17,6 +17,7 @@ const UserSchema = new Schema(
       minLength: 8,
       trim: true,
     },
+    isActive: Boolean,
     avatarURL: String,
     generalMessages: [
       {

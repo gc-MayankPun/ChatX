@@ -150,9 +150,15 @@ const Error = () => {
                 );
               })}
 
-          <div className="error__back-button-container error__chat-div">
+          <div className="error__button-container error__chat-div">
             <button className="error__back-button" onClick={() => navigate(-1)}>
               Go Back
+            </button>
+            <button
+              className="error__refresh-button"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
             </button>
           </div>
         </div>

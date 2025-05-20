@@ -5,6 +5,8 @@
     align-items: center;
     flex-direction: column;
     padding: 1.8rem 2rem;
+    position: relative;
+    z-index: 200;
 }
 
 .logo {
@@ -42,7 +44,7 @@
 }
 
 .form-container img {
-    margin-bottom: .3rem;
+    /* margin-bottom: .3rem; */
 }
 
 .form-container h2 {
@@ -136,7 +138,6 @@
 
 .credentials-container .form-group a:hover {
     color: var(--secondary-text-color);
-
 }
 
 .credentials-container .form-group input {
@@ -203,6 +204,20 @@
     gap: .5rem
 }
 
+.credentials-container .avatar__div {
+    position: relative;
+    /* border: .1rem solid red; */
+}
+
+.credentials-container .avatar__div .spiner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    font-size: 2rem;
+}
+
 .credentials-container .user-avatar__container span {
     /* display: inline-block; */
     /* align-self: flex-start; */
@@ -223,11 +238,18 @@
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
-    transition: .3s ease-in-out;
+    image-rendering: auto;
+    transition: .3s ease;
+    will-change: opacity, scale;
+}
+
+.credentials-container .avatar__div:has(.spiner) .user-avatar {
+    opacity: .4;
 }
 
 .credentials-container .user-avatar:hover {
-    opacity: .5;
+    opacity: .6;
+    transform: scale(1.05);
 }
 
 .credentials-container button {
@@ -298,7 +320,11 @@
 }
 
 /* For Tablets */
-@media (max-width: 1024px) {}
+@media (max-width: 1024px) {
+    .credentials-container .user-avatar:hover {
+        opacity: 1;
+    }
+}
 
 /* For Mobiles */
 @media (max-width: 768px) {
@@ -314,5 +340,9 @@
     .user-avatar__subhead span,
     .user-avatar__subhead p {
         font-size: .8rem !important;
+    }
+
+    .credentials-container .user-avatar:hover {
+        opacity: 1;
     }
 }

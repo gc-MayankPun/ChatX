@@ -1,12 +1,15 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
+import { generateRandomID } from "../utils/generateRandomID";
 import { useChatRoom } from "../context/chatRoomContext";
+import { censorMessage } from "../utils/censorMessage";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
-import { v4 as uuidv4 } from "uuid";
+import useToast from "./useToast";
 import axios from "axios";
 
 const useMessageHandler = () => {
-  const { setChatRooms, updateRooms } = useChatRoom();
+  const { updateRooms, setChatRooms } = useChatRoom();
+  const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useUser();
 
@@ -33,23 +36,28 @@ const useMessageHandler = () => {
     };
 
     socket.emit("send_message", newMessage);
-      console.log("SENDED")
     updateRooms(currentChatRoom.roomID, newMessage);
   };
 
-  const sendMessage = useCallback(
-    async (event, currentChatRoom) => {
-      event.preventDefault();
-      const messageContent = event.target.chatInput.value.trim();
-      if (!socket || messageContent === "") return;
+  const sendMessage = async (
+    rawContent,
+    setInputValue,
+    currentChatRoom,
+    setSending
+  ) => {
+    try {
+      if (setSending) setSending(true); // Start sending state
+
+      const messageContent = censorMessage(rawContent);
 
       if (currentChatRoom.roomID === "🌍 General") {
         await sendGeneralMessage(currentChatRoom, messageContent);
-        event.target.chatInput.value = "";
+        setInputValue("");
         return;
       }
 
       const timestamp = new Date().toISOString();
+      const randomID = generateRandomID("msg-");
       const newMessage = {
         roomID: currentChatRoom.roomID,
         message: messageContent,
@@ -57,17 +65,22 @@ const useMessageHandler = () => {
         avatar: user.avatar,
         self: true,
         time: timestamp,
-        messageID: uuidv4().replace(/-/g, ""),
+        messageID: randomID,
       };
 
       socket.emit("send_message", newMessage);
-      console.log("SENDED")
       updateRooms(currentChatRoom.roomID, newMessage);
 
-      event.target.chatInput.value = "";
-    },
-    [socket, user.username, updateRooms]
-  );
+      setInputValue("");
+    } catch (err) {
+      showToast({
+        type: "error",
+        payload: "Failed to send message. Please try again.",
+      });
+    } finally {
+      if (setSending) setSending(false); // End sending state
+    }
+  };
 
   const fetchGeneralMessages = useCallback(async () => {
     const response = await axios.get(
@@ -93,45 +106,6 @@ const useMessageHandler = () => {
       },
     }));
   }, [user.id, setChatRooms]);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleReceiveMessage = (data) => {
-      console.log("MESSAGE RECEIVED");
-      const newMessage = {
-        message: data.message,
-        avatar: data.avatar,
-        username: data.username,
-        self: data.id === user.id,
-        time: data.time,
-        messageId: data.messageId,
-      };
-      
-      updateRooms(data.roomID, newMessage); 
-    };
-    
-    const handleUserLeftMessage = ({ roomID, username }) => {
-      const newMessage = {
-        message: `${username} left the room`,
-        avatar: "/images/glitched-robot.png",
-        username: "System",
-        self: false,
-        time: new Date().toISOString(),
-      };
-
-      updateRooms(roomID, newMessage);
-    };
-
-    console.log("Using messages handler");
-    socket.on("receive_message", handleReceiveMessage);
-    socket.on("user-left", handleUserLeftMessage);
-    return () => {
-      socket.off("receive_message", handleReceiveMessage);
-      socket.off("user-left", handleUserLeftMessage);
-    };
-    }, [socket, updateRooms]);
-  // }, [socket]);
 
   return { sendMessage, fetchGeneralMessages };
 };

@@ -19,15 +19,30 @@ const socketHandler = (io) => {
       console.log(
         `User ${socket.user.username} joined a room with id: ${roomID}`
       );
+      if (roomID !== "🌍 General") {
+        socket
+          .to(roomID)
+          .emit("user-join", {
+            roomID,
+            username: socket.user.username,
+            action: "join",
+          });
+      }
     });
 
     // Leave Room
     socket.on("leaveRoom", (roomID) => {
       socket.leave(roomID);
       console.log(`User ${socket.user.username} left ${roomID} room`);
-      socket
-        .to(roomID)
-        .emit("user-left", { roomID, username: socket.user.username });
+      if (roomID !== "🌍 General") {
+        socket
+          .to(roomID)
+          .emit("user-left", {
+            roomID,
+            username: socket.user.username,
+            action: "leave",
+          });
+      }
     });
 
     // Room Chat

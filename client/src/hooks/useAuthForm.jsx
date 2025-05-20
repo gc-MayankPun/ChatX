@@ -1,14 +1,14 @@
 import { getValidationSchema } from "../utils/yupValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
+import { getItem, setItem } from "../utils/storage";
 import { useUser } from "../context/userContext";
-import { setItem } from "../utils/storage";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useToast from "./useToast";
 import axios from "axios";
 
-const useAuthForm = ({ endpoint, imageSet = "default" }) => {
+const useAuthForm = ({ endpoint, imageSet}) => {
   const schema = getValidationSchema(endpoint);
   const {
     register,
@@ -35,7 +35,16 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
       showToast({ type: "success", payload: data.message });
       setUser(data.user);
       setItem("user", data.user);
-      navigate("/");
+
+      const redirectURL = getItem("redirectAfterAuth") || "/";
+      localStorage.removeItem("redirectAfterAuth");
+
+      // Use full browser redirect if it's an absolute URL
+      if (redirectURL.startsWith("http")) {
+        window.location.href = redirectURL;
+      } else {
+        navigate(redirectURL);
+      }
     },
     onError: (error) => {
       const message = error?.response?.data?.message || "Something went wrong!";
@@ -90,7 +99,7 @@ const useAuthForm = ({ endpoint, imageSet = "default" }) => {
     const { username, password } = formData;
 
     if (imageSet !== "default") {
-      form.append("avatar", imageSet["original"].file);
+      form.append("avatar", imageSet);
     }
 
     form.append("username", username);

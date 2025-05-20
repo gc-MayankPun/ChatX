@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { RiErrorWarningLine } from "react-icons/ri";
+import { autoCloseSidebarOnMobile } from "../utils/responsive";
+import ShareComponent from "../components/ui/ShareComponent";
+import CustomizeModal from "../components/ui/CustomizeModal";
+import CSSRulePlugin from "gsap/CSSRulePlugin";
 import { CiCircleAlert } from "react-icons/ci";
 import "../stylesheets/custom-toast.css";
 import { toast } from "react-toastify";
 import { gsap } from "gsap";
-import CSSRulePlugin from "gsap/CSSRulePlugin";
-import ShareComponent from "../components/ui/ShareComponent";
 
 gsap.registerPlugin(CSSRulePlugin);
 
@@ -53,10 +54,17 @@ const useToast = () => {
             setError("Invalid room ID.");
             return;
           }
+          if (inputValue.length > 50 && action === "Create") {
+            setError("😏 Easy there, poet. 50 chars max.");
+            return;
+          }
           resolved = true;
           closeToast();
           toastAnimation(false);
-          resolve({ action, inputValue });
+          resolve({
+            action,
+            inputValue: inputValue.trim().replace(/\s+/g, " "),
+          });
         };
 
         return (
@@ -74,13 +82,7 @@ const useToast = () => {
               }}
               value={inputValue}
             />
-            {error && (
-              <p className="input-toast__error">
-                {/* <span>
-                </span>{" "} */}
-                <RiErrorWarningLine /> {error}
-              </p>
-            )}
+            {error && <p className="input-toast__error">{error}</p>}
             <div className="custom-toast__actions">
               <button
                 type="button"
@@ -104,6 +106,7 @@ const useToast = () => {
       toast(<InputToast />, {
         autoClose: false,
         closeButton: true,
+        draggable: false,
         closeOnClick: false,
         onClose: () => {
           if (!resolved) {
@@ -156,6 +159,10 @@ const useToast = () => {
       toast(toastContent, {
         autoClose: false,
         closeButton: false,
+        onClose: () => {
+          autoCloseSidebarOnMobile();
+        },
+        draggable: false,
         closeOnClick: false,
         ...config,
       });
@@ -165,15 +172,22 @@ const useToast = () => {
   };
 
   const shareToast = ({ payload, config = {} }) => {
-    const { shareURL } = payload;
+    const { roomID, roomName } = payload;
 
     const toastContent = ({ closeToast }) => {
-      return <ShareComponent shareURL={shareURL} closeToast={closeToast} />;
+      return (
+        <ShareComponent
+          roomID={roomID}
+          roomName={roomName}
+          closeToast={closeToast}
+        />
+      );
     };
 
     toast(toastContent, {
       autoClose: false,
       closeButton: true,
+      draggable: false,
       closeOnClick: false,
       onClose: () => {
         toastAnimation(false);
@@ -184,7 +198,38 @@ const useToast = () => {
     toastAnimation(true);
   };
 
-  return { showToast, inputDecisionToast, confirmToast, shareToast };
+  const customizeToast = ({ payload, config = {} }) => {
+    const toastContent = ({ closeToast }) => {
+      return (
+        <CustomizeModal
+          toastAnimation={toastAnimation}
+          closeToast={closeToast}
+        />
+      );
+    };
+
+    toast(toastContent, {
+      autoClose: false,
+      closeButton: true,
+      closeOnClick: false,
+      draggable: false,
+      onClose: () => {
+        autoCloseSidebarOnMobile();
+        toastAnimation(false);
+      },
+      ...config,
+    });
+
+    toastAnimation(true);
+  };
+
+  return {
+    showToast,
+    inputDecisionToast,
+    confirmToast,
+    shareToast,
+    customizeToast,
+  };
 };
 
 export default useToast;

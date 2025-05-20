@@ -2,6 +2,7 @@ import { useChatRoom } from "../../context/chatRoomContext";
 import { useSidebar } from "../../context/sidebarContext";
 import { useUser } from "../../context/userContext";
 import useAuthForm from "../../hooks/useAuthForm";
+import { isMobile } from "../../utils/responsive";
 import { GoSidebarExpand } from "react-icons/go";
 import { IoMdSettings } from "react-icons/io";
 import useToast from "../../hooks/useToast";
@@ -11,17 +12,16 @@ import "../../stylesheets/sidebar.css";
 import { memo } from "react";
 
 const Sidebar = () => {
-  console.log("Sidebar")
-  const { handleLogout } = useAuthForm({ endpoint: "/logout" });
   const { chatRooms, selectRoom, joinOrCreateRoom } = useChatRoom();
+  const { handleLogout } = useAuthForm({ endpoint: "/logout" });
   const { sidebarRef, closeSidebar } = useSidebar();
-  const { showToast } = useToast();
+  const { customizeToast } = useToast();
   const { user } = useUser();
 
   const selectChatRoom = (room) => {
     const { roomName, roomID, messages } = room;
     selectRoom(roomName, roomID, messages);
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+    if (isMobile()) {
       closeSidebar();
     }
   };
@@ -58,33 +58,41 @@ const Sidebar = () => {
             </button>
           </div>
           <ul className="sidebar-nav__list">
-            {Object.keys(chatRooms).map((key, index) => {
-              if (key === "🌍 General") return;
-              const room = chatRooms[key];
-              console.log(room.roomName)
-              return (
-                <li
-                  key={`${room.roomName} | ${room.roomID}`}
-                  onClick={() => selectChatRoom(room)}
-                  className="sidebar-nav__item"
-                >
-                  {room.roomName}
-                </li>
-              );
-            })}
+            {Object.keys(chatRooms).length < 2 ? (
+              <>
+                <p className="sidebar-nav__skeleton-p">
+                  It's a bit lonely here...
+                </p>
+                <p className="sidebar-nav__skeleton-p">
+                  Add a room to get started! 👀
+                </p>
+              </>
+            ) : (
+              Object.keys(chatRooms).map((key, index) => {
+                if (key === "🌍 General") return;
+                const room = chatRooms[key];
+                return (
+                  <li
+                    title={room.roomName}
+                    key={`${room.roomName} | ${room.roomID}`}
+                    onClick={() => selectChatRoom(room)}
+                    className="sidebar-nav__item"
+                  >
+                    {room.roomName}
+                  </li>
+                );
+              })
+            )}
           </ul>
         </nav>
         <div className="sidebar-nav__footer">
           <button
             className="sidebar-nav__button"
             onClick={() =>
-              showToast({
-                type: "info",
-                payload: "Feature will be implemented soon",
-              })
+              customizeToast({ config: { position: "top-center" } })
             }
           >
-            <IoMdSettings /> Settings
+            <IoMdSettings /> Customize
           </button>
           <button className="sidebar-nav__button" onClick={handleLogout}>
             <ImExit /> Log Out
@@ -97,4 +105,3 @@ const Sidebar = () => {
 
 // export default Sidebar;
 export default memo(Sidebar);
-

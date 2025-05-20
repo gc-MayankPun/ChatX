@@ -1,19 +1,22 @@
 import { useChatRoom } from "../../context/chatRoomContext";
-import useChatRoomHandler from "../../hooks/useChatRoomHandler";
 import useToast from "../../hooks/useToast";
 
-const ShareComponent = ({ shareURL, closeToast }) => {
-  // const { leaveRoom } = useChatRoomHandler();
+const ShareComponent = ({ roomID, roomName, closeToast }) => {
   const { leaveRoom } = useChatRoom();
   const { showToast } = useToast();
 
   const handleShare = async () => {
     if (navigator.share) {
       closeToast();
+
+      const baseURL = window.location.origin;
+      const shareURL = `${baseURL}?roomID=${encodeURIComponent(roomID)}`;
       try {
         await navigator.share({
-          title: "Join my room!",
-          text: `Here's the room ID: ${shareURL}`,
+          // title: `Join my chat room "${roomName}"`,
+          // text: `Hey! I created a chat room called "${roomName}".\n\nTo join:\n1. Open the app: ${baseURL}\n2. Paste this Room ID: ${roomID}`,
+          title: `Join my chat room "${roomName}"`,
+          text: `Hey! I created a chat room called "${roomName}".\n\nJoin me here:\n${shareURL}`,
         });
       } catch (error) {
         showToast({
@@ -34,7 +37,7 @@ const ShareComponent = ({ shareURL, closeToast }) => {
   const handleCopy = async () => {
     closeToast();
     try {
-      await navigator.clipboard.writeText(shareURL);
+      await navigator.clipboard.writeText(roomID);
       showToast({
         type: "success",
         payload: "Room ID copied to clipboard!",
@@ -52,7 +55,7 @@ const ShareComponent = ({ shareURL, closeToast }) => {
   const handleLeave = () => {
     closeToast();
     try {
-      leaveRoom(shareURL);
+      leaveRoom(roomID);
       showToast({
         type: "success",
         payload: "You left the room!",

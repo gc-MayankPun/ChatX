@@ -14,6 +14,26 @@ const createMessage = async (message, senderID) => {
       throw new ApiError("Failed to send message.", 500);
     }
 
+    // Enforce max 5000 messages limit
+    const totalCount = await GeneralChatModel.countDocuments();
+    const MAX_MESSAGES = 5000;
+
+    if (totalCount > MAX_MESSAGES) {
+      // Number of messages to remove
+      const excessCount = totalCount - MAX_MESSAGES;
+
+      // Find IDs of oldest messages
+      const oldestMessages = await GeneralChatModel.find({})
+        .sort({ createdAt: 1 }) // oldest first
+        .limit(excessCount)
+        .select("_id");
+
+      const idsToDelete = oldestMessages.map((msg) => msg._id);
+
+      // Delete them by IDs
+      await GeneralChatModel.deleteMany({ _id: { $in: idsToDelete } });
+    }
+
     const createdMessage = await GeneralChatModel.findById(
       newMessage._id
     ).populate("sender", "username avatarURL _id");

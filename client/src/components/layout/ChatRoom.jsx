@@ -1,23 +1,29 @@
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import AutoExpandingTextarea from "../ui/AutoExpandingTextarea";
+import useMessageListener from "../../hooks/useMessageListener";
 import useMessageHandler from "../../hooks/useMessageHandler";
 import { useChatRoom } from "../../context/chatRoomContext";
 import { useSidebar } from "../../context/sidebarContext";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
+import { isMobile } from "../../utils/responsive";
 import ChatMessage from "../ui/ChatMessage";
 import useToast from "../../hooks/useToast";
-import DateDivider from "../ui/DateDivider";
+import ChatDivider from "../ui/ChatDivider";
+import { ImSpinner2 } from "react-icons/im";
 import { IoSend } from "react-icons/io5";
 import "../../stylesheets/chat-room.css";
 
 const ChatRoom = () => {
-  console.log("Chat Room");
-  const { handleSidebarMenu, isSidebarClosed, isMobile } = useSidebar();
-  const { sendMessage, fetchGeneralMessages } = useMessageHandler();
+  const { handleSidebarMenu, isSidebarClosed } = useSidebar();
   const { currentChatRoom, chatRooms } = useChatRoom();
+  const [isSending, setIsSending] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const { sendMessage } = useMessageHandler();
   const { shareToast } = useToast();
+  useMessageListener();
 
   const scrollRef = useRef(null);
 
@@ -27,16 +33,20 @@ const ChatRoom = () => {
   }, [room?.messages]);
 
   useEffect(() => {
-    // if (room?.roomID === "🌍 General") {
-    //   fetchGeneralMessages();
-    // }
-
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [room?.messages.length, room?.roomID, fetchGeneralMessages]);
+  }, [room?.messages.length, room?.roomID]);
 
   if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
+
+  const handleSendMessage = (event) => {
+    event.preventDefault();
+    const trimmedValue = inputValue.trim();
+    if (!trimmedValue) return;
+
+    if (!isSending) sendMessage(inputValue, setInputValue, room, setIsSending);
+  };
 
   return (
     <div className="chat-room">
@@ -46,7 +56,7 @@ const ChatRoom = () => {
           onClick={handleSidebarMenu}
         >
           <span className="center-icon">
-            {isMobile ? (
+            {isMobile() ? (
               <GoSidebarCollapse />
             ) : isSidebarClosed ? (
               <GoSidebarCollapse />
@@ -55,11 +65,17 @@ const ChatRoom = () => {
             )}
           </span>
         </button>
-        <h1 className="chat-room__title">{room.roomName}</h1>
+        <h1 className="chat-room__title" title={room.roomName}>
+          {room.roomName}
+        </h1>
         {room.roomID !== "🌍 General" && (
           <button
             className="chat-room__buttons chat-room__options"
-            onClick={() => shareToast({ payload: { shareURL: room.roomID } })}
+            onClick={() =>
+              shareToast({
+                payload: { roomName: room.roomName, roomID: room.roomID },
+              })
+            }
           >
             <span className="center-icon">
               <PiDotsThreeOutlineVerticalFill />
@@ -75,13 +91,18 @@ const ChatRoom = () => {
               No chats yet. You're the one to kick it off! 🚀
             </p>
           ) : (
-            processedMessages.map((msg) => {
+            processedMessages.map((msg, index) => {
               if (msg.type === "date") {
-                return <DateDivider key={msg.id} date={msg.date} />;
+                return <ChatDivider key={msg.dateId} message={msg.date} />;
               }
+              if (msg.type === "user-left" || msg.type === "user-join") {
+                return (
+                  <ChatDivider key={msg.messageID} message={msg.message} />
+                );
+              }
+
               return (
                 <ChatMessage
-                  messageID={msg.messageID}
                   key={msg.messageID}
                   self={msg.self}
                   username={msg.username}
@@ -98,19 +119,22 @@ const ChatRoom = () => {
       </div>
 
       <div className="chat-room__input-section">
-        <form
-          className="chat-room__input-wrapper"
-          onSubmit={(event) => sendMessage(event, room)}
-        >
-          <input
-            type="text"
-            name="chatInput"
-            id="chat-input"
-            placeholder="Type a message..."
-            autoComplete="off"
+        <form className="chat-room__input-wrapper" onSubmit={handleSendMessage}>
+          <AutoExpandingTextarea
+            value={inputValue}
+            onChange={setInputValue}
+            onSubmit={handleSendMessage}
+            isSending={isSending}
           />
-          <button className="chat-room__send-button">
-            <IoSend />
+          <button
+            type="submit"
+            disabled={!inputValue.trim() || isSending}
+            title={isSending ? "Sending..." : "Send message"}
+            className={`chat-room__send-button center-icon ${
+              !inputValue.trim() ? "disabled" : ""
+            }`}
+          >
+            {isSending ? <ImSpinner2 className="spin" /> : <IoSend />}
           </button>
         </form>
       </div>

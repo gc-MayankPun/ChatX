@@ -1,15 +1,17 @@
 import { createContext, useContext, useState } from "react";
-import useChatRoomHandler from "../hooks/useChatRoomHandler";
+import useChatRoomListener from "../hooks/useChatRoomListener";
+import { autoCloseSidebarOnMobile } from "../utils/responsive";
+import { generateRandomID } from "../utils/generateRandomID";
 import { getItem, setItem } from "../utils/storage";
 import useToast from "../hooks/useToast";
-import { v4 as uuidv4 } from "uuid";
 
 const RoomContext = createContext(null);
 
 export const RoomContextProvider = ({ children }) => {
-  const { emitCreateRoom, emitJoinRoom, emitLeaveRoom } = useChatRoomHandler();
+  const { emitCreateRoom, emitJoinRoom, emitLeaveRoom } = useChatRoomListener();
   const [currentChatRoom, setCurrentChatRoom] = useState(
-    getItem("currentChatRoom") || null
+    getItem("currentChatRoom") || {}
+    // getItem("currentChatRoom") || null
   );
   const [chatRooms, setChatRooms] = useState(
     getItem("chatRooms") || {
@@ -20,10 +22,25 @@ export const RoomContextProvider = ({ children }) => {
       },
     }
   );
-  const { inputDecisionToast } = useToast();
+  const { showToast, inputDecisionToast } = useToast();
 
   // Create or Join room
   const joinOrCreateRoom = async () => {
+    // Don't allow user to create more room if the limit is hit
+    const length = Object.keys(chatRooms).length;
+    if (length > 15) {
+      showToast({
+        payload:
+          "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
+        config: {
+          autoClose: false,
+          closeButton: true,
+          closeOnClick: false,
+        },
+      });
+      return;
+    }
+
     const roomAction = await inputDecisionToast({
       payload: {
         title: "Join or Create room",
@@ -47,7 +64,7 @@ export const RoomContextProvider = ({ children }) => {
     let updatedRooms;
     if (action === "Create") {
       // Generate random ID for new rooms
-      const randomID = uuidv4().replace(/-/g, "");
+      const randomID = generateRandomID();
       const roomID = `${randomID}::${inputValue}`;
       emitCreateRoom(roomID, inputValue);
 
@@ -76,13 +93,47 @@ export const RoomContextProvider = ({ children }) => {
       setItem("currentChatRoom", { roomName, roomID, messages: [] });
     }
 
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      const sidebar = document.querySelector(".sidebar");
-      gsap.to(sidebar, {
-        width: "0",
-        duration: 0.4,
+    autoCloseSidebarOnMobile();
+    setChatRooms(updatedRooms);
+    setItem("chatRooms", updatedRooms);
+  };
+
+  // Join room through url
+  const joinRoomThroughUrl = async (roomID) => {
+    // Don't allow user to create more room if the limit is hit
+    const length = Object.keys(chatRooms).length;
+    if (length > 15) {
+      showToast({
+        payload:
+          "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
+        config: {
+          autoClose: false,
+          closeButton: true,
+          closeOnClick: false,
+        },
       });
+      return;
     }
+
+    // If room already exists, Select that room
+    if (chatRooms[roomID]) {
+      setCurrentChatRoom(chatRooms[roomID]);
+      setItem("currentChatRoom", chatRooms[roomID]);
+      return;
+    }
+
+    emitJoinRoom(roomID);
+    const roomName = roomID.split("::")[1];
+
+    const updatedRooms = {
+      ...chatRooms,
+      [roomID]: { roomName, roomID, messages: [] },
+    };
+
+    setCurrentChatRoom({ roomName, roomID, messages: [] });
+    setItem("currentChatRoom", { roomName, roomID, messages: [] });
+
+    autoCloseSidebarOnMobile();
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
   };
@@ -113,6 +164,7 @@ export const RoomContextProvider = ({ children }) => {
 
   // Update Chatrooms
   const updateRooms = (roomID, newMessage) => {
+    if (!chatRooms) return;
     setChatRooms((prevRooms) => ({
       ...prevRooms,
       [roomID]: {
@@ -120,8 +172,6 @@ export const RoomContextProvider = ({ children }) => {
         messages: [...prevRooms[roomID].messages, newMessage],
       },
     }));
-
-    // setItem("chatRooms", updatedRooms);
   };
 
   return (
@@ -133,6 +183,7 @@ export const RoomContextProvider = ({ children }) => {
         currentChatRoom,
         selectRoom,
         joinOrCreateRoom,
+        joinRoomThroughUrl,
         leaveRoom,
         updateRooms,
       }}

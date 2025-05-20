@@ -1,16 +1,32 @@
 import { useNavigate, useParams } from "react-router-dom";
-import legalData from "../api/termsData.json";
 import policyData from "../api/policyData.json";
+import legalData from "../api/termsData.json";
+import Loader from "../components/ui/Loader";
+import { useEffect, useState } from "react";
 import "../stylesheets/legal-info.css";
 
 const legalAndPrivacy = () => {
   const { info } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
 
-  if (info === "terms") return <InfoContainer data={legalData} />;
+  useEffect(() => {
+    setLoading(true);
 
-  if (info === "privacy") return <InfoContainer data={policyData} />;
+    setTimeout(() => {
+      if (info === "terms") setData(legalData);
+      else if (info === "privacy") setData(policyData);
+      else setData(null);
 
-  return <h1>Ohh!! A dog is scooping around here? aye!</h1>
+      setLoading(false);
+    }, 1000);
+  }, [info]);
+
+  if (loading) return <Loader />;
+
+  if (!data) return <InfoFallback />;
+
+  return <InfoContainer data={data} />;
 };
 
 const InfoContainer = ({ data }) => {
@@ -26,7 +42,7 @@ const InfoContainer = ({ data }) => {
           <p className="legal-list__head">{header?.listHead} </p>
           <ul className="legal__list">
             {content.map((paragraph, index) => {
-              if (paragraph.body[0] === undefined) {
+              if (typeof paragraph.body === "object") {
                 return (
                   <li key={`${index} = ${Math.random()}`}>
                     <strong>{paragraph.title}</strong>
@@ -58,6 +74,28 @@ const InfoContainer = ({ data }) => {
       </div>
       <div className="legal__go-back">
         <button onClick={() => navigate(-1)}>Go Back</button>
+      </div>
+    </div>
+  );
+};
+
+const InfoFallback = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="info-fallback__wrapper">
+      <div className="info-fallback">
+        <h1>Well, well, look who's poking around…</h1>
+        <p>
+          You really wanna dive into the legal jungle? Terms of Service and
+          Privacy Policy didn't give you enough drama?
+        </p>
+        <p>
+          I gotta say, most people just scroll past this stuff… but hey, you do
+          you. Just don't get lost in the fine print maze! 😏
+        </p>
+        <p>Wanna turn back before it gets too wild?</p>
+        <button onClick={() => navigate(-1)}>Take Me Back</button>
       </div>
     </div>
   );

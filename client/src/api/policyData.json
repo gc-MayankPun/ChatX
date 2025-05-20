@@ -9,27 +9,25 @@
       "title": "What We Collect",
       "body": {
         "1": "Only your chosen username and messages posted in the General Chat are stored temporarily.",
-        "2": "No emails, passwords, or personal identifying information are collected."
+        "2": "No emails, passwords, or personal identifying information are collected.",
+        "3": "Rooms you create? Totally private, zero data collection — like a vault with a sarcastic guard dog."
       }
     },
     {
       "title": "Why We Collect It",
-      "body": "These details are necessary for the basic functionality of the application — to display usernames and chat messages."
+      "body": "These details are necessary for the basic functionality of the application — to display usernames and chat messages. No sneaky business here."
     },
     {
       "title": "How It's Stored",
-      "body": {
-        "1": "Messages and usernames may be stored in local storage or in the temporary backend database as part of the development environment.",
-        "2": "These are not shared or used for analytics, advertising, or any commercial purpose."
-      }
+      "body": "Messages you send in rooms are kept only temporarily — live, in-memory, and visible to members currently in the room. No storing in localStorage, no databases, nada. When you close or refresh, poof — chat vanishes like your last snack at midnight. So, enjoy the moment, but don't expect a replay!"
     },
     {
       "title": "Data Security",
-      "body": "While efforts are made to protect the stored data, this is a learning project and may not implement production-grade security."
+      "body": "While efforts are made to protect the stored data, this is a learning project and may not implement production-grade security. So, no promises — but we try!"
     },
     {
       "title": "Third-Party Sharing",
-      "body": "No information is shared with any third parties. This application is entirely self-contained for learning purposes"
+      "body": "No information is shared with any third parties. This application is entirely self-contained for learning purposes."
     },
     {
       "title": "User Rights",
@@ -38,6 +36,6 @@
   ],
   "footer": {
     "title": "Contact",
-    "body": "If you have any questions or concerns, feel free to reach out to the developer Mayank Pun(gc_mayankpun) through the project repository or personal contact (if provided)."
+    "body": "If you have any questions or concerns, feel free to reach out to the developer Mayank Pun (gc_mayankpun) through the project repository."
   }
 }

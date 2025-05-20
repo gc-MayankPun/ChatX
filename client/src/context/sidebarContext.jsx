@@ -1,17 +1,17 @@
 import { createContext, useContext, useRef, useState } from "react";
+import { isMobile } from "../utils/responsive";
 import { gsap } from "gsap";
 
 const SidebarContext = createContext();
 
 export const SidebarContextProvider = ({ children }) => {
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
   const [isSidebarClosed, setIsSidebarClosed] = useState(false);
   const sidebarRef = useRef(null);
 
   const handleSidebarMenu = () => {
     if (!sidebarRef?.current) return;
-
-    if (isMobile) {
+    
+    if (isMobile()) {
       gsap.to(sidebarRef.current, {
         width: "20rem",
         duration: 0.4,
@@ -51,7 +51,6 @@ export const SidebarContextProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         isSidebarClosed,
-        isMobile,
       }}
     >
       {children}

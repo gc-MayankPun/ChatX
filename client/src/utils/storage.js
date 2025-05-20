@@ -1,6 +1,10 @@
 export const getItem = (key) => {
   const storedValue = localStorage.getItem(key);
-  return storedValue ? JSON.parse(storedValue) : undefined;
+  try {
+    return JSON.parse(storedValue);
+  } catch (error) {
+    return storedValue;
+  }
 };
 
 export const setItem = (key, value) => {

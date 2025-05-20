@@ -1,19 +1,18 @@
 import * as yup from "yup";
 
-// email: yup
-//   .string()
-//   .trim()
-//   .required("Email is required")
-//   .email("Invalid email address")
-//   .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+const noEmojiRegex = /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF])/g;
 
 const registerSchema = yup.object().shape({
   username: yup
     .string()
     .matches(/^\S*$/, "Must not contain spaces")
+    .test("no-emojis", "Must not contain emojis 🤣", (value) => {
+      if (!value) return true;
+      return !noEmojiRegex.test(value);
+    })
     .required("Username is required")
     .min(3, "Must be at least 3 characters long")
-    .max(15, "Must not be more than 15 characters long"),
+    .max(20, "Must not be more than 20 characters long"),
   password: yup
     .string()
     .required("Password is required")

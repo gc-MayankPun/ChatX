@@ -1,17 +1,23 @@
 .error-wrapper {
     height: 100dvh;
     width: 100%;
+    position: relative;
+    z-index: 200;
 }
 
 .error__type {
     border-bottom: .1rem solid var(--border-color);
     text-align: center;
-    padding: 1rem;
+    /* padding: 1rem; */
     height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .error__type h1 {
     animation: glitch 1.5s infinite;
+    font-size: 1.5rem;
 }
 
 @keyframes glitch {
@@ -73,11 +79,25 @@
     background-color: rgb(0, 58, 124);
     color: white;
     font-weight: 500;
-    padding: 1rem 2rem;
+    padding: .8rem 2rem;
 }
 
 .error__back-button:hover {
     background-color: rgb(1, 74, 156);
+}
+
+.error__refresh-button {
+    margin-left: 1rem;
+    background-color: rgb(10, 90, 150);
+    color: white;
+    font-weight: 600;
+    padding: .8rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.error__refresh-button:hover {
+    background-color: rgb(20, 120, 200);
 }
 
 /* For Tablets */

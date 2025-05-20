@@ -1,10 +1,14 @@
 import { useRef, useState } from "react";
-import { processImageFile } from "../../utils/optimseImageConverter";
 import LegalInfo from "../../components/ui/LegalInfo";
 import { RiErrorWarningLine } from "react-icons/ri";
 import useAuthForm from "../../hooks/useAuthForm";
 import Input from "../../components/ui/Input";
+import { ImSpinner2 } from "react-icons/im";
 import { NavLink } from "react-router-dom";
+import {
+  base64ToFile,
+  resizeAndCropImage,
+} from "../../utils/imageResolutionUtil";
 
 const RegisterForm = () => {
   const [preview, setPreview] = useState(
@@ -25,15 +29,22 @@ const RegisterForm = () => {
     setFileError(null);
   };
 
-  const handleImageUpload = async (event) => {
+  const handleImageUpload = (event) => {
     setIsUploaded(false);
+
     try {
       const file = event.target.files[0];
-      const images = await processImageFile(file);
+      if (!file) {
+        setIsUploaded(true);
+        return;
+      }
 
-      setPreview(images["medium"].dataURL); // Preview a medium one
-      setImageSet(images);
-      setIsUploaded(true);
+      resizeAndCropImage(file, 500, 500, (base64Image) => {
+        setPreview(base64Image);
+        const resizedFile = base64ToFile(base64Image, file.name);
+        setImageSet(resizedFile);
+        setIsUploaded(true);
+      });
     } catch (err) {
       setIsUploaded(true);
       setFileError(err.message || "Image processing failed");
@@ -56,12 +67,19 @@ const RegisterForm = () => {
                 accept="image/*"
                 onChange={handleImageUpload}
               />
-              <img
-                className="user-avatar"
-                src={preview}
-                alt="user-avatar"
-                onClick={handleImageClick}
-              />
+              <div className="avatar__div">
+                <img
+                  className="user-avatar"
+                  src={preview}
+                  alt="user-avatar"
+                  onClick={handleImageClick}
+                />
+                {!isUploaded && (
+                  <span className="spiner">
+                    <ImSpinner2 className="spin" />
+                  </span>
+                )}
+              </div>
               <div className="user-avatar__subhead">
                 <span>Upload an image</span>
                 {fileError && (

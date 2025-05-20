@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useSocket } from "../context/socketContext";
 
-const useChatRoomHandler = () => {
+const useChatRoomListener = () => {
   const { socket } = useSocket();
 
   const emitCreateRoom = useCallback(
@@ -31,4 +31,4 @@ const useChatRoomHandler = () => {
   return { emitCreateRoom, emitJoinRoom, emitLeaveRoom };
 };
 
-export default useChatRoomHandler;
+export default useChatRoomListener;
