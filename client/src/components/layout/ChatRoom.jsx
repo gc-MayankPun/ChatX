@@ -17,6 +17,7 @@ import { IoSend } from "react-icons/io5";
 import "../../stylesheets/chat-room.css";
 
 const ChatRoom = () => {
+  console.log("Rendering ChatRoom...")
   const { handleSidebarMenu, isSidebarClosed } = useSidebar();
   const { currentChatRoom, chatRooms } = useChatRoom();
   const [isSending, setIsSending] = useState(false);

@@ -30,7 +30,7 @@ const HomePage = () => {
     const roomID = params.get("roomID");
 
     if (roomID) {
-      console.log("Yes")
+      console.log("Yes");
       joinRoomThroughUrl(roomID);
 
       // Remove the roomID from URL (optional cleanup)

@@ -13,33 +13,35 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UserContextProvider>
-        <SocketProvider>
-          <RoomContextProvider>
-            <SidebarContextProvider>
-              <AppWrapper>
-                <RouterProvider router={router} />
-              </AppWrapper>
-              <ToastContainer
-                position="top-right"
-                autoClose={1000}
-                hideProgressBar={false}
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-                // limit={1}
-                transition={Bounce}
-              />
-            </SidebarContextProvider>
-          </RoomContextProvider>
-        </SocketProvider>
-      </UserContextProvider>
+      <AppWrapper>
+        <RouterProvider router={router} />
+      </AppWrapper>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        // limit={1}
+        transition={Bounce}
+      />
     </QueryClientProvider>
   );
 };
 
 export default App;
+
+/* 
+  <UserContextProvider>
+    <SocketProvider>
+      <RoomContextProvider>
+          <SidebarContextProvider></SidebarContextProvider>
+      </RoomContextProvider>
+    </SocketProvider>
+  </UserContextProvider>
+*/

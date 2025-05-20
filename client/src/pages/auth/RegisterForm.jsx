@@ -11,6 +11,7 @@ import {
 } from "../../utils/imageResolutionUtil";
 
 const RegisterForm = () => {
+  console.log("Rendering Register Page...")
   const [preview, setPreview] = useState(
     "https://res.cloudinary.com/dozdj2yha/image/upload/f_auto,q_auto/v1747328460/blank-profile-picture-973460_1280_ybew2z.png"
   );

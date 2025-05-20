@@ -2,6 +2,8 @@ import { Outlet } from "react-router-dom";
 import "../stylesheets/auth.css";
 
 const AuthPage = () => {
+   console.log("Rendering Auth Page...")
+   
   return (
     <div className="auth-page">
       <div className="logo">

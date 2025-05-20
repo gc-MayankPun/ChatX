@@ -2,13 +2,13 @@ import { getValidationSchema } from "../utils/yupValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { getItem, setItem } from "../utils/storage";
-import { useUser } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useToast from "./useToast";
 import axios from "axios";
 
-const useAuthForm = ({ endpoint, imageSet}) => {
+const useAuthForm = ({ endpoint, imageSet }) => {
+  console.log("Rendering useAuthPage...");
   const schema = getValidationSchema(endpoint);
   const {
     register,
@@ -17,7 +17,6 @@ const useAuthForm = ({ endpoint, imageSet}) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const { showToast, confirmToast } = useToast();
-  const { setUser } = useUser();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -33,7 +32,6 @@ const useAuthForm = ({ endpoint, imageSet}) => {
     },
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
-      setUser(data.user);
       setItem("user", data.user);
 
       const redirectURL = getItem("redirectAfterAuth") || "/";
@@ -56,7 +54,6 @@ const useAuthForm = ({ endpoint, imageSet}) => {
         });
       }
 
-      setUser(null);
       setItem("user", null);
       showToast({ type: "error", payload: message });
     },

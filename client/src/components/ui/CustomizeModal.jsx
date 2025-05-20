@@ -2,21 +2,21 @@ import { useRef, useState } from "react";
 import { applyPseudoBackgroundStyle } from "../../utils/applyPseudoBackgroundStyle";
 import { autoCloseSidebarOnMobile, isMobile } from "../../utils/responsive";
 import { useUploadBgImage } from "../../hooks/useUploadTheme";
-import { useUser } from "../../context/userContext";
 import { MdOutlineClose } from "react-icons/md";
 import { setItem } from "../../utils/storage";
 import useToast from "../../hooks/useToast";
 import { BsUpload } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import "../../stylesheets/modal.css";
+import { useTheme } from "../../context/ThemeContext";
 
 const CustomizeModal = ({ closeToast }) => {
-  const { backgroundThemes, setBackgroundThemes } = useUser();
+  const { backgroundThemes, setBackgroundThemes } = useTheme();
   const [activeTab, setActiveTab] = useState("background");
   const { uploadImage } = useUploadBgImage();
   const backgroundRef = useRef(null);
   const { showToast } = useToast();
-  
+
   const handleImageUpload = (e) => {
     if (Object.keys(backgroundThemes).length > 7) {
       showToast({

@@ -12,8 +12,10 @@ import "../../stylesheets/sidebar.css";
 import { memo } from "react";
 
 const Sidebar = () => {
+  console.log("Rendering Sidebar...")
   const { chatRooms, selectRoom, joinOrCreateRoom } = useChatRoom();
   const { handleLogout } = useAuthForm({ endpoint: "/logout" });
+  // const handleLogout = () => {}
   const { sidebarRef, closeSidebar } = useSidebar();
   const { customizeToast } = useToast();
   const { user } = useUser();

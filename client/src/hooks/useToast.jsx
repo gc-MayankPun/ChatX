@@ -7,6 +7,7 @@ import { CiCircleAlert } from "react-icons/ci";
 import "../stylesheets/custom-toast.css";
 import { toast } from "react-toastify";
 import { gsap } from "gsap";
+import { ThemeContextProvider } from "../context/ThemeContext";
 
 gsap.registerPlugin(CSSRulePlugin);
 
@@ -201,10 +202,12 @@ const useToast = () => {
   const customizeToast = ({ payload, config = {} }) => {
     const toastContent = ({ closeToast }) => {
       return (
-        <CustomizeModal
-          toastAnimation={toastAnimation}
-          closeToast={closeToast}
-        />
+        <ThemeContextProvider>
+          <CustomizeModal
+            toastAnimation={toastAnimation}
+            closeToast={closeToast}
+          />
+        </ThemeContextProvider>
       );
     };
 

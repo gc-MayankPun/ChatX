@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import "../stylesheets/legal-info.css";
 
 const legalAndPrivacy = () => {
+  console.log("Privacy")
   const { info } = useParams();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);

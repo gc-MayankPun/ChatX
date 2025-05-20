@@ -2,11 +2,11 @@ import { useCallback } from "react";
 import { applyPseudoBackgroundStyle } from "../utils/applyPseudoBackgroundStyle";
 import { generateRandomID } from "../utils/generateRandomID";
 import { resizeImage } from "../utils/imageResolutionUtil";
-import { useUser } from "../context/userContext";
 import { setItem } from "../utils/storage";
+import { useTheme } from "../context/ThemeContext";
 
 export const useUploadBgImage = () => {
-  const { backgroundThemes, setBackgroundThemes } = useUser();
+  const { backgroundThemes, setBackgroundThemes } = useTheme();
 
   const uploadImage = useCallback(async (selector, input) => {
     resizeImage(input, 1920, 1080, (base64Image) => {
@@ -29,7 +29,7 @@ export const useUploadBgImage = () => {
 
       applyPseudoBackgroundStyle(selector, base64Image);
     });
-  }, []);
+  }, [backgroundThemes, setBackgroundThemes]);
 
   return { uploadImage };
 };
