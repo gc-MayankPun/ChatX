@@ -11,7 +11,6 @@ const useInfiniteScroll = () => {
       queryKey: ["general-messages"],
       queryFn: fetchGeneralMessage,
       initialPageParam: 0,
-      // getNextPageParam: (lastPage, allPages, lastPageParams) =>
       getNextPageParam: (lastPage) => lastPage.nextPage,
     });
 
@@ -55,37 +54,3 @@ const useInfiniteScroll = () => {
 };
 
 export default useInfiniteScroll;
-
-// {{/* {data.pages.map((page) => ( */}
-// {[...data.pages].reverse().map((page) => (
-//   <div
-//     key={page.currentPage}
-//     style={{
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "center",
-//       gap: "1rem",
-//       border: ".1rem solid red",
-//     }}
-//   >
-//     {/* {page.data.map((message) => { */}
-//     {[...page.data].reverse().map((message) => {
-//       return (
-//         <div
-//           key={message.id}
-//           className="center-icon"
-//           style={{
-//             padding: "2rem",
-//             width: "50rem",
-//             height: "10rem",
-//             borderRadius: "1rem",
-//             border: ".1rem solid white",
-//           }}
-//         >
-//           {message.name}
-//         </div>
-//       );
-//     })}
-//   </div>
-// ))}
-// {/* <div style={{border: ".1rem solid green"}} ref={ref}>{isFetchingNextPage && "Loading..."}</div> */}}
