@@ -17,8 +17,8 @@ import ChatForm from "../ui/ChatForm";
 
 const ChatRoom = () => {
   const { handleSidebarMenu, isSidebarClosed } = useSidebar();
-  const { chatRooms } = useChatRooms();
   const { currentChatRoom } = useCurrentRoom();
+  const { chatRooms } = useChatRooms();
   const { activeTheme } = useTheme();
   const { shareToast } = useToast();
   useMessageListener();

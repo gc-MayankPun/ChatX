@@ -49,13 +49,16 @@ const createMessage = async (message, senderID) => {
   }
 };
 
-const getAllGeneralMessages = async () => {
+const getAllGeneralMessages = async (offset, limit) => {
   try {
+    const total = await GeneralChatModel.countDocuments();
     const messages = await GeneralChatModel.find({})
       .sort({ createdAt: 1 }) // sort oldest to newest
+      .skip(offset) // skip first 'offset' messages
+      .limit(limit) // return only 'limit' messages
       .populate("sender", "username avatarURL _id");
 
-    return messages;
+    return { total, messages };
   } catch (error) {
     throw new ApiError(
       error.message || "Failed to fetch general messages.",

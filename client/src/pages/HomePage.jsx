@@ -20,7 +20,7 @@ const HomePage = () => {
     if (socket && isConnected && chatRooms) {
       Object.keys(chatRooms).forEach(async (roomID) => {
         if (roomID === "🌍 General") {
-          fetchGeneralMessages();
+          // fetchGeneralMessages();
         }
         emitJoinRoom(roomID);
       });

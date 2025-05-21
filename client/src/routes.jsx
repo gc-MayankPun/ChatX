@@ -8,6 +8,7 @@ import LoginForm from "./pages/auth/LoginForm";
 import AuthPage from "./pages/AuthPage";
 import Error from "./pages/Error";
 import HomeProvider from "./pages/HomeProvider";
+import Test from "./components/ui/Test";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomeProvider />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
       },
     ],
   },
