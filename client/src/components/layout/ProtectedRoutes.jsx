@@ -1,9 +1,13 @@
+import { SidebarContextProvider } from "../../context/sidebarContext";
+import { RoomContextProvider } from "../../context/chatRoomContext";
+import { UserContextProvider } from "../../context/userContext";
+import { SocketProvider } from "../../context/socketContext";
 import { Outlet, useNavigate } from "react-router-dom";
+import { validateToken } from "../../api/apiClient";
 import { setItem } from "../../utils/storage";
 import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
 import Loader from "../ui/Loader";
-import axios from "axios";
 
 const ProtectedRoutes = () => {
   const [checking, setChecking] = useState(true);
@@ -13,17 +17,10 @@ const ProtectedRoutes = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/`,
-          {
-            withCredentials: true,
-          }
-        );
-
+        await validateToken();
         setChecking(false);
-      } catch (err) {
-        const message = err?.response?.data?.message || "Something went wrong!";
-        showToast({ type: "error", payload: message });
+      } catch (error) {
+        showToast({ type: "error", payload: error.message });
         const currentUrl = window.location.href;
         setItem("redirectAfterAuth", currentUrl);
         navigate("/auth/login");
@@ -34,7 +31,17 @@ const ProtectedRoutes = () => {
 
   if (checking) return <Loader />;
 
-  return <Outlet />;
+  return (
+    <UserContextProvider>
+      <SocketProvider>
+        <RoomContextProvider>
+          <SidebarContextProvider>
+            <Outlet />
+          </SidebarContextProvider>
+        </RoomContextProvider>
+      </SocketProvider>
+    </UserContextProvider>
+  );
 };
 
 export default ProtectedRoutes;

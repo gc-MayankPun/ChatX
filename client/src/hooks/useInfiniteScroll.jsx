@@ -1,9 +1,9 @@
 import { fetchGeneralMessage } from "../api/fetchGeneralMessage";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ChatMessage from "../components/ui/ChatMessage";
 import { formatTime } from "../utils/formatDateTime";
+import { useEffect } from "react";
 
 const useInfiniteScroll = () => {
   const { data, error, status, fetchNextPage, isFetchingNextPage } =
@@ -14,13 +14,15 @@ const useInfiniteScroll = () => {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     });
 
-  const { ref, inView } = useInView();
+  // const { ref, inView } = useInView();
 
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, inView]);
+  // useEffect(() => {
+  //   if (inView) {
+  //     fetchNextPage();
+  //   }
+  // }, [fetchNextPage, inView]);
+
+  return { status, error, data, isFetchingNextPage, fetchNextPage };
 
   return status === "pending" ? (
     <div>Loading...</div>

@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { getItem } from "../utils/storage";
+import { applyPseudoBackgroundStyle } from "../utils/applyPseudoBackgroundStyle";
 
 const ThemeContext = createContext(null);
 
@@ -12,6 +13,15 @@ export const ThemeContextProvider = ({ children }) => {
       },
     }
   );
+
+  useEffect(() => {
+    if (activeTheme) {
+      applyPseudoBackgroundStyle(
+        ".chat-room__messages-wrapper",
+        activeTheme.link
+      );
+    }
+  }, []);
 
   const activeTheme = useMemo(() => {
     return Object.values(backgroundThemes).find((t) => t.isActive);

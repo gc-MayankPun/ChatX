@@ -1,7 +1,7 @@
 import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
-import { ThemeContextProvider } from "../context/ThemeContext";
 import useChatRoomListener from "../hooks/useChatRoomListener";
 import useMessageHandler from "../hooks/useMessageHandler";
+import { toastAnimation } from "../utils/toastAnimation";
 import ChatRoom from "../components/layout/ChatRoom";
 import { useSocket } from "../context/socketContext";
 import Sidebar from "../components/layout/Sidebar";
@@ -30,6 +30,7 @@ const HomePage = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomID = params.get("roomID");
+    toastAnimation(false);
 
     if (roomID) {
       console.log("Yes");
@@ -46,9 +47,7 @@ const HomePage = () => {
   return (
     <main className="home">
       <Sidebar />
-      <ThemeContextProvider>
-        <ChatRoom />
-      </ThemeContextProvider>
+      <ChatRoom />
     </main>
   );
 };

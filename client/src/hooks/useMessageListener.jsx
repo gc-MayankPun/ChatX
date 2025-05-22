@@ -18,6 +18,7 @@ const useMessageListener = () => {
         message: data.message,
         avatar: data.avatar,
         username: data.username,
+        userID: data.userID,
         self: data.id === user.id,
         time: data.time,
         messageID: data.messageID,

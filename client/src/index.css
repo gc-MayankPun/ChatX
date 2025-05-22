@@ -1,5 +1,4 @@
 :root {
-  /* --border-color: #27272A; */
   --border-color: #3b3b3b;
   --error-color: 255, 88, 88;
   --secondary-text-color: #818181;
@@ -43,7 +42,6 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   -webkit-text-fill-color: white !important;
   transition: background-color 5000s ease-in-out 0s;
-  /* Chrome fix */
 }
 
 /* Firefox CSS to prevent browser's autofill default css */
@@ -76,10 +74,3 @@ input:-moz-autofill {
     transform: rotate(360deg);
   }
 }
-
-
-/* For Tablets */
-@media (max-width: 1024px) {}
-
-/* For Mobiles */
-@media (max-width: 768px) {}

@@ -26,7 +26,6 @@
 .chat-room_skeleton .toggle-sidebar {
   position: absolute;
   font-size: 1.5rem;
-  top: 2.3rem;
   top: 1.8rem;
   left: 1rem;
   color: white;
@@ -43,7 +42,14 @@
   display: block;
 }
 
+@media (max-width: 375px) {
+  .chat-room_skeleton .toggle-sidebar {
+    top: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
+
   .chat-room_skeleton .toggle-sidebar {
     display: flex;
   }

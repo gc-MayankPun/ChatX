@@ -8,6 +8,7 @@ import useToast from "./useToast";
 import axios from "axios";
 
 const useAuthForm = ({ endpoint, imageSet }) => {
+  console.log("Rendering Auth Form...")
   const schema = getValidationSchema(endpoint);
   const {
     register,

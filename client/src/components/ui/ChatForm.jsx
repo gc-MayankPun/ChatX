@@ -5,8 +5,8 @@ import { IoSend } from "react-icons/io5";
 import { memo, useState } from "react";
 
 const ChatForm = ({ room }) => {
-  const [inputValue, setInputValue] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageHandler();
 
   const handleSendMessage = (event) => {
@@ -21,9 +21,9 @@ const ChatForm = ({ room }) => {
     <form className="chat-room__input-wrapper" onSubmit={handleSendMessage}>
       <AutoExpandingTextarea
         value={inputValue}
+        isSending={isSending}
         onChange={setInputValue}
         onSubmit={handleSendMessage}
-        isSending={isSending}
       />
       <button
         type="submit"
@@ -39,5 +39,4 @@ const ChatForm = ({ room }) => {
   );
 };
 
-// export default ChatForm;
 export default memo(ChatForm);

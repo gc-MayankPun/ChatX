@@ -1,8 +1,4 @@
-.Toastify__progress-bar {}
-
 .Toastify__toast {
-    /* background-color: #272727; */
-    /* width: auto; */
     min-width: 30rem;
     padding: 2rem 1.5rem;
 }
@@ -25,7 +21,6 @@
 
 .input-toast__error {
     color: rgb(var(--error-color));
-    /* font-size: .9rem; */
     margin: 0;
     margin-top: .5rem;
     display: flex;
@@ -33,13 +28,10 @@
     font-size: .9rem;
     align-items: center;
     text-align: start;
-    /* border: .1rem solid red; */
 }
 
 /* Input Decision Toast CSS */
 .decision-toast {
-    /* border: .1rem solid red; */
-    /* min-width: 25rem; */
     width: 100%;
     text-align: center;
 }
@@ -99,14 +91,10 @@
 
 .confirm-toast__button--cancel {
     margin-left: 1rem;
-    /* background-color: #DF6B50;
-    color: white; */
 }
 
 /* Share Toast CSS */
 .share-toast {
-    /* flex items-center gap-3  */
-    /* border: .1rem solid red; */
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -115,16 +103,12 @@
 }
 
 .share-toast__action {
-    /* border: .1rem solid red; */
-    /* width: 80%; */
-    /* width: 70%; */
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
 .share-toast__row {
-    /* border: .1rem solid blue; */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -134,7 +118,6 @@
 .share-toast__button {
     transition: .3s ease-in-out;
     will-change: scale;
-    font-weight: 600;
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -149,14 +132,12 @@
 }
 
 .share-toast__action .share {
-    /* text-blue-600 hover:text-blue-800  */
     background-color: #2563eb;
     text-wrap: nowrap;
     color: white;
 }
 
 .share-toast__action .copy {
-    /* text-green-600 hover:text-green-800  */
     background-color: #22c55e;
 }
 
@@ -167,22 +148,16 @@
 }
 
 .share-toast__icon {
-    /* border: .1rem solid red; */
     font-size: 1.2rem;
 }
 
 .share-toast__copied {
-    /* text-green-500 text-sm  */
     color: green;
 }
-
-/* For Tablets */
-@media (max-width: 1024px) {}
 
 /* For Mobiles */
 @media (max-width: 768px) {
     .Toastify__toast {
-        /* padding: 1rem; */
         min-width: 100dvw;
     }
 

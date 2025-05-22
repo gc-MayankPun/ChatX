@@ -1,29 +1,13 @@
-import { autoCloseSidebarOnMobile } from "../utils/responsive";
-import { ThemeContextProvider } from "../context/ThemeContext";
 import ShareComponent from "../components/ui/ShareComponent";
 import CustomizeModal from "../components/ui/CustomizeModal";
-import CSSRulePlugin from "gsap/CSSRulePlugin";
+import { toastAnimation } from "../utils/toastAnimation";
 import { CiCircleAlert } from "react-icons/ci";
+import { isMobile } from "../utils/responsive";
 import "../stylesheets/custom-toast.css";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { gsap } from "gsap";
-
-gsap.registerPlugin(CSSRulePlugin);
 
 const useToast = () => {
-  const toastAnimation = (isToastCalled) => {
-    const rule = CSSRulePlugin.getRule(".app-wrapper::before");
-    gsap.to(rule, {
-      cssRule: {
-        opacity: isToastCalled ? 0.4 : 0,
-        zIndex: isToastCalled ? 102 : -1,
-      },
-      ease: "power3.out",
-      duration: 0.3,
-    });
-  };
-
   const showToast = ({ type, payload, messages, config = {} }) => {
     if (type === "promise" && payload instanceof Promise) {
       toast[type](payload, messages, config);
@@ -160,9 +144,6 @@ const useToast = () => {
       toast(toastContent, {
         autoClose: false,
         closeButton: false,
-        onClose: () => {
-          autoCloseSidebarOnMobile();
-        },
         draggable: false,
         closeOnClick: false,
         ...config,
@@ -173,7 +154,7 @@ const useToast = () => {
   };
 
   const shareToast = ({ payload, config = {} }) => {
-    const { roomID, roomName } = payload;
+    const { roomID, roomName, leaveRoom } = payload;
 
     const toastContent = ({ closeToast }) => {
       return (
@@ -181,6 +162,7 @@ const useToast = () => {
           roomID={roomID}
           roomName={roomName}
           closeToast={closeToast}
+          leaveRoom={leaveRoom}
         />
       );
     };
@@ -202,12 +184,10 @@ const useToast = () => {
   const customizeToast = ({ payload, config = {} }) => {
     const toastContent = ({ closeToast }) => {
       return (
-        <ThemeContextProvider>
-          <CustomizeModal
-            toastAnimation={toastAnimation}
-            closeToast={closeToast}
-          />
-        </ThemeContextProvider>
+        <CustomizeModal
+          toastAnimation={toastAnimation}
+          closeToast={closeToast}
+        />
       );
     };
 
@@ -217,7 +197,9 @@ const useToast = () => {
       closeOnClick: false,
       draggable: false,
       onClose: () => {
-        autoCloseSidebarOnMobile();
+        if (isMobile()) {
+          payload.closeSidebar();
+        }
         toastAnimation(false);
       },
       ...config,

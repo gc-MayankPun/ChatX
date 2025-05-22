@@ -1,8 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SidebarContextProvider } from "./context/sidebarContext";
-import { RoomContextProvider } from "./context/chatRoomContext";
-import { UserContextProvider } from "./context/userContext";
-import { SocketProvider } from "./context/socketContext";
+import { ThemeContextProvider } from "./context/ThemeContext";
 import { Bounce, ToastContainer } from "react-toastify";
 import AppWrapper from "./components/layout/AppWrapper";
 import { RouterProvider } from "react-router-dom";
@@ -13,35 +10,27 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppWrapper>
-        <RouterProvider router={router} />
-      </AppWrapper>
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        // limit={1}
-        transition={Bounce}
-      />
+      <ThemeContextProvider>
+        <AppWrapper>
+          <RouterProvider router={router} />
+        </AppWrapper>
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          // limit={1}
+          transition={Bounce}
+        />
+      </ThemeContextProvider>
     </QueryClientProvider>
   );
 };
 
 export default App;
-
-/* 
-  <UserContextProvider>
-    <SocketProvider>
-      <RoomContextProvider>
-          <SidebarContextProvider></SidebarContextProvider>
-      </RoomContextProvider>
-    </SocketProvider>
-  </UserContextProvider>
-*/

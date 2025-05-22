@@ -18,6 +18,8 @@ export const insertDateDividers = (messages) => {
   const result = [];
   let lastDate = null;
 
+  console.log("Rendering Date Function...")
+
   const todayDate = format(new Date(), "yyyy-MM-dd");
   const yesterdayDate = format(subDays(new Date(), 1), "yyyy-MM-dd");
 

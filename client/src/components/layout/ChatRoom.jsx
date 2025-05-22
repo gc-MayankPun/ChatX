@@ -1,128 +1,171 @@
-import { applyPseudoBackgroundStyle } from "../../utils/applyPseudoBackgroundStyle";
 import { useChatRooms, useCurrentRoom } from "../../context/chatRoomContext";
+import { useChatRoomActions } from "../../context/chatRoomContext";
 import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import useMessageListener from "../../hooks/useMessageListener";
-import { useSidebar } from "../../context/sidebarContext";
-import { memo, useEffect, useMemo, useRef } from "react";
-import { useTheme } from "../../context/ThemeContext";
+import ChatroomMessagesList from "../ui/ChatroomMessagesList";
+import { useAutoScroll } from "../../hooks/useAutoScroll";
+import { useUser } from "../../context/userContext";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
-import { isMobile } from "../../utils/responsive";
-import ChatMessage from "../ui/ChatMessage";
+import SidebarToggler from "../ui/SidebarToggler";
 import useToast from "../../hooks/useToast";
-import ChatDivider from "../ui/ChatDivider";
 import "../../stylesheets/chat-room.css";
+import { memo, useEffect } from "react";
 import ChatForm from "../ui/ChatForm";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
+import ChatMessage from "../ui/ChatMessage";
+import { useInView } from "react-intersection-observer";
 
-const ChatRoom = () => {
-  const { handleSidebarMenu, isSidebarClosed } = useSidebar();
+const ChatRoom = memo(() => {
   const { currentChatRoom } = useCurrentRoom();
   const { chatRooms } = useChatRooms();
-  const { activeTheme } = useTheme();
-  const { shareToast } = useToast();
   useMessageListener();
 
-  const scrollRef = useRef(null);
-
   const room = currentChatRoom ? chatRooms[currentChatRoom.roomID] : null;
-
-  const processedMessages = useMemo(() => {
-    return room ? insertDateDividers(room?.messages) : [];
-  }, [room?.messages]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [room?.messages.length, room?.roomID]);
-
-  useEffect(() => {
-    if (activeTheme) {
-      applyPseudoBackgroundStyle(
-        ".chat-room__messages-wrapper",
-        activeTheme.link
-      );
-    }
-  }, [activeTheme.link]);
-
-  if (!currentChatRoom || !room) return <ChatRoomSkeleton />;
+  if (!room) return <ChatRoomSkeleton />;
 
   return (
     <div className="chat-room">
-      <div className="chat-room__title-container">
-        <button
-          className="chat-room__buttons toggle-sidebar"
-          onClick={handleSidebarMenu}
-        >
-          <span className="center-icon">
-            {isMobile() ? (
-              <GoSidebarCollapse />
-            ) : isSidebarClosed ? (
-              <GoSidebarCollapse />
-            ) : (
-              <GoSidebarExpand />
-            )}
-          </span>
-        </button>
-        <h1 className="chat-room__title" title={room.roomName}>
-          {room.roomName}
-        </h1>
-        {room.roomID !== "🌍 General" && (
-          <button
-            className="chat-room__buttons chat-room__options"
-            onClick={() =>
-              shareToast({
-                payload: { roomName: room.roomName, roomID: room.roomID },
-              })
-            }
-          >
-            <span className="center-icon">
-              <PiDotsThreeOutlineVerticalFill />
-            </span>
-          </button>
-        )}
-      </div>
+      <ChatRoomTitle room={room} />
 
-      <div className="chat-room__messages-wrapper">
-        <div className="chat-room__messages">
-          {processedMessages.length === 0 ? (
-            <p className="chat-room__skeleton-p">
-              No chats yet. You're the one to kick it off! 🚀
-            </p>
-          ) : (
-            processedMessages.map((msg, index) => {
-              if (msg.type === "date") {
-                return <ChatDivider key={msg.dateId} message={msg.date} />;
-              }
-              if (msg.type === "user-left" || msg.type === "user-join") {
-                return (
-                  <ChatDivider key={msg.messageID} message={msg.message} />
-                );
-              }
-
-              return (
-                <ChatMessage
-                  key={msg.messageID}
-                  self={msg.self}
-                  username={msg.username}
-                  avatar={msg.avatar}
-                  message={msg.message}
-                  time={formatTime(msg.time)}
-                />
-              );
-            })
-          )}
-
-          <div ref={scrollRef} />
-        </div>
-      </div>
+      {room.roomID === "🌍 General" ? (
+        <GeneralChat room={room} />
+      ) : (
+        <ChatroomMessagesContainer room={room} />
+      )}
 
       <div className="chat-room__input-section">
         <ChatForm room={room} />
       </div>
     </div>
   );
-};
+});
+
+const ChatroomScrollableContainer = memo(({ children, scrollTrigger }) => {
+  const { containerRef, scrollRef, handleScroll, scrollToBottom } =
+    useAutoScroll();
+
+  useEffect(() => {
+    if (!scrollRef.current || scrollTrigger.length === 0) return;
+    scrollToBottom(scrollTrigger.isSelf);
+  }, [scrollTrigger.length, scrollTrigger.isSelf]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="chat-room__messages"
+      onScroll={handleScroll}
+    >
+      {children}
+      <div
+        ref={scrollRef}
+        style={{ border: ".1rem solid red", float: "left", clear: "both" }}
+      />
+    </div>
+  );
+});
+
+const ChatroomMessagesContainer = memo(({ room }) => {
+  const { user } = useUser();
+  const processedMessages = room ? insertDateDividers(room?.messages) : [];
+  const lastMessage = room?.messages[room.messages.length - 1];
+  const isSentBySelf = lastMessage?.username === user.username;
+
+  return (
+    <div className="chat-room__messages-wrapper">
+      <ChatroomScrollableContainer
+        scrollTrigger={{
+          length: processedMessages.length,
+          isSelf: isSentBySelf,
+        }}
+      >
+        {processedMessages.length === 0 ? (
+          <p className="chat-room__skeleton-p">
+            No chats yet. You're the one to kick it off! 🚀
+          </p>
+        ) : (
+          <ChatroomMessagesList processedMessages={processedMessages} />
+        )}
+      </ChatroomScrollableContainer>
+    </div>
+  );
+});
+
+const ChatRoomTitle = memo(({ room }) => {
+  const { leaveRoom } = useChatRoomActions();
+  const { shareToast } = useToast();
+
+  const handleRoomOptionsClick = () => {
+    shareToast({
+      payload: {
+        roomName: room.roomName,
+        roomID: room.roomID,
+        leaveRoom,
+      },
+    });
+  };
+
+  return (
+    <div className="chat-room__title-container">
+      <SidebarToggler />
+      <h1 className="chat-room__title" title={room.roomName}>
+        {room.roomName}
+      </h1>
+      {room.roomID !== "🌍 General" && (
+        <button
+          className="chat-room__buttons chat-room__options"
+          onClick={handleRoomOptionsClick}
+        >
+          <span className="center-icon">
+            <PiDotsThreeOutlineVerticalFill />
+          </span>
+        </button>
+      )}
+    </div>
+  );
+});
+
+const GeneralChat = memo(({ room }) => {
+  const { status, error, data, isFetchingNextPage, fetchNextPage } =
+    useInfiniteScroll();
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
+
+  return status === "pending" ? (
+    <div>Loading...</div>
+  ) : status === "error" ? (
+    <div>{error.message}</div>
+  ) : (
+    <div style={{ textAlign: "center", fontSize: "2rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {data.pages.map((page) => (
+          <div key={page.currentPage}>
+            {page.data.map((message) => {
+              return (
+                <ChatMessage
+                  key={message._id}
+                  username={message.sender.username}
+                  avatar={message.sender.avatarURL}
+                  message={message.message}
+                  self={false}
+                  time={formatTime(message.createdAt)}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      <div style={{ border: ".1rem solid green" }} ref={ref}>
+        {isFetchingNextPage && "Loading..."}
+      </div>
+    </div>
+  );
+});
 
 export default memo(ChatRoom);

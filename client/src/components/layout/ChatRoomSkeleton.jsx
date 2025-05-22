@@ -1,15 +1,10 @@
-import { useSidebar } from "../../context/sidebarContext";
-import { GoSidebarCollapse } from "react-icons/go";
 import "../../stylesheets/chat-room-skeleton.css";
+import SidebarToggler from "../ui/SidebarToggler";
 
 const ChatRoomSkeleton = () => {
-  const { openSidebar } = useSidebar();
-
   return (
     <div className="chat-room_skeleton">
-      <span className="toggle-sidebar center-icon" onClick={openSidebar}>
-        <GoSidebarCollapse />
-      </span>
+      <SidebarToggler />
 
       <div className="chat-room_skeleton__text">
         <p>
