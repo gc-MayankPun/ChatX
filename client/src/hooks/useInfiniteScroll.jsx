@@ -1,28 +1,44 @@
 import { fetchGeneralMessage } from "../api/fetchGeneralMessage";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useInView } from "react-intersection-observer";
 import ChatMessage from "../components/ui/ChatMessage";
 import { formatTime } from "../utils/formatDateTime";
-import { useEffect } from "react";
+import { useUser } from "../context/userContext";
+import { useMemo } from "react";
 
 const useInfiniteScroll = () => {
+  const { user } = useUser();
+
   const { data, error, status, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["general-messages"],
       queryFn: fetchGeneralMessage,
-      initialPageParam: 0,
       getNextPageParam: (lastPage) => lastPage.nextPage,
+      initialPageParam: 0,
     });
 
-  // const { ref, inView } = useInView();
+  const messages = useMemo(() => {
+    return data?.pages
+      ?.slice()
+      ?.reverse() // So earliest page is first
+      .flatMap((page) => page.data)
+      .map((msg) => ({
+        roomID: "🌍 General",
+        message: msg.message,
+        username: msg.sender.username,
+        avatar: msg.sender.avatarURL,
+        self: msg.sender._id === user.id,
+        time: msg.createdAt,
+        messageID: msg._id,
+      }));
+  }, [data, user.id]);
 
-  // useEffect(() => {
-  //   if (inView) {
-  //     fetchNextPage();
-  //   }
-  // }, [fetchNextPage, inView]);
-
-  return { status, error, data, isFetchingNextPage, fetchNextPage };
+  return {
+    error,
+    status,
+    data: { messages },
+    fetchNextPage,
+    isFetchingNextPage,
+  };
 
   return status === "pending" ? (
     <div>Loading...</div>

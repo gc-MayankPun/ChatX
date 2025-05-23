@@ -29,7 +29,7 @@ const ChatRoom = memo(() => {
       <ChatRoomTitle room={room} />
 
       {room.roomID === "🌍 General" ? (
-        <GeneralChat room={room} />
+        <GeneralChat />
       ) : (
         <ChatroomMessagesContainer room={room} />
       )}
@@ -41,55 +41,86 @@ const ChatRoom = memo(() => {
   );
 });
 
-const ChatroomScrollableContainer = memo(({ children, scrollTrigger }) => {
-  const { containerRef, scrollRef, handleScroll, scrollToBottom } =
-    useAutoScroll();
+const ChatroomScrollableContainer = memo(
+  ({ children, scrollTrigger, isFetchingNextPage, fetchNextPage }) => {
+    const { containerRef, scrollRef, handleScroll, scrollToBottom } =
+      useAutoScroll(isFetchingNextPage, fetchNextPage);
+    console.log("Scrolling Container...");
 
-  useEffect(() => {
-    if (!scrollRef.current || scrollTrigger.length === 0) return;
-    scrollToBottom(scrollTrigger.isSelf);
-  }, [scrollTrigger.length, scrollTrigger.isSelf]);
+    // useEffect(() => {
+    //   if (!scrollRef.current || scrollTrigger.length === 0) return;
+    //   console.log("Scrolling...");
 
-  return (
-    <div
-      ref={containerRef}
-      className="chat-room__messages"
-      onScroll={handleScroll}
-    >
-      {children}
+    //   if (isFetchingNextPage) {
+    //     scrollToBottom(false); // force scroll
+    //     return;
+    //   }
+    //   if (scrollTrigger.isSelf) {
+    //     scrollToBottom(true); // force scroll
+    //   }
+    // }, [scrollTrigger.length, isFetchingNextPage, scrollTrigger.isSelf]);
+    useEffect(() => {
+      if (!scrollRef.current || scrollTrigger.length === 0) return;
+      scrollToBottom();
+    }, [scrollTrigger.length, isFetchingNextPage]);
+
+    return (
       <div
-        ref={scrollRef}
-        style={{ border: ".1rem solid red", float: "left", clear: "both" }}
-      />
-    </div>
-  );
-});
-
-const ChatroomMessagesContainer = memo(({ room }) => {
-  const { user } = useUser();
-  const processedMessages = room ? insertDateDividers(room?.messages) : [];
-  const lastMessage = room?.messages[room.messages.length - 1];
-  const isSentBySelf = lastMessage?.username === user.username;
-
-  return (
-    <div className="chat-room__messages-wrapper">
-      <ChatroomScrollableContainer
-        scrollTrigger={{
-          length: processedMessages.length,
-          isSelf: isSentBySelf,
-        }}
+        ref={containerRef}
+        className="chat-room__messages"
+        onScroll={handleScroll}
       >
-        {processedMessages.length === 0 ? (
-          <p className="chat-room__skeleton-p">
-            No chats yet. You're the one to kick it off! 🚀
-          </p>
-        ) : (
-          <ChatroomMessagesList processedMessages={processedMessages} />
-        )}
-      </ChatroomScrollableContainer>
-    </div>
-  );
-});
+        {children}
+        <div
+          ref={scrollRef}
+          style={{ border: ".1rem solid red", float: "left", clear: "both" }}
+        />
+      </div>
+    );
+  }
+);
+
+const ChatroomMessagesContainer = memo(
+  ({ room, isFetchingNextPage, fetchNextPage }) => {
+    const { user } = useUser();
+    const processedMessages = room ? insertDateDividers(room?.messages) : [];
+    const lastMessage = room?.messages[room.messages.length - 1];
+    const isSentBySelf = lastMessage?.username === user.username;
+
+    const { ref, inView } = useInView();
+    console.log("Updating bitches...");
+
+    useEffect(() => {
+      if (inView) {
+        fetchNextPage();
+      }
+    }, [inView, fetchNextPage]);
+
+    return (
+      <div className="chat-room__messages-wrapper">
+        <ChatroomScrollableContainer
+          scrollTrigger={{
+            length: processedMessages.length,
+            isSelf: isSentBySelf,
+          }}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+        >
+          <div style={{ border: ".1rem solid green" }} ref={ref}>
+            {isFetchingNextPage && "Loading..."}
+          </div>
+          {processedMessages.length === 0 ? (
+            <p className="chat-room__skeleton-p">
+              No chats yet. You're the one to kick it off! 🚀
+            </p>
+          ) : (
+            <ChatroomMessagesList processedMessages={processedMessages} />
+          )}
+        </ChatroomScrollableContainer>
+      </div>
+    );
+  }
+);
 
 const ChatRoomTitle = memo(({ room }) => {
   const { leaveRoom } = useChatRoomActions();
@@ -125,46 +156,20 @@ const ChatRoomTitle = memo(({ room }) => {
   );
 });
 
-const GeneralChat = memo(({ room }) => {
-  const { status, error, data, isFetchingNextPage, fetchNextPage } =
+const GeneralChat = memo(() => {
+  const { data, status, error, isFetchingNextPage, fetchNextPage } =
     useInfiniteScroll();
+  console.log("Loading bitches...");
 
-  const { ref, inView } = useInView();
+  if (status === "pending") return <div>Loading...</div>;
+  if (status === "error") return <div>{error.message}</div>;
 
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, inView]);
-
-  return status === "pending" ? (
-    <div>Loading...</div>
-  ) : status === "error" ? (
-    <div>{error.message}</div>
-  ) : (
-    <div style={{ textAlign: "center", fontSize: "2rem" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {data.pages.map((page) => (
-          <div key={page.currentPage}>
-            {page.data.map((message) => {
-              return (
-                <ChatMessage
-                  key={message._id}
-                  username={message.sender.username}
-                  avatar={message.sender.avatarURL}
-                  message={message.message}
-                  self={false}
-                  time={formatTime(message.createdAt)}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
-      <div style={{ border: ".1rem solid green" }} ref={ref}>
-        {isFetchingNextPage && "Loading..."}
-      </div>
-    </div>
+  return (
+    <ChatroomMessagesContainer
+      room={data}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+    />
   );
 });
 

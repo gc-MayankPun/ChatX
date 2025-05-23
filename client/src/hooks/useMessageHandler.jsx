@@ -6,6 +6,7 @@ import { useUser } from "../context/userContext";
 import { useCallback } from "react";
 import useToast from "./useToast";
 import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useMessageHandler = () => {
   const { updateRooms } = useChatRoomActions();
@@ -13,6 +14,7 @@ const useMessageHandler = () => {
   const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useUser();
+  const queryClient = useQueryClient();
 
   const sendGeneralMessage = async (currentChatRoom, messageContent) => {
     const response = await axios.post(
@@ -36,8 +38,11 @@ const useMessageHandler = () => {
       messageID: _id,
     };
 
+    // After emitting the socket message
+    // console.log("Sending General Message...");
+
     socket.emit("send_message", newMessage);
-    updateRooms(currentChatRoom.roomID, newMessage);
+    // updateRooms(currentChatRoom.roomID, newMessage);
   };
 
   const sendMessage = async (
@@ -53,6 +58,7 @@ const useMessageHandler = () => {
 
       if (currentChatRoom.roomID === "🌍 General") {
         await sendGeneralMessage(currentChatRoom, messageContent);
+        await queryClient.invalidateQueries({ queryKey: ["general-messages"] });
         setInputValue("");
         return;
       }

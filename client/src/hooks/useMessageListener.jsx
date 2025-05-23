@@ -3,17 +3,20 @@ import { generateRandomID } from "../utils/generateRandomID";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useMessageListener = () => {
   const { updateRooms } = useChatRoomActions();
   const { chatRooms } = useChatRooms();
   const { socket } = useSocket();
   const { user } = useUser();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!socket) return;
 
     const handleReceiveMessage = (data) => {
+      queryClient.invalidateQueries({ queryKey: ["general-messages"] });
       const newMessage = {
         message: data.message,
         avatar: data.avatar,
