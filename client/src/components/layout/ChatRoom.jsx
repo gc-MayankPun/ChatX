@@ -1,20 +1,19 @@
 import { useChatRooms, useCurrentRoom } from "../../context/chatRoomContext";
 import { useChatRoomActions } from "../../context/chatRoomContext";
-import { formatTime, insertDateDividers } from "../../utils/formatDateTime";
+import { insertDateDividers } from "../../utils/formatDateTime";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import useMessageListener from "../../hooks/useMessageListener";
 import ChatroomMessagesList from "../ui/ChatroomMessagesList";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 import { useAutoScroll } from "../../hooks/useAutoScroll";
-import { useUser } from "../../context/userContext";
+import { useScroll } from "../../context/scrollContext";
+import "../../stylesheets/new-message-indicator.css";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import SidebarToggler from "../ui/SidebarToggler";
 import useToast from "../../hooks/useToast";
 import "../../stylesheets/chat-room.css";
 import { memo, useEffect } from "react";
 import ChatForm from "../ui/ChatForm";
-import useInfiniteScroll from "../../hooks/useInfiniteScroll";
-import ChatMessage from "../ui/ChatMessage";
-import { useInView } from "react-intersection-observer";
 
 const ChatRoom = memo(() => {
   const { currentChatRoom } = useCurrentRoom();
@@ -41,86 +40,74 @@ const ChatRoom = memo(() => {
   );
 });
 
-const ChatroomScrollableContainer = memo(
-  ({ children, scrollTrigger, isFetchingNextPage, fetchNextPage }) => {
-    const { containerRef, scrollRef, handleScroll, scrollToBottom } =
-      useAutoScroll(isFetchingNextPage, fetchNextPage);
-    console.log("Scrolling Container...");
+const ChatroomScrollableContainer = memo(({ children, isGeneral = false }) => {
+  const { isFetchingNextPage } = useInfiniteScroll();
+  const { containerRef, scrollRef } = useScroll();
+  const { handleScroll } = useAutoScroll();
 
-    // useEffect(() => {
-    //   if (!scrollRef.current || scrollTrigger.length === 0) return;
-    //   console.log("Scrolling...");
+  return (
+    <div
+      ref={containerRef}
+      className="chat-room__messages"
+      onScroll={handleScroll}
+    >
+      {isGeneral && isFetchingNextPage && <div>Loading...</div>}
+      {children}
+      <div id="scroll" ref={scrollRef} />
+    </div>
+  );
+});
 
-    //   if (isFetchingNextPage) {
-    //     scrollToBottom(false); // force scroll
-    //     return;
-    //   }
-    //   if (scrollTrigger.isSelf) {
-    //     scrollToBottom(true); // force scroll
-    //   }
-    // }, [scrollTrigger.length, isFetchingNextPage, scrollTrigger.isSelf]);
-    useEffect(() => {
-      if (!scrollRef.current || scrollTrigger.length === 0) return;
+const ChatroomMessagesContainer = memo(({ room, isGeneral = false }) => {
+  const processedMessages = room ? insertDateDividers(room?.messages) : [];
+  const { scrollToBottom } = useAutoScroll();
+  const { shouldAutoScroll } = useScroll();
+
+  useEffect(() => {
+    if (processedMessages.length === 0) return;
+
+    if (shouldAutoScroll) {
+      console.log("Fetching from useEffect...");
       scrollToBottom();
-    }, [scrollTrigger.length, isFetchingNextPage]);
+    }
+  }, [processedMessages]);
 
-    return (
-      <div
-        ref={containerRef}
-        className="chat-room__messages"
-        onScroll={handleScroll}
-      >
-        {children}
-        <div
-          ref={scrollRef}
-          style={{ border: ".1rem solid red", float: "left", clear: "both" }}
-        />
-      </div>
-    );
-  }
-);
+  return (
+    <div className="chat-room__messages-wrapper">
+      <ChatroomScrollableContainer isGeneral={isGeneral}>
+        {processedMessages.length === 0 ? (
+          <p className="chat-room__skeleton-p">
+            No chats yet. You're the one to kick it off! 🚀
+          </p>
+        ) : (
+          <ChatroomMessagesList processedMessages={processedMessages} />
+        )}
+      </ChatroomScrollableContainer>
+      {!shouldAutoScroll &&
+        checkNewMessage(
+          processedMessages[processedMessages.length - 1].messageID
+        ) && <NewMessageIndicator scrollToBottom={scrollToBottom} />}
+    </div>
+  );
+});
 
-const ChatroomMessagesContainer = memo(
-  ({ room, isFetchingNextPage, fetchNextPage }) => {
-    const { user } = useUser();
-    const processedMessages = room ? insertDateDividers(room?.messages) : [];
-    const lastMessage = room?.messages[room.messages.length - 1];
-    const isSentBySelf = lastMessage?.username === user.username;
-
-    const { ref, inView } = useInView();
-    console.log("Updating bitches...");
-
-    useEffect(() => {
-      if (inView) {
-        fetchNextPage();
-      }
-    }, [inView, fetchNextPage]);
-
-    return (
-      <div className="chat-room__messages-wrapper">
-        <ChatroomScrollableContainer
-          scrollTrigger={{
-            length: processedMessages.length,
-            isSelf: isSentBySelf,
-          }}
-          isFetchingNextPage={isFetchingNextPage}
-          fetchNextPage={fetchNextPage}
-        >
-          <div style={{ border: ".1rem solid green" }} ref={ref}>
-            {isFetchingNextPage && "Loading..."}
-          </div>
-          {processedMessages.length === 0 ? (
-            <p className="chat-room__skeleton-p">
-              No chats yet. You're the one to kick it off! 🚀
-            </p>
-          ) : (
-            <ChatroomMessagesList processedMessages={processedMessages} />
-          )}
-        </ChatroomScrollableContainer>
-      </div>
-    );
-  }
-);
+import { FaArrowCircleDown } from "react-icons/fa";
+import { checkNewMessage } from "../../utils/checkNewMessage";
+const NewMessageIndicator = ({ scrollToBottom }) => {
+  return (
+    <button
+      onClick={scrollToBottom}
+      tabIndex={0}
+      aria-label="View new messages"
+      className="new-message-indicator__button"
+    >
+      <span className="center-icon new-message-indicator__icon">
+        <FaArrowCircleDown />
+      </span>{" "}
+      View New Messages
+    </button>
+  );
+};
 
 const ChatRoomTitle = memo(({ room }) => {
   const { leaveRoom } = useChatRoomActions();
@@ -157,20 +144,12 @@ const ChatRoomTitle = memo(({ room }) => {
 });
 
 const GeneralChat = memo(() => {
-  const { data, status, error, isFetchingNextPage, fetchNextPage } =
-    useInfiniteScroll();
-  console.log("Loading bitches...");
+  const { data, status, error } = useInfiniteScroll();
 
   if (status === "pending") return <div>Loading...</div>;
   if (status === "error") return <div>{error.message}</div>;
 
-  return (
-    <ChatroomMessagesContainer
-      room={data}
-      isFetchingNextPage={isFetchingNextPage}
-      fetchNextPage={fetchNextPage}
-    />
-  );
+  return <ChatroomMessagesContainer room={data} isGeneral={true} />;
 });
 
 export default memo(ChatRoom);

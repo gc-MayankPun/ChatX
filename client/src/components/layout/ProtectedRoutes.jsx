@@ -8,6 +8,7 @@ import { setItem } from "../../utils/storage";
 import { useEffect, useState } from "react";
 import useToast from "../../hooks/useToast";
 import Loader from "../ui/Loader";
+import { ScrollContextProvider } from "../../context/scrollContext";
 
 const ProtectedRoutes = () => {
   const [checking, setChecking] = useState(true);
@@ -33,13 +34,15 @@ const ProtectedRoutes = () => {
 
   return (
     <UserContextProvider>
-      <SocketProvider>
-        <RoomContextProvider>
-          <SidebarContextProvider>
-            <Outlet />
-          </SidebarContextProvider>
-        </RoomContextProvider>
-      </SocketProvider>
+      <ScrollContextProvider>
+        <SocketProvider>
+          <RoomContextProvider>
+            <SidebarContextProvider>
+              <Outlet />
+            </SidebarContextProvider>
+          </RoomContextProvider>
+        </SocketProvider>
+      </ScrollContextProvider>
     </UserContextProvider>
   );
 };

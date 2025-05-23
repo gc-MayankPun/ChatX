@@ -1,20 +1,18 @@
-import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
+import { useChatRoomActions } from "../context/chatRoomContext";
 import { generateRandomID } from "../utils/generateRandomID";
+import { useQueryClient } from "@tanstack/react-query";
 import { censorMessage } from "../utils/censorMessage";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
-import { useCallback } from "react";
 import useToast from "./useToast";
 import axios from "axios";
-import { useQueryClient } from "@tanstack/react-query";
 
 const useMessageHandler = () => {
   const { updateRooms } = useChatRoomActions();
-  const { setChatRooms } = useChatRooms();
+  const queryClient = useQueryClient();
   const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useUser();
-  const queryClient = useQueryClient();
 
   const sendGeneralMessage = async (currentChatRoom, messageContent) => {
     const response = await axios.post(
@@ -77,7 +75,6 @@ const useMessageHandler = () => {
 
       socket.emit("send_message", newMessage);
       updateRooms(currentChatRoom.roomID, newMessage);
-
       setInputValue("");
     } catch (err) {
       showToast({
@@ -89,39 +86,7 @@ const useMessageHandler = () => {
     }
   };
 
-  const fetchGeneralMessages = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
-        { withCredentials: true }
-      );
-
-      const messages = response.data.messages.map((msg) => ({
-        roomID: "🌍 General",
-        message: msg.message,
-        username: msg.sender.username,
-        avatar: msg.sender.avatarURL,
-        self: msg.sender._id === user.id,
-        time: msg.createdAt,
-        messageID: msg._id,
-      }));
-
-      setChatRooms((prev) => ({
-        ...prev,
-        ["🌍 General"]: {
-          ...prev["🌍 General"],
-          messages,
-        },
-      }));
-    } catch (error) {
-      showToast({
-        type: "error",
-        payload: "Failed to fetch general message. Try refreshing",
-      });
-    }
-  }, [user.id, setChatRooms]);
-
-  return { sendMessage, fetchGeneralMessages };
+  return { sendMessage };
 };
 
 export default useMessageHandler;

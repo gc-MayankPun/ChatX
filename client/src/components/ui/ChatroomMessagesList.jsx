@@ -1,7 +1,7 @@
 import { formatTime } from "../../utils/formatDateTime";
 import ChatDivider from "./ChatDivider";
 import ChatMessage from "./ChatMessage";
-import { memo,} from "react";;
+import { memo } from "react";
 
 const ChatroomMessagesList = memo(({ processedMessages }) => {
   console.log("Rendering Message Lists...")

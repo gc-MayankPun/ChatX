@@ -19,7 +19,6 @@ export const fetchGeneralMessage = async ({ pageParam }) => {
       data: messages,
       currentPage: pageParam,
       nextPage: pageParam + LIMIT < total ? pageParam + LIMIT : null,
-      total,
     };
   } catch (error) {
     console.error("Failed to fetch messages:", error);

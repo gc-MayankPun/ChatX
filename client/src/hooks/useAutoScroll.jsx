@@ -1,42 +1,41 @@
-import { useCallback, useRef, useState } from "react";
+import { useScroll } from "../context/scrollContext";
+import useInfiniteScroll from "./useInfiniteScroll";
+import { useCallback, useRef } from "react";
 
-export const useAutoScroll = (isFetchingNextPage, fetchNextPage) => {
-  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
-  const containerRef = useRef(null);
-  const scrollRef = useRef(null);
-  const isFetchingRef = useRef(null);
+export const useAutoScroll = () => {
+  const { containerRef, scrollRef, shouldAutoScroll, setShouldAutoScroll } =
+    useScroll();
+  const { fetchNextPage } = useInfiniteScroll();
+  const isFetchingRef = useRef(false);
 
-  const handleScroll = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  const handleScroll = useCallback(async () => {
+    if (!containerRef.current) return;
 
-    const { scrollTop, scrollHeight, clientHeight } = container;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-    // const threshold = clientHeight * 0.5;
-    const threshold = clientHeight * 0.8;
+    const threshold = clientHeight / 4;
 
     setShouldAutoScroll(distanceFromBottom <= threshold);
 
-    // if (scrollTop === 0 && !isFetchingRef.current) {
-    //   isFetchingRef.current = true;
-    //   fetchNextPage().finally(() => {
-    //     isFetchingRef.current = false;
-    //   });
-    // }
+    if (scrollTop === 0 && !isFetchingRef.current) {
+      console.log("Top reached. Fetching older messages...");
+      isFetchingRef.current = true; // Lock fetching
+
+      await fetchNextPage();
+
+      requestAnimationFrame(() => {
+        containerRef.current.scrollTop = 20;
+        isFetchingRef.current = false; // Unlock after adjustment
+      });
+    }
   }, []);
 
   const scrollToBottom = useCallback(() => {
-    if (scrollRef.current && shouldAutoScroll) {
-      console.log("Scrolling to bottom...");
+    if (scrollRef.current || shouldAutoScroll) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     } else {
-      console.log("Skipping scroll:", {
-        scrollRef: scrollRef.current,
-        shouldAutoScroll,
-      });
     }
   }, [shouldAutoScroll]);
-
   return {
     containerRef,
     scrollRef,

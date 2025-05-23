@@ -1,16 +1,16 @@
 import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import { generateRandomID } from "../utils/generateRandomID";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSocket } from "../context/socketContext";
 import { useUser } from "../context/userContext";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 const useMessageListener = () => {
   const { updateRooms } = useChatRoomActions();
+  const queryClient = useQueryClient();
   const { chatRooms } = useChatRooms();
   const { socket } = useSocket();
   const { user } = useUser();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!socket) return;

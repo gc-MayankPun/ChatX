@@ -1,6 +1,5 @@
 import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import useChatRoomListener from "../hooks/useChatRoomListener";
-import useMessageHandler from "../hooks/useMessageHandler";
 import { toastAnimation } from "../utils/toastAnimation";
 import ChatRoom from "../components/layout/ChatRoom";
 import { useSocket } from "../context/socketContext";
@@ -10,7 +9,6 @@ import "../stylesheets/home-page.css";
 import { useEffect } from "react";
 
 const HomePage = () => {
-  const { fetchGeneralMessages } = useMessageHandler();
   const { joinRoomThroughUrl } = useChatRoomActions();
   const { emitJoinRoom } = useChatRoomListener();
   const { socket, isConnected } = useSocket();
@@ -19,13 +17,10 @@ const HomePage = () => {
   useEffect(() => {
     if (socket && isConnected && chatRooms) {
       Object.keys(chatRooms).forEach(async (roomID) => {
-        if (roomID === "🌍 General") {
-          // fetchGeneralMessages();
-        }
         emitJoinRoom(roomID);
       });
     }
-  }, [socket, isConnected, emitJoinRoom, fetchGeneralMessages]);
+  }, [socket, isConnected, emitJoinRoom]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -33,7 +28,6 @@ const HomePage = () => {
     toastAnimation(false);
 
     if (roomID) {
-      console.log("Yes");
       joinRoomThroughUrl(roomID);
 
       // Remove the roomID from URL
