@@ -1,5 +1,5 @@
 import ShareComponent from "../components/ui/ShareComponent";
-import CustomizeModal from "../components/ui/CustomizeModal";
+import CustomizeModal from "../features/Modal/CustomizeModal";
 import { toastAnimation } from "../utils/toastAnimation";
 import { CiCircleAlert } from "react-icons/ci";
 import { isMobile } from "../utils/responsive";

@@ -20,12 +20,14 @@ export const SocketProvider = ({ children }) => {
 
     socketRef.current.on("connect", () => {
       setIsConnected(true);
-      console.log("✅ Socket connected", socketInstance.id);
+      // console.log("✅ Socket connected", socketInstance.id);
+      // console.log("User is Online")
     });
 
     socketRef.current.on("disconnect", () => {
       setIsConnected(false);
-      console.log("⚠️ Socket disconnected");
+      // console.log("⚠️ Socket disconnected");
+      // console.log("User is Offline")
     });
 
     return () => socketInstance.disconnect();

@@ -194,11 +194,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    gap: .5rem
-}
-
-.credentials-container .avatar__div {
-    position: relative;
+    gap: .5rem; 
 }
 
 .credentials-container .avatar__div .spiner {
@@ -210,25 +206,8 @@
     font-size: 2rem;
 }
 
-
 .user-avatar__subhead {
     text-align: center;
-}
-
-#avatar-input {
-    display: none;
-}
-
-.credentials-container .user-avatar {
-    cursor: pointer;
-    height: 6.5rem;
-    width: 6.5rem;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    image-rendering: auto;
-    transition: .3s ease;
-    will-change: opacity, scale;
 }
 
 .credentials-container .avatar__div:has(.spiner) .user-avatar {

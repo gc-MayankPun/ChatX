@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const uploadToCloudinary = require("../utils/cloudinaryUtil");
 const { deleteTempFile } = require("../utils/multerUtil");
+const { DEFAULT_AVATAR_URL } = require("../utils/constants");
 
 const registerUser = async (req, res) => {
   const { username, password } = req.body;
@@ -16,8 +17,7 @@ const registerUser = async (req, res) => {
       publicId: `avatar/${username}`,
     });
   } else {
-    avatarURL =
-      "https://res.cloudinary.com/dozdj2yha/image/upload/f_auto,q_auto/v1747328460/blank-profile-picture-973460_1280_ybew2z.png";
+    avatarURL = DEFAULT_AVATAR_URL;
   }
 
   // Validate request body

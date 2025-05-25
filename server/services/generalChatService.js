@@ -1,4 +1,5 @@
 const GeneralChatModel = require("../models/generalChatModel");
+const { MAX_GENERAL_MESSAGES } = require("../utils/constants");
 const ApiError = require("../utils/ApiError");
 
 const createMessage = async (message, senderID) => {
@@ -16,11 +17,11 @@ const createMessage = async (message, senderID) => {
 
     // Enforce max 5000 messages limit
     const totalCount = await GeneralChatModel.countDocuments();
-    const MAX_MESSAGES = 5000;
+    // const MAX_MESSAGES = 5000;
 
-    if (totalCount > MAX_MESSAGES) {
+    if (totalCount > MAX_GENERAL_MESSAGES) {
       // Number of messages to remove
-      const excessCount = totalCount - MAX_MESSAGES;
+      const excessCount = totalCount - MAX_GENERAL_MESSAGES;
 
       // Find IDs of oldest messages
       const oldestMessages = await GeneralChatModel.find({})
@@ -53,11 +54,14 @@ const getAllGeneralMessages = async (offset, limit) => {
   try {
     const total = await GeneralChatModel.countDocuments();
     const messages = await GeneralChatModel.find({})
-      // .sort({ createdAt: 1 }) // sort oldest to newest
       .sort({ createdAt: -1 }) // newest first
       .skip(offset) // skip first 'offset' messages
       .limit(limit) // return only 'limit' messages
-      .populate("sender", "username avatarURL _id");
+      .populate({
+        path: "sender",
+        select: "username avatarURL _id",
+        match: { _id: { $ne: null } }, // only match existing senders
+      });
 
     return { total, messages: messages.reverse() };
   } catch (error) {

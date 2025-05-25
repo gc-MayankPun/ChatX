@@ -1,5 +1,5 @@
-import "../../stylesheets/chat-room-skeleton.css";
-import SidebarToggler from "../ui/SidebarToggler";
+import SidebarToggler from "../../components/ui/SidebarToggler";
+import "./styles/chat-room-skeleton.css";
 
 const ChatRoomSkeleton = () => {
   return (

@@ -4,10 +4,9 @@ import { createBrowserRouter } from "react-router-dom";
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 import RegisterForm from "./pages/auth/RegisterForm";
 import LoginForm from "./pages/auth/LoginForm";
+import Error from "./pages/ErrorPage/Error";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
-import Test from "./components/ui/Test";
-import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -18,10 +17,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
-      },
-      {
-        path: "/test",
-        element: <Test />,
       },
     ],
   },

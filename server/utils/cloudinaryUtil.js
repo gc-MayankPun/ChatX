@@ -1,3 +1,4 @@
+const ApiError = require("./ApiError");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 
@@ -17,7 +18,8 @@ const uploadToCloudinary = async ({ file, publicId }) => {
       invalidate: true,
     })
     .catch((error) => {
-      console.log(error);
+      console.error("Cloudinary upload failed:", error);
+      throw new ApiError("Failed to upload image", 500);
     });
 
   // Optimize delivery by resizing and applying auto-format and auto-quality

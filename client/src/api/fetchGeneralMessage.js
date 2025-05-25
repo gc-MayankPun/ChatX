@@ -1,27 +1,28 @@
-import axios from "axios";
-
-const LIMIT = 10;
+import { FETCH_PAGE_LIMIT } from "../utils/constants";
+import { axiosInstance } from "./axiosInstance";
 
 export const fetchGeneralMessage = async ({ pageParam }) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
-      {
-        params: { offset: pageParam, limit: LIMIT },
-        withCredentials: true,
-      }
-    );
+    const data = await axiosInstance({
+      method: "get",
+      url: `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/receiveAll`,
+      config: {
+        params: { offset: pageParam, limit: FETCH_PAGE_LIMIT },
+      },
+    });
 
-    const messages = response.data.messages;
-    const total = response.data.total; // Total number of messages
+    const messages = data.messages;
+    const total = data.total; // Total number of messages
 
     return {
       data: messages,
       currentPage: pageParam,
-      nextPage: pageParam + LIMIT < total ? pageParam + LIMIT : null,
+      nextPage:
+        pageParam + FETCH_PAGE_LIMIT < total
+          ? pageParam + FETCH_PAGE_LIMIT
+          : null,
     };
   } catch (error) {
-    console.error("Failed to fetch messages:", error);
     throw error;
   }
 };

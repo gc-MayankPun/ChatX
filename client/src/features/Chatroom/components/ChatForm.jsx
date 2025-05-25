@@ -1,5 +1,5 @@
-import AutoExpandingTextarea from "../ui/AutoExpandingTextarea";
-import useMessageHandler from "../../hooks/useMessageHandler";
+import AutoExpandingTextarea from "../../../components/ui/AutoExpandingTextarea";
+import useMessageHandler from "../hooks/useMessageHandler";
 import { ImSpinner2 } from "react-icons/im";
 import { IoSend } from "react-icons/io5";
 import { memo, useState } from "react";

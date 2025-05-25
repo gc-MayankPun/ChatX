@@ -1,11 +1,11 @@
-import { useChatRoomActions } from "../context/chatRoomContext";
-import { generateRandomID } from "../utils/generateRandomID";
+import { useChatRoomActions } from "../../../context/chatRoomContext";
+import { generateRandomID } from "../../../utils/generateRandomID";
+import { censorMessage } from "../../../utils/censorMessage";
+import { axiosInstance } from "../../../api/axiosInstance";
+import { useSocket } from "../../../context/socketContext";
 import { useQueryClient } from "@tanstack/react-query";
-import { censorMessage } from "../utils/censorMessage";
-import { useSocket } from "../context/socketContext";
-import { useUser } from "../context/userContext";
-import useToast from "./useToast";
-import axios from "axios";
+import { useUser } from "../../../context/userContext";
+import useToast from "../../../hooks/useToast";
 
 const useMessageHandler = () => {
   const { updateRooms } = useChatRoomActions();
@@ -15,16 +15,14 @@ const useMessageHandler = () => {
   const { user } = useUser();
 
   const sendGeneralMessage = async (currentChatRoom, messageContent) => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/send`,
-      { message: messageContent },
-      {
-        withCredentials: true,
-      }
-    );
+    const data = await axiosInstance({
+      method: "post",
+      url: `${import.meta.env.VITE_SERVER_BASE_URL}/generalChat/send`,
+      payload: { message: messageContent },
+    });
 
     const { message, sender, _id, createdAt, updatedAt } =
-      response.data.generalChat.newMessage;
+      data.generalChat.newMessage;
 
     const newMessage = {
       roomID: currentChatRoom.roomID,

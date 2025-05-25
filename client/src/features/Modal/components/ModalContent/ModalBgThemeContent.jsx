@@ -1,68 +1,14 @@
-import useBgThemeHandler from "../../hooks/useBgThemeHandler";
-import { useTheme } from "../../context/ThemeContext";
-import { isMobile } from "../../utils/responsive";
+import useBgThemeHandler from "../../../../hooks/useBgThemeHandler";
+import { useTheme } from "../../../../context/ThemeContext";
+import { isMobile } from "../../../../utils/responsive";
 import { MdOutlineClose } from "react-icons/md";
-import { memo, useRef, useState } from "react";
 import { BsUpload } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
-import "../../stylesheets/modal.css";
+import { memo, useRef } from "react";
 
-const CustomizeModal = ({ closeToast }) => {
-  const [activeTab, setActiveTab] = useState("background");
-
-  return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <h2 className="modal-title">Customize Your Theme</h2>
-        <div className="modal-content">
-          <div className="modal-layout">
-            {/* Sidebar Navigation */}
-            <ModalSidebar setActiveTab={setActiveTab} activeTab={activeTab} />
-
-            {/* Content Area */}
-            <ModalContent activeTab={activeTab} closeToast={closeToast} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ModalSidebar = memo(({ setActiveTab, activeTab }) => {
-  return (
-    <aside className="modal-sidebar">
-      <ul className="sidebar-nav">
-        <li
-          className={`sidebar-item ${
-            activeTab === "background" ? "active" : ""
-          }`}
-          onClick={() => setActiveTab("background")}
-        >
-          Background Image
-        </li>
-        <li
-          className={`sidebar-item ${activeTab === "user" ? "active" : ""}`}
-          onClick={() => setActiveTab("user")}
-        >
-          User
-        </li>
-      </ul>
-    </aside>
-  );
-});
-
-const ModalContent = memo(({ activeTab, closeToast }) => {
-  return (
-    <section className="modal-settings">
-      <ModalBgThemeContent activeTab={activeTab} closeToast={closeToast} />
-      <ModalUserContent activeTab={activeTab} />
-    </section>
-  );
-});
-
-const ModalBgThemeContent = memo(({ activeTab, closeToast }) => {
-  const { backgroundThemes, setBackgroundThemes, activeTheme } = useTheme();
+export const ModalBgThemeContent = memo(({ activeTab, closeToast }) => {
   const backgroundRef = useRef(null);
+  const { backgroundThemes, setBackgroundThemes, activeTheme } = useTheme();
   const { handleImageUpload, handleSelectTheme, handleRemoveTheme } =
     useBgThemeHandler(
       backgroundThemes,
@@ -135,16 +81,3 @@ const ModalBgThemeContent = memo(({ activeTab, closeToast }) => {
     )
   );
 });
-
-const ModalUserContent = memo(({ activeTab }) => {
-  return (
-    activeTab === "user" && (
-      <div className="user-settings">
-        <p>User customization is on the way!</p>
-        <p>Stay tuned — exciting features will be added soon.</p>
-      </div>
-    )
-  );
-});
-
-export default memo(CustomizeModal);

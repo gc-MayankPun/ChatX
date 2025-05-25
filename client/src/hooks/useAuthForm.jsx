@@ -2,13 +2,12 @@ import { getValidationSchema } from "../utils/yupValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { getItem, setItem } from "../utils/storage";
+import { axiosInstance } from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useToast from "./useToast";
-import axios from "axios";
 
 const useAuthForm = ({ endpoint, imageSet }) => {
-  console.log("Rendering Auth Form...")
   const schema = getValidationSchema(endpoint);
   const {
     register,
@@ -21,14 +20,12 @@ const useAuthForm = ({ endpoint, imageSet }) => {
 
   const mutation = useMutation({
     mutationFn: async (formData) => {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth${endpoint}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data;
+      const data = await axiosInstance({
+        method: "post",
+        url: `${import.meta.env.VITE_SERVER_BASE_URL}/auth${endpoint}`,
+        payload: formData,
+      });
+      return data;
     },
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
@@ -45,6 +42,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
       }
     },
     onError: (error) => {
+      console.log(error)
       const message = error?.response?.data?.message || "Something went wrong!";
 
       if (error?.status === 409) {
@@ -66,17 +64,12 @@ const useAuthForm = ({ endpoint, imageSet }) => {
       });
       if (!logoutConfirm) return;
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
-        {
-          method: "post",
-          credentials: "include",
-        }
-      );
+      const data = await axiosInstance({
+        method: "post",
+        url: `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
+      });
 
-      if (response.ok) {
-        const data = await response.json();
-
+      if (data) {
         localStorage.removeItem("currentChatRoom");
         localStorage.removeItem("user");
         sessionStorage.removeItem("chatRooms");

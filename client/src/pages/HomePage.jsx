@@ -1,12 +1,14 @@
 import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import useChatRoomListener from "../hooks/useChatRoomListener";
 import { toastAnimation } from "../utils/toastAnimation";
-import ChatRoom from "../components/layout/ChatRoom";
+// import ChatRoom from "../components/layout/ChatRoom";
 import { useSocket } from "../context/socketContext";
-import Sidebar from "../components/layout/Sidebar";
+// import Sidebar from "../components/layout/Sidebar";
 import Loader from "../components/ui/Loader";
 import "../stylesheets/home-page.css";
 import { useEffect } from "react";
+import Sidebar from "../features/Sidebar/Sidebar";
+import ChatRoom from "../features/Chatroom/ChatRoom";
 
 const HomePage = () => {
   const { joinRoomThroughUrl } = useChatRoomActions();
