@@ -1,8 +1,9 @@
 import { getValidationSchema } from "../utils/yupValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
-import { getItem, setItem } from "../utils/storage";
 import { axiosInstance } from "../api/axiosInstance";
+import { getItem, setItem } from "../utils/storage";
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useToast from "./useToast";
@@ -17,6 +18,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
   } = useForm({ resolver: yupResolver(schema) });
   const { showToast, confirmToast } = useToast();
   const navigate = useNavigate();
+  const { setToken } = useAuth();
 
   const mutation = useMutation({
     mutationFn: async (formData) => {
@@ -30,6 +32,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
       setItem("user", data.user);
+      setToken(data.accessToken);
 
       const redirectURL = getItem("redirectAfterAuth") || "/";
       localStorage.removeItem("redirectAfterAuth");
@@ -42,7 +45,6 @@ const useAuthForm = ({ endpoint, imageSet }) => {
       }
     },
     onError: (error) => {
-      console.log(error)
       const message = error?.response?.data?.message || "Something went wrong!";
 
       if (error?.status === 409) {
@@ -71,8 +73,8 @@ const useAuthForm = ({ endpoint, imageSet }) => {
 
       if (data) {
         localStorage.removeItem("currentChatRoom");
-        localStorage.removeItem("user");
         sessionStorage.removeItem("chatRooms");
+        localStorage.removeItem("user");
 
         showToast({ type: "success", payload: data.message });
         navigate("/auth/login");

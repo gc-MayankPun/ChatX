@@ -3,9 +3,8 @@ import { ModalSidebar } from "./components/ModalSidebar";
 import { memo, useState } from "react";
 import "./styles/modal.css";
 
-const CustomizeModal = ({ closeToast }) => {
+const CustomizeModal = ({ closeToast, navigate }) => {
   const [activeTab, setActiveTab] = useState("background");
-  console.log("Rendering Modal...")
 
   return (
     <div className="modal-overlay">
@@ -17,7 +16,7 @@ const CustomizeModal = ({ closeToast }) => {
             <ModalSidebar setActiveTab={setActiveTab} activeTab={activeTab} />
 
             {/* Content Area */}
-            <ModalContent activeTab={activeTab} closeToast={closeToast} />
+            <ModalContent activeTab={activeTab} closeToast={closeToast} navigate={navigate} />
           </div>
         </div>
       </div>

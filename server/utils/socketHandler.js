@@ -20,13 +20,11 @@ const socketHandler = (io) => {
       //   `User ${socket.user.username} joined a room with id: ${roomID}`
       // );
       if (roomID !== "🌍 General") {
-        socket
-          .to(roomID)
-          .emit("user-join", {
-            roomID,
-            username: socket.user.username,
-            action: "join",
-          });
+        socket.to(roomID).emit("user-join", {
+          roomID,
+          username: socket.user.username,
+          action: "join",
+        });
       }
     });
 
@@ -35,13 +33,11 @@ const socketHandler = (io) => {
       socket.leave(roomID);
       // console.log(`User ${socket.user.username} left ${roomID} room`);
       if (roomID !== "🌍 General") {
-        socket
-          .to(roomID)
-          .emit("user-left", {
-            roomID,
-            username: socket.user.username,
-            action: "leave",
-          });
+        socket.to(roomID).emit("user-left", {
+          roomID,
+          username: socket.user.username,
+          action: "leave",
+        });
       }
     });
 

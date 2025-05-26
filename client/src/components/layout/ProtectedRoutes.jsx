@@ -3,33 +3,37 @@ import { ScrollContextProvider } from "../../context/scrollContext";
 import { RoomContextProvider } from "../../context/chatRoomContext";
 import { SocketProvider } from "../../context/socketContext";
 import { Outlet, useNavigate } from "react-router-dom";
-import { validateToken } from "../../api/apiClient";
-import { setItem } from "../../utils/storage";
-import { useEffect, useState } from "react";
+import { useAuth } from "../../context/authContext";
 import useToast from "../../hooks/useToast";
+import { memo, useEffect } from "react";
 import Loader from "../ui/Loader";
+import { axiosInstance } from "../../api/axiosInstance";
+import { useQuery } from "@tanstack/react-query";
 
 const ProtectedRoutes = () => {
-  const [checking, setChecking] = useState(true);
   const { showToast } = useToast();
   const navigate = useNavigate();
+  // const { token, setToken } = useAuth();
 
-  useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        await validateToken();
-        setChecking(false);
-      } catch (error) {
-        showToast({ type: "error", payload: error.message });
-        const currentUrl = window.location.href;
-        setItem("redirectAfterAuth", currentUrl);
-        navigate("/auth/login");
-      }
-    };
-    verifyAuth();
-  }, [navigate]);
+  // useEffect(async () => {
+  //   if (!token) {
+  //     try {
+  //       const data = await axiosInstance({
+  //         method: "get",
+  //         url: `${import.meta.env.VITE_SERVER_BASE_URL}/refresh-token`,
+  //       });
+  //       console.log("Setting this token:", data.accessToken);
+  //       setToken(data.accessToken);
+  //     } catch (error) {
+  //       showToast({ type: "error", payload: "Session expired. Please login." });
+  //       navigate("/auth/login");
+  //     }
+  //   }
+  // }, [token]);
 
-  if (checking) return <Loader />;
+  // if (!token) return <Loader />;
+
+  
 
   return (
     <ScrollContextProvider>
@@ -44,4 +48,4 @@ const ProtectedRoutes = () => {
   );
 };
 
-export default ProtectedRoutes;
+export default memo(ProtectedRoutes);

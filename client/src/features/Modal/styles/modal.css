@@ -172,6 +172,12 @@
     align-items: center;
 }
 
+.user-settings__title {
+    text-align: start;
+    font-weight: 500;
+    width: 100%;
+}
+
 .user-settings #user-avatar__container {
     height: 5rem;
     width: 5rem;
@@ -194,25 +200,37 @@
     color: #111111;
 }
 
-.user-settings__footer {
-    /* margin-top: .5rem; */
+.user-settings__btn-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2rem;
+}
+
+.user-settings__button {
+    width: 5rem;
+    transition: .3s ease;
+    will-change: scale;
+}
+
+.user-settings__button:hover {
+    transform: scale(.9);
 }
 
 .user-save__button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    /* padding: .5rem1rem; */
     background-color: blue;
     color: white;
-    width: 5rem;
-    transition: .3s ease;
-    will-change: scale
 }
 
-.user-save__button:hover {
-    transform: scale(.9);
+.user-delete__button {
+    background-color: red;
+    color: white;
+    width: 8rem;
 }
+
+
 
 /* For Tablets */
 @media (max-width: 1024px) {
@@ -266,6 +284,9 @@
 
     .background-option {
         height: 7rem;
+    }
 
+    .user-settings__title{
+        display: none;
     }
 }

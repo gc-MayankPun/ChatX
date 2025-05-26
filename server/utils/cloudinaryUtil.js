@@ -14,6 +14,7 @@ const uploadToCloudinary = async ({ file, publicId }) => {
   const uploadResult = await cloudinary.uploader
     .upload(file, {
       public_id: publicId,
+      folder: "ChatX/avatars/",
       overwrite: true,
       invalidate: true,
     })
@@ -41,4 +42,25 @@ const uploadToCloudinary = async ({ file, publicId }) => {
   return autoCropUrl;
 };
 
-module.exports = uploadToCloudinary;
+const deleteFromCloudinary = async (publicId) => {
+  try {
+    if (!publicId)
+      throw new ApiError("publicId is required to delete image", 400);
+
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    // result example: { result: 'ok' } on success
+    if (result.result !== "ok") {
+      throw new ApiError("Failed to delete image from Cloudinary", 500);
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Cloudinary delete failed:", error);
+    throw error instanceof ApiError
+      ? error
+      : new ApiError("Failed to delete image", 500);
+  }
+};
+
+module.exports = { uploadToCloudinary, deleteFromCloudinary };

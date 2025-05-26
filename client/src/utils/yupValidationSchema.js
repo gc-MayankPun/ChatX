@@ -1,6 +1,8 @@
+import { DELETED_USERNAME } from "./constants";
 import * as yup from "yup";
 
-const noEmojiRegex = /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF])/g;
+const noEmojiRegex =
+  /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF])/g;
 
 const registerSchema = yup.object().shape({
   username: yup
@@ -10,6 +12,7 @@ const registerSchema = yup.object().shape({
       if (!value) return true;
       return !noEmojiRegex.test(value);
     })
+    .notOneOf([`[${DELETED_USERNAME}]`], "This username is not allowed")
     .required("Username is required")
     .min(3, "Must be at least 3 characters long")
     .max(20, "Must not be more than 20 characters long"),

@@ -38,7 +38,6 @@ const useMessageHandler = () => {
     // console.log("Sending General Message...");
 
     socket.emit("send_message", newMessage);
-    // updateRooms(currentChatRoom.roomID, newMessage);
   };
 
   const sendMessage = async (
@@ -75,6 +74,15 @@ const useMessageHandler = () => {
       updateRooms(currentChatRoom.roomID, newMessage);
       setInputValue("");
     } catch (err) {
+      if (err.response?.status === 429) {
+        showToast({
+          type: "error",
+          payload:
+            "Too many messages sent. Please wait a moment before sending more, or create a custom room with faster messaging and no limits.",
+          config: { autoClose: 2000 },
+        });
+        return;
+      }
       showToast({
         type: "error",
         payload: "Failed to send message. Please try again.",

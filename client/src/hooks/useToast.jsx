@@ -187,6 +187,7 @@ const useToast = () => {
         <CustomizeModal
           toastAnimation={toastAnimation}
           closeToast={closeToast}
+          navigate={payload.navigate}
         />
       );
     };

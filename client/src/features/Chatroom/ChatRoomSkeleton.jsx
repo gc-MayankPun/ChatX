@@ -27,10 +27,6 @@ const ChatRoomSkeleton = () => {
         </p>
 
         <p>
-          🧠 We only keep your user info alive while you're active. Go MIA for 3
-          days and *poof* — you're auto-deleted. Thanks, MongoDB free tier!
-        </p>
-        <p>
           💬 Chats in your private rooms? They live only in real-time memory —
           no localStorage, no databases, no receipts. Close the tab or bounce,
           and your chats vanish like a magician's trick. 🪄

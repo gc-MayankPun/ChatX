@@ -11,12 +11,12 @@
 
 .logo {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: .5rem;
 }
 
 .logo .logo-container {
-    height: 2rem;
+    height: 3rem;
     width: auto;
 }
 
@@ -32,7 +32,6 @@
     color: #0af;
     letter-spacing: 1px;
 }
-
 
 .form-container {
     background-color: rgb(26, 26, 26);

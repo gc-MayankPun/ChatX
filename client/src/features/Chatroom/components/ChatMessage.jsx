@@ -1,3 +1,4 @@
+import { DELETED_USERNAME } from "../../../utils/constants";
 import { memo } from "react";
 
 const ChatMessage = ({ username, avatar, message, self = false, time }) => {
@@ -10,8 +11,8 @@ const ChatMessage = ({ username, avatar, message, self = false, time }) => {
       >
         <p
           className={`chat-message__sender-name ${
-            self ? "chat-message__sender-name-self" : ""
-          }`}
+            username === DELETED_USERNAME ? "deleted-user__name" : ""
+          } ${self ? "chat-message__sender-name-self" : ""} `}
         >
           {username}
         </p>

@@ -1,5 +1,5 @@
 import ChatMessage from "../../../features/Chatroom/components/ChatMessage";
-const glitchedRobotImage = "/images/glitched-robot.png";
+import { GLITCHED_ROBOT_IMAGE } from "../../../utils/constants";
 import { getRandomTime } from "../utils/getRandomTime";
 
 const pageNotFoundChat = [
@@ -14,21 +14,21 @@ const pageNotFoundChat = [
     username: "System",
     message: "🤖 Umm... this chat thread went on vacation.",
     self: false,
-    avatar: glitchedRobotImage,
+    avatar: GLITCHED_ROBOT_IMAGE,
     time: getRandomTime(),
   },
   {
     username: "System",
     message: "Either it never existed, or it got abducted by rogue code.",
     self: false,
-    avatar: glitchedRobotImage,
+    avatar: GLITCHED_ROBOT_IMAGE,
     time: getRandomTime(),
   },
   {
     username: "System",
     message: "Try checking the URL or go back by clicking the button below.",
     self: false,
-    avatar: glitchedRobotImage,
+    avatar: GLITCHED_ROBOT_IMAGE,
     time: getRandomTime(),
   },
 ];

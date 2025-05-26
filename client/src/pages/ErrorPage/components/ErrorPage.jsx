@@ -1,5 +1,5 @@
 import ChatMessage from "../../../features/Chatroom/components/ChatMessage";
-const glitchedRobotImage = "/images/glitched-robot.png";
+import { GLITCHED_ROBOT_IMAGE } from "../../../utils/constants";
 import { getRandomTime } from "../utils/getRandomTime";
 
 const systemErrorMessages = [
@@ -30,7 +30,7 @@ const errorFoundChat = [
       username: "System",
       message: msg,
       self: false,
-      avatar: glitchedRobotImage,
+      avatar: GLITCHED_ROBOT_IMAGE,
       time: getRandomTime(),
     })),
 ];

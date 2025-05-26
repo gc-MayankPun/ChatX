@@ -1,5 +1,5 @@
+import { DEFAULT_AVATAR_URL, DELETED_USERNAME } from "../utils/constants";
 import { fetchGeneralMessage } from "../api/fetchGeneralMessage";
-import { DEFAULT_AVATAR_URL } from "../utils/constants";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useUser } from "../context/userContext";
 import { useMemo } from "react";
@@ -30,7 +30,7 @@ const useInfiniteScroll = () => {
         return {
           roomID: "🌍 General",
           message: msg.message,
-          username: sender.username || "Deleted User",
+          username: sender.username || DELETED_USERNAME,
           avatar: sender.avatarURL || DEFAULT_AVATAR_URL,
           self: msg.sender?._id === user.id,
           time: msg.createdAt,

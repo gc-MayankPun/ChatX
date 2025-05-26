@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getItem } from "../utils/storage";
 import { applyPseudoBackgroundStyle } from "../utils/applyPseudoBackgroundStyle";
+import { DEFAULT_BACKGROUND_IMAGE } from "../utils/constants";
+import { getItem } from "../utils/storage";
 
 const ThemeContext = createContext(null);
 
@@ -8,7 +9,7 @@ export const ThemeContextProvider = ({ children }) => {
   const [backgroundThemes, setBackgroundThemes] = useState(
     getItem("backgroundThemes") || {
       default: {
-        link: "https://res.cloudinary.com/dozdj2yha/image/upload/v1747680988/default-background_z9gnbf.png",
+        link: DEFAULT_BACKGROUND_IMAGE,
         isActive: true,
       },
     }

@@ -29,4 +29,24 @@ const updateUser = async (username, avatarURL) => {
   }
 };
 
-module.exports = { updateUser };
+const deleteUserData = async (userID) => {
+  // Check if user exists and delete
+  try {
+    const existingUser = await UserModel.findOneAndDelete({ _id: userID });
+
+    // If deletion fails
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return deleted user data
+    return existingUser.username;
+  } catch (error) {
+    throw new ApiError(
+      error.message || "Something went wrong while deleting your account.",
+      error.statusCode || 500
+    );
+  }
+};
+
+module.exports = { updateUser, deleteUserData };

@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const helmet = require('helmet');
 const authRoutes = require("./routes/authRoutes");
 const appRoutes = require("./routes/appRoutes");
 const generalChatRoutes = require("./routes/generalChatRoutes");
@@ -15,6 +16,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(helmet()); 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

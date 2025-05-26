@@ -14,6 +14,7 @@ export const axiosInstance = async ({
       withCredentials: true,
       ...config,
     });
+
     return response.data;
   } catch (err) {
     throw err;

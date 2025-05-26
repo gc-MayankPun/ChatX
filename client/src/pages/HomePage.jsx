@@ -1,20 +1,20 @@
 import { useChatRoomActions, useChatRooms } from "../context/chatRoomContext";
 import useChatRoomListener from "../hooks/useChatRoomListener";
 import { toastAnimation } from "../utils/toastAnimation";
-// import ChatRoom from "../components/layout/ChatRoom";
 import { useSocket } from "../context/socketContext";
-// import Sidebar from "../components/layout/Sidebar";
+import ChatRoom from "../features/Chatroom/ChatRoom";
+import Sidebar from "../features/Sidebar/Sidebar";
 import Loader from "../components/ui/Loader";
 import "../stylesheets/home-page.css";
-import { useEffect } from "react";
-import Sidebar from "../features/Sidebar/Sidebar";
-import ChatRoom from "../features/Chatroom/ChatRoom";
+import { memo, useEffect } from "react";
+import { useAuth } from "../context/authContext";
 
 const HomePage = () => {
   const { joinRoomThroughUrl } = useChatRoomActions();
   const { emitJoinRoom } = useChatRoomListener();
   const { socket, isConnected } = useSocket();
   const { chatRooms } = useChatRooms();
+  // const { authLoading } = useAuth();
 
   useEffect(() => {
     if (socket && isConnected && chatRooms) {
@@ -38,6 +38,7 @@ const HomePage = () => {
     }
   }, []);
 
+  // if (authLoading || !socket || !isConnected) return <Loader />;
   if (!socket || !isConnected) return <Loader />;
 
   return (
@@ -48,4 +49,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default memo(HomePage);
