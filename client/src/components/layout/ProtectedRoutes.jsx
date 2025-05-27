@@ -2,7 +2,7 @@ import { SidebarContextProvider } from "../../context/sidebarContext";
 import { ScrollContextProvider } from "../../context/scrollContext";
 import { RoomContextProvider } from "../../context/chatRoomContext";
 import { SocketProvider } from "../../context/socketContext";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import useToast from "../../hooks/useToast";
 import { memo, useEffect } from "react";
@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 const ProtectedRoutes = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
-  // const { token, setToken } = useAuth();
+  // const { token } = useAuth();
 
   // useEffect(async () => {
   //   if (!token) {
@@ -31,9 +31,11 @@ const ProtectedRoutes = () => {
   //   }
   // }, [token]);
 
-  // if (!token) return <Loader />;
-
-  
+  // if (!token) {
+  //   // If no token, redirect to login
+  //   showToast({ type: "error", payload: "Session expired. Please login." });
+  //   return <Navigate to="/auth/login" replace />;
+  // }
 
   return (
     <ScrollContextProvider>

@@ -2,7 +2,7 @@ const rateLimit = require("express-rate-limit");
 
 const messageRateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute window
-  max: 5, // limit each IP to 1 request per windowMs
+  max: 10, // limit each IP to 1 request per windowMs
   keyGenerator: (req) => req.user.id, // assuming your authMiddleware adds user info to req.user
   message: {
     status: 429,

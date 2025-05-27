@@ -36,6 +36,11 @@ const ChatRoomSkeleton = () => {
           dramatically — ChatX doesn't judge (but hey, we might log it for
           science). 🌚
         </p>
+        
+        <p>
+          💡 <strong>Quick tip:</strong> Create your own room or join others 
+          for more flexibility and privacy than general chat.
+        </p>
       </div>
     </div>
   );

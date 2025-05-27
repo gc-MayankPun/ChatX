@@ -78,8 +78,7 @@ const useMessageHandler = () => {
         showToast({
           type: "error",
           payload:
-            "Too many messages sent. Please wait a moment before sending more, or create a custom room with faster messaging and no limits.",
-          config: { autoClose: 2000 },
+            "Too many messages sent. Please wait a moment before sending more.",
         });
         return;
       }

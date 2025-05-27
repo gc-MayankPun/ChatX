@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { axiosInstance } from "../api/axiosInstance";
 import { getItem, setItem } from "../utils/storage";
 import { useMutation } from "@tanstack/react-query";
+import { useUser } from "../context/userContext";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -19,6 +20,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
   const { showToast, confirmToast } = useToast();
   const navigate = useNavigate();
   const { setToken } = useAuth();
+  const { setUser } = useUser();
 
   const mutation = useMutation({
     mutationFn: async (formData) => {
@@ -31,6 +33,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
     },
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
+      setUser(data.user);
       setItem("user", data.user);
       setToken(data.accessToken);
 
@@ -73,7 +76,7 @@ const useAuthForm = ({ endpoint, imageSet }) => {
 
       if (data) {
         localStorage.removeItem("currentChatRoom");
-        sessionStorage.removeItem("chatRooms");
+        localStorage.removeItem("lastMessageID");
         localStorage.removeItem("user");
 
         showToast({ type: "success", payload: data.message });

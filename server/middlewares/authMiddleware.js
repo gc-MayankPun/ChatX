@@ -5,9 +5,9 @@ const authMiddleware = (req, res, next) => {
   const token =
     req.cookies.accessToken || req.headers["authorization"]?.split(" ")[1];
 
-  // if (!token) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  if (!token) {
+    return res.status(401).json({ message: "Token not provided" });
+  }
 
   try {
     // Verify token and attach decoded user to request

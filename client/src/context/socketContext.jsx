@@ -11,10 +11,8 @@ export const SocketProvider = ({ children }) => {
   const socketRef = useRef();
 
   useEffect(() => {
-    // if (!token) return;
-    if (authLoading || !token) return;
+    if (authLoading && !token) return;
     const socketInstance = io(import.meta.env.VITE_SOCKET_SERVER_BASE_URL, {
-      // withCredentials: true,
       auth: { token },
       transports: ["websocket"],
       autoConnect: true,

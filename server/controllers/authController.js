@@ -84,8 +84,9 @@ const loginUser = async (req, res) => {
     .json({ message: "Login successful. Welcome back!", user, accessToken });
 };
 
-const logoutUser = (req, res) => {
-  res.clearCookie();
+const logoutUser = (req, res) => { 
+  res.clearCookie("accessToken", COOKIE_OPTIONS);
+  res.clearCookie("refreshToken", COOKIE_OPTIONS);
   res.status(200).json({ message: "Logged out successfully, See you soon" });
 };
 

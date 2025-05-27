@@ -158,8 +158,11 @@ export const RoomContextProvider = ({ children }) => {
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
 
-    setCurrentChatRoom(updatedRooms["🌍 General"]);
-    setItem("currentChatRoom", updatedRooms["🌍 General"]);
+    // setCurrentChatRoom(updatedRooms["🌍 General"]);
+    // setItem("currentChatRoom", updatedRooms["🌍 General"]);
+
+    setCurrentChatRoom(null);
+    setItem("currentChatRoom", null);
 
     emitLeaveRoom(roomID);
   };
