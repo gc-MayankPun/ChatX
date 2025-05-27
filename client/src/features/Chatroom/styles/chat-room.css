@@ -50,16 +50,6 @@
     overflow: hidden;
 }
 
-.chat-room__messages-wrapper::before {
-    /* background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b) !important;
-    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364) !important;
-    background: linear-gradient(135deg, #7f00ff, #e100ff) !important;
-    background: linear-gradient(60deg, #2c3e50, #4ca1af) !important;
-    background: linear-gradient(45deg, #1f005c, #5b0060, #870160, #a60061, #d6006e) !important;
-    background: linear-gradient(90deg, #ff0080, #7928ca) !important;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important; */
-}
-
 .chat-room__messages {
     height: 100%;
     padding: 1rem 2rem;
