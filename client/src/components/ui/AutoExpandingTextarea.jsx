@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 
-const AutoExpandingTextarea = ({ value, onChange, onSubmit, isSending}) => {
+const AutoExpandingTextarea = ({ value, onChange, onSubmit, isSending }) => {
   const textareaRef = useRef(null);
   const mirrorRef = useRef(null);
 
@@ -20,16 +20,22 @@ const AutoExpandingTextarea = ({ value, onChange, onSubmit, isSending}) => {
   }, [value]);
 
   // Handles Enter key to submit, Shift+Enter for newline
-  const submitForm = useCallback((event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      onSubmit(event);
-    }
-  }, [onSubmit]);
+  const submitForm = useCallback(
+    (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        onSubmit(event);
+      }
+    },
+    [onSubmit]
+  );
 
   // Update value in parent
-  const handleInputChange = useCallback((event) => {
-    onChange(event.target.value);
-  }, [onChange]);
+  const handleInputChange = useCallback(
+    (event) => {
+      onChange(event.target.value);
+    },
+    [onChange]
+  );
 
   return (
     <div

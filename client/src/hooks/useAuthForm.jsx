@@ -1,14 +1,15 @@
 import { getValidationSchema } from "../utils/yupValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
+import { axiosInstance } from "../api/axiosInstance";
 import { getItem, setItem } from "../utils/storage";
+import { useMutation } from "@tanstack/react-query";
 import { useUser } from "../context/userContext";
+import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useToast from "./useToast";
-import axios from "axios";
 
-const useAuthForm = ({ endpoint, imageSet}) => {
+const useAuthForm = ({ endpoint, imageSet }) => {
   const schema = getValidationSchema(endpoint);
   const {
     register,
@@ -17,24 +18,24 @@ const useAuthForm = ({ endpoint, imageSet}) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const { showToast, confirmToast } = useToast();
-  const { setUser } = useUser();
   const navigate = useNavigate();
+  const { setToken } = useAuth();
+  const { setUser } = useUser();
 
   const mutation = useMutation({
     mutationFn: async (formData) => {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth${endpoint}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data;
+      const data = await axiosInstance({
+        method: "post",
+        url: `${import.meta.env.VITE_SERVER_BASE_URL}/auth${endpoint}`,
+        payload: formData,
+      });
+      return data;
     },
     onSuccess: (data) => {
       showToast({ type: "success", payload: data.message });
       setUser(data.user);
       setItem("user", data.user);
+      setToken(data.accessToken);
 
       const redirectURL = getItem("redirectAfterAuth") || "/";
       localStorage.removeItem("redirectAfterAuth");
@@ -56,7 +57,6 @@ const useAuthForm = ({ endpoint, imageSet}) => {
         });
       }
 
-      setUser(null);
       setItem("user", null);
       showToast({ type: "error", payload: message });
     },
@@ -69,20 +69,15 @@ const useAuthForm = ({ endpoint, imageSet}) => {
       });
       if (!logoutConfirm) return;
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
-        {
-          method: "post",
-          credentials: "include",
-        }
-      );
+      const data = await axiosInstance({
+        method: "post",
+        url: `${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`,
+      });
 
-      if (response.ok) {
-        const data = await response.json();
-
+      if (data) {
         localStorage.removeItem("currentChatRoom");
+        localStorage.removeItem("lastMessageID");
         localStorage.removeItem("user");
-        sessionStorage.removeItem("chatRooms");
 
         showToast({ type: "success", payload: data.message });
         navigate("/auth/login");

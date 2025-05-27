@@ -11,12 +11,12 @@
 
 .logo {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: .5rem;
 }
 
 .logo .logo-container {
-    height: 2rem;
+    height: 3rem;
     width: auto;
 }
 
@@ -33,7 +33,6 @@
     letter-spacing: 1px;
 }
 
-
 .form-container {
     background-color: rgb(26, 26, 26);
     text-align: center;
@@ -41,10 +40,6 @@
     border-radius: 1rem;
     padding: 1rem 1.5rem;
     margin: 1rem 0 0;
-}
-
-.form-container img {
-    /* margin-bottom: .3rem; */
 }
 
 .form-container h2 {
@@ -157,7 +152,6 @@
 
 .credentials-container .input-error {
     color: rgb(var(--error-color));
-    font-size: .8rem;
     font-size: .9rem;
     margin: 0;
     margin-top: .5rem;
@@ -193,20 +187,13 @@
 }
 
 .credentials-container .user-avatar__container {
-    /* border: .1rem solid red; */
-    /* height: 5rem; */
     width: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    gap: .5rem
-}
-
-.credentials-container .avatar__div {
-    position: relative;
-    /* border: .1rem solid red; */
+    gap: .5rem; 
 }
 
 .credentials-container .avatar__div .spiner {
@@ -218,29 +205,8 @@
     font-size: 2rem;
 }
 
-.credentials-container .user-avatar__container span {
-    /* display: inline-block; */
-    /* align-self: flex-start; */
-}
-
 .user-avatar__subhead {
     text-align: center;
-}
-
-#avatar-input {
-    display: none;
-}
-
-.credentials-container .user-avatar {
-    cursor: pointer;
-    height: 6.5rem;
-    width: 6.5rem;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    image-rendering: auto;
-    transition: .3s ease;
-    will-change: opacity, scale;
 }
 
 .credentials-container .avatar__div:has(.spiner) .user-avatar {
@@ -258,10 +224,7 @@
     font-size: .9rem;
 }
 
-.credentials-container button:hover {
-    background-color: rgb(var(--btn-2-hover-background-color));
-}
-
+.credentials-container button:hover,
 .credentials-container .reset-button:hover {
     background-color: rgb(var(--btn-2-hover-background-color));
 }
@@ -300,7 +263,6 @@
 .legal-info-container {
     margin-top: 2rem;
     text-align: center;
-    font-size: .8rem;
     font-size: .7rem;
     width: 12rem;
     color: var(--secondary-text-color);

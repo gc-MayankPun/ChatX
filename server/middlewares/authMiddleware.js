@@ -3,10 +3,10 @@ require("dotenv").config();
 
 const authMiddleware = (req, res, next) => {
   const token =
-    req.cookies.token || req.headers["authorization"]?.split(" ")[1];
+    req.cookies.accessToken || req.headers["authorization"]?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Oops! You need to log in first." });
+    return res.status(401).json({ message: "Token not provided" });
   }
 
   try {
@@ -15,9 +15,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    return res
-      .status(403)
-      .json({ message: "Your session has expired. Please log in again." });
+    return res.status(403).json({ message: "Unauthorized" });
   }
 };
 

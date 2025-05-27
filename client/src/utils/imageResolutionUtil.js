@@ -11,10 +11,12 @@ export const resizeImage = (
       const canvas = document.createElement("canvas");
       const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
 
+
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
 
       const ctx = canvas.getContext("2d");
+
 
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       

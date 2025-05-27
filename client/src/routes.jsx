@@ -1,12 +1,11 @@
 import ProtectedRoutes from "./components/layout/ProtectedRoutes";
-import ForgotPasswordForm from "./pages/auth/ForgotPasswordForm";
 import { createBrowserRouter } from "react-router-dom";
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 import RegisterForm from "./pages/auth/RegisterForm";
 import LoginForm from "./pages/auth/LoginForm";
+import Error from "./pages/ErrorPage/Error";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
-import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -36,10 +35,6 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <RegisterForm />,
-      },
-      {
-        path: "password/reset",
-        element: <ForgotPasswordForm />,
       },
     ],
   },

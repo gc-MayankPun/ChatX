@@ -1,0 +1,40 @@
+.new-message-indicator__button {
+    width: fit-content;
+    position: absolute;
+    bottom: .5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background-color: #11111157;
+    color: var(--secondary-text-color);
+    transition: .3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    animation: fadeInUp 0.3s ease;
+}
+
+.new-message-indicator__icon {
+    font-size: 1rem;
+}
+
+.new-message-indicator__button:hover {
+    background-color: #11111183;
+    background-color: #111111;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0%);
+    }
+}

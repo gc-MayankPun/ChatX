@@ -1,28 +1,13 @@
-import { useState } from "react";
-import { autoCloseSidebarOnMobile } from "../utils/responsive";
 import ShareComponent from "../components/ui/ShareComponent";
-import CustomizeModal from "../components/ui/CustomizeModal";
-import CSSRulePlugin from "gsap/CSSRulePlugin";
+import CustomizeModal from "../features/Modal/CustomizeModal";
+import { toastAnimation } from "../utils/toastAnimation";
 import { CiCircleAlert } from "react-icons/ci";
+import { isMobile } from "../utils/responsive";
 import "../stylesheets/custom-toast.css";
 import { toast } from "react-toastify";
-import { gsap } from "gsap";
-
-gsap.registerPlugin(CSSRulePlugin);
+import { useState } from "react";
 
 const useToast = () => {
-  const toastAnimation = (isToastCalled) => {
-    const rule = CSSRulePlugin.getRule(".app-wrapper::before");
-    gsap.to(rule, {
-      cssRule: {
-        opacity: isToastCalled ? 0.4 : 0,
-        zIndex: isToastCalled ? 102 : -1,
-      },
-      ease: "power3.out",
-      duration: 0.3,
-    });
-  };
-
   const showToast = ({ type, payload, messages, config = {} }) => {
     if (type === "promise" && payload instanceof Promise) {
       toast[type](payload, messages, config);
@@ -159,9 +144,6 @@ const useToast = () => {
       toast(toastContent, {
         autoClose: false,
         closeButton: false,
-        onClose: () => {
-          autoCloseSidebarOnMobile();
-        },
         draggable: false,
         closeOnClick: false,
         ...config,
@@ -172,7 +154,7 @@ const useToast = () => {
   };
 
   const shareToast = ({ payload, config = {} }) => {
-    const { roomID, roomName } = payload;
+    const { roomID, roomName, leaveRoom } = payload;
 
     const toastContent = ({ closeToast }) => {
       return (
@@ -180,6 +162,7 @@ const useToast = () => {
           roomID={roomID}
           roomName={roomName}
           closeToast={closeToast}
+          leaveRoom={leaveRoom}
         />
       );
     };
@@ -204,6 +187,7 @@ const useToast = () => {
         <CustomizeModal
           toastAnimation={toastAnimation}
           closeToast={closeToast}
+          navigate={payload.navigate}
         />
       );
     };
@@ -214,7 +198,9 @@ const useToast = () => {
       closeOnClick: false,
       draggable: false,
       onClose: () => {
-        autoCloseSidebarOnMobile();
+        if (isMobile()) {
+          payload.closeSidebar();
+        }
         toastAnimation(false);
       },
       ...config,

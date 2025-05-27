@@ -1,14 +1,14 @@
-export const validateToken = async (token) => {
+import { axiosInstance } from "./axiosInstance";
+
+export const validateToken = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/validate`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const data = await axiosInstance({
+      method: "get",
+      url: `${import.meta.env.VITE_SERVER_BASE_URL}/`,
     });
-    if (!response.ok) return console.log("Invalid token");
-    return response.json();
-  } catch (error) {
-    console.log("Token validation failed:", error);
-    return "something"
+    return data;
+  } catch (err) {
+    const message = err?.response?.data?.message || "Something went wrong!";
+    throw new Error(message);
   }
 };

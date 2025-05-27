@@ -1,0 +1,32 @@
+.avatar__div {
+    position: relative;
+}
+
+.avatar__div .spiner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    font-size: 2rem;
+}
+
+#avatar-input {
+    display: none;
+}
+
+.user-avatar {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    image-rendering: auto;
+    transition: .3s ease;
+    will-change: opacity, scale;
+}
+
+.avatar__div:has(.spiner) .user-avatar {
+    opacity: .4;
+}

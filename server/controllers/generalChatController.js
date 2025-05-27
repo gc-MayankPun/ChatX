@@ -15,8 +15,11 @@ const sendMessage = async (req, res) => {
 
 const receiveMessage = async (req, res) => {
   try {
-    const messages = await getAllGeneralMessages();
-    res.status(200).json({ messages });
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const { messages, total } = await getAllGeneralMessages(offset, limit);
+    res.status(200).json({ messages, total });
   } catch (err) {
     throw new ApiError(
       err.message || "Failed to fetch general messages.",

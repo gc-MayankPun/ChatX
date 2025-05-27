@@ -1,55 +1,20 @@
-import { useRef, useState } from "react";
+import { DEFAULT_AVATAR_URL } from "../../utils/constants";
+import PickImage from "../../components/ui/PickImage";
 import LegalInfo from "../../components/ui/LegalInfo";
-import { RiErrorWarningLine } from "react-icons/ri";
 import useAuthForm from "../../hooks/useAuthForm";
 import Input from "../../components/ui/Input";
 import { ImSpinner2 } from "react-icons/im";
 import { NavLink } from "react-router-dom";
-import {
-  base64ToFile,
-  resizeAndCropImage,
-} from "../../utils/imageResolutionUtil";
+import { useState } from "react";
 
 const RegisterForm = () => {
-  const [preview, setPreview] = useState(
-    "https://res.cloudinary.com/dozdj2yha/image/upload/f_auto,q_auto/v1747328460/blank-profile-picture-973460_1280_ybew2z.png"
-  );
-  const [fileError, setFileError] = useState(null);
   const [imageSet, setImageSet] = useState("default");
   const [isUploaded, setIsUploaded] = useState(true);
-  const avatarRef = useRef(null);
-
+  const [fileError, setFileError] = useState(null);
   const { register, handleSubmit, onSubmit, errors, isPending } = useAuthForm({
     endpoint: "/register",
     imageSet,
   });
-
-  const handleImageClick = () => {
-    avatarRef.current?.click();
-    setFileError(null);
-  };
-
-  const handleImageUpload = (event) => {
-    setIsUploaded(false);
-
-    try {
-      const file = event.target.files[0];
-      if (!file) {
-        setIsUploaded(true);
-        return;
-      }
-
-      resizeAndCropImage(file, 500, 500, (base64Image) => {
-        setPreview(base64Image);
-        const resizedFile = base64ToFile(base64Image, file.name);
-        setImageSet(resizedFile);
-        setIsUploaded(true);
-      });
-    } catch (err) {
-      setIsUploaded(true);
-      setFileError(err.message || "Image processing failed");
-    }
-  };
 
   return (
     <>
@@ -59,26 +24,20 @@ const RegisterForm = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="credentials-container">
             <div className="user-avatar__container">
-              <input
-                ref={avatarRef}
-                type="file"
-                name="avatar"
-                id="avatar-input"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-              <div className="avatar__div">
-                <img
-                  className="user-avatar"
-                  src={preview}
-                  alt="user-avatar"
-                  onClick={handleImageClick}
-                />
-                {!isUploaded && (
-                  <span className="spiner">
-                    <ImSpinner2 className="spin" />
-                  </span>
-                )}
+              <div title="Upload an avatar" id="user-avatar__container">
+                <PickImage
+                  previewImg={DEFAULT_AVATAR_URL}
+                  setImageSet={setImageSet}
+                  setIsUploaded={setIsUploaded}
+                  setFileError={setFileError}
+                  styles={{ height: "6.5rem", width: "6.5rem" }}
+                >
+                  {!isUploaded && (
+                    <span className="spiner">
+                      <ImSpinner2 className="spin" />
+                    </span>
+                  )}
+                </PickImage>
               </div>
               <div className="user-avatar__subhead">
                 <span>Upload an image</span>

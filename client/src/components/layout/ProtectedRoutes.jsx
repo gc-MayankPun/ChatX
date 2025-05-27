@@ -1,40 +1,53 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { setItem } from "../../utils/storage";
+import { SidebarContextProvider } from "../../context/sidebarContext";
+import { ScrollContextProvider } from "../../context/scrollContext";
+import { RoomContextProvider } from "../../context/chatRoomContext";
+import { SocketProvider } from "../../context/socketContext";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 import useToast from "../../hooks/useToast";
+import { memo, useEffect } from "react";
 import Loader from "../ui/Loader";
-import axios from "axios";
+import { axiosInstance } from "../../api/axiosInstance";
+import { useQuery } from "@tanstack/react-query";
 
 const ProtectedRoutes = () => {
-  const [checking, setChecking] = useState(true);
   const { showToast } = useToast();
   const navigate = useNavigate();
+  // const { token } = useAuth();
 
-  useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/`,
-          {
-            withCredentials: true,
-          }
-        );
+  // useEffect(async () => {
+  //   if (!token) {
+  //     try {
+  //       const data = await axiosInstance({
+  //         method: "get",
+  //         url: `${import.meta.env.VITE_SERVER_BASE_URL}/refresh-token`,
+  //       });
+  //       console.log("Setting this token:", data.accessToken);
+  //       setToken(data.accessToken);
+  //     } catch (error) {
+  //       showToast({ type: "error", payload: "Session expired. Please login." });
+  //       navigate("/auth/login");
+  //     }
+  //   }
+  // }, [token]);
 
-        setChecking(false);
-      } catch (err) {
-        const message = err?.response?.data?.message || "Something went wrong!";
-        showToast({ type: "error", payload: message });
-        const currentUrl = window.location.href;
-        setItem("redirectAfterAuth", currentUrl);
-        navigate("/auth/login");
-      }
-    };
-    verifyAuth();
-  }, [navigate]);
+  // if (!token) {
+  //   // If no token, redirect to login
+  //   showToast({ type: "error", payload: "Session expired. Please login." });
+  //   return <Navigate to="/auth/login" replace />;
+  // }
 
-  if (checking) return <Loader />;
-
-  return <Outlet />;
+  return (
+    <ScrollContextProvider>
+      <SocketProvider>
+        <RoomContextProvider>
+          <SidebarContextProvider>
+            <Outlet />
+          </SidebarContextProvider>
+        </RoomContextProvider>
+      </SocketProvider>
+    </ScrollContextProvider>
+  );
 };
 
-export default ProtectedRoutes;
+export default memo(ProtectedRoutes);

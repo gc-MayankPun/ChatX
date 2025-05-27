@@ -1,17 +1,17 @@
-import { createContext, useContext, useState } from "react";
 import useChatRoomListener from "../hooks/useChatRoomListener";
-import { autoCloseSidebarOnMobile } from "../utils/responsive";
 import { generateRandomID } from "../utils/generateRandomID";
+import { createContext, useContext, useState } from "react";
 import { getItem, setItem } from "../utils/storage";
 import useToast from "../hooks/useToast";
 
-const RoomContext = createContext(null);
+const ChatRoomActionsContext = createContext();
+const CurrentRoomContext = createContext();
+const ChatRoomsContext = createContext();
 
 export const RoomContextProvider = ({ children }) => {
   const { emitCreateRoom, emitJoinRoom, emitLeaveRoom } = useChatRoomListener();
   const [currentChatRoom, setCurrentChatRoom] = useState(
-    getItem("currentChatRoom") || {}
-    // getItem("currentChatRoom") || null
+    getItem("currentChatRoom") || null
   );
   const [chatRooms, setChatRooms] = useState(
     getItem("chatRooms") || {
@@ -25,77 +25,79 @@ export const RoomContextProvider = ({ children }) => {
   const { showToast, inputDecisionToast } = useToast();
 
   // Create or Join room
-  const joinOrCreateRoom = async () => {
-    // Don't allow user to create more room if the limit is hit
-    const length = Object.keys(chatRooms).length;
-    if (length > 15) {
-      showToast({
-        payload:
-          "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
-        config: {
-          autoClose: false,
-          closeButton: true,
-          closeOnClick: false,
+  const joinOrCreateRoom = () => {
+    return new Promise(async (resolve) => {
+      // Don't allow user to create more room if the limit is hit
+      const length = Object.keys(chatRooms).length;
+      if (length > 15) {
+        showToast({
+          payload:
+            "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
+          config: {
+            autoClose: false,
+            closeButton: true,
+            closeOnClick: false,
+          },
+        });
+        return;
+      }
+
+      const roomAction = await inputDecisionToast({
+        payload: {
+          title: "Join or Create room",
+          inputField: "roomName",
+          placeholder: "Enter room name or id",
+          choicePrimary: "Join",
+          choiceSecondary: "Create",
         },
+        config: { position: "top-center" },
       });
-      return;
-    }
+      const { action, inputValue } = roomAction;
+      if (!action || !inputValue) return;
 
-    const roomAction = await inputDecisionToast({
-      payload: {
-        title: "Join or Create room",
-        inputField: "roomName",
-        placeholder: "Enter room name or id",
-        choicePrimary: "Join",
-        choiceSecondary: "Create",
-      },
-      config: { position: "top-center" },
+      // If room already exists, Select that room
+      if (chatRooms[inputValue]) {
+        setCurrentChatRoom(chatRooms[inputValue]);
+        setItem("currentChatRoom", chatRooms[inputValue]);
+        return;
+      }
+
+      let updatedRooms;
+      if (action === "Create") {
+        // Generate random ID for new rooms
+        const randomID = generateRandomID();
+        const roomID = `${randomID}::${inputValue}`;
+        emitCreateRoom(roomID, inputValue);
+
+        updatedRooms = {
+          ...chatRooms,
+          [roomID]: { roomName: inputValue, roomID, messages: [] },
+        };
+
+        setCurrentChatRoom({ roomName: inputValue, roomID, messages: [] });
+        setItem("currentChatRoom", {
+          roomName: inputValue,
+          roomID,
+          messages: [],
+        });
+      } else {
+        emitJoinRoom(inputValue);
+        const roomID = inputValue;
+        const roomName = inputValue.split("::")[1];
+
+        updatedRooms = {
+          ...chatRooms,
+          [roomID]: { roomName, roomID, messages: [] },
+        };
+
+        setCurrentChatRoom({ roomName, roomID, messages: [] });
+        setItem("currentChatRoom", { roomName, roomID, messages: [] });
+      }
+
+      setChatRooms(updatedRooms);
+      setItem("chatRooms", updatedRooms);
+      resolve(true);
     });
-    const { action, inputValue } = roomAction;
-    if (!action || !inputValue) return;
-
-    // If room already exists, Select that room
-    if (chatRooms[inputValue]) {
-      setCurrentChatRoom(chatRooms[inputValue]);
-      setItem("currentChatRoom", chatRooms[inputValue]);
-      return;
-    }
-
-    let updatedRooms;
-    if (action === "Create") {
-      // Generate random ID for new rooms
-      const randomID = generateRandomID();
-      const roomID = `${randomID}::${inputValue}`;
-      emitCreateRoom(roomID, inputValue);
-
-      updatedRooms = {
-        ...chatRooms,
-        [roomID]: { roomName: inputValue, roomID, messages: [] },
-      };
-
-      setCurrentChatRoom({ roomName: inputValue, roomID, messages: [] });
-      setItem("currentChatRoom", {
-        roomName: inputValue,
-        roomID,
-        messages: [],
-      });
-    } else {
-      emitJoinRoom(inputValue);
-      const roomID = inputValue;
-      const roomName = inputValue.split("::")[1];
-
-      updatedRooms = {
-        ...chatRooms,
-        [roomID]: { roomName, roomID, messages: [] },
-      };
-
-      setCurrentChatRoom({ roomName, roomID, messages: [] });
-      setItem("currentChatRoom", { roomName, roomID, messages: [] });
-    }
-
-    autoCloseSidebarOnMobile();
-    setChatRooms(updatedRooms);
-    setItem("chatRooms", updatedRooms);
   };
 
   // Join room through url
@@ -133,7 +135,7 @@ export const RoomContextProvider = ({ children }) => {
     setCurrentChatRoom({ roomName, roomID, messages: [] });
     setItem("currentChatRoom", { roomName, roomID, messages: [] });
 
-    autoCloseSidebarOnMobile();
+    // autoCloseSidebarOnMobile();
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
   };
@@ -156,8 +158,11 @@ export const RoomContextProvider = ({ children }) => {
     setChatRooms(updatedRooms);
     setItem("chatRooms", updatedRooms);
 
-    setCurrentChatRoom(updatedRooms["🌍 General"]);
-    setItem("currentChatRoom", updatedRooms["🌍 General"]);
+    // setCurrentChatRoom(updatedRooms["🌍 General"]);
+    // setItem("currentChatRoom", updatedRooms["🌍 General"]);
+
+    setCurrentChatRoom(null);
+    setItem("currentChatRoom", null);
 
     emitLeaveRoom(roomID);
   };
@@ -175,22 +180,26 @@ export const RoomContextProvider = ({ children }) => {
   };
 
   return (
-    <RoomContext.Provider
-      value={{
-        setChatRooms,
-        chatRooms,
-        setCurrentChatRoom,
-        currentChatRoom,
-        selectRoom,
-        joinOrCreateRoom,
-        joinRoomThroughUrl,
-        leaveRoom,
-        updateRooms,
-      }}
-    >
-      {children}
-    </RoomContext.Provider>
+    <ChatRoomsContext.Provider value={{ chatRooms, setChatRooms }}>
+      <CurrentRoomContext.Provider
+        value={{ currentChatRoom, setCurrentChatRoom }}
+      >
+        <ChatRoomActionsContext.Provider
+          value={{
+            joinOrCreateRoom,
+            joinRoomThroughUrl,
+            selectRoom,
+            leaveRoom,
+            updateRooms,
+          }}
+        >
+          {children}
+        </ChatRoomActionsContext.Provider>
+      </CurrentRoomContext.Provider>
+    </ChatRoomsContext.Provider>
   );
 };
 
-export const useChatRoom = () => useContext(RoomContext);
+export const useChatRoomActions = () => useContext(ChatRoomActionsContext);
+export const useCurrentRoom = () => useContext(CurrentRoomContext);
+export const useChatRooms = () => useContext(ChatRoomsContext);
