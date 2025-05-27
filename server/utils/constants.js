@@ -1,7 +1,7 @@
 const DEFAULT_AVATAR_URL =
   "https://res.cloudinary.com/dozdj2yha/image/upload/v1748200329/blank-profile-picture_tlmavs.webp";
 
-const MAX_GENERAL_MESSAGES = 5000;
+const MAX_GENERAL_MESSAGES = 500;
 
 const COOKIE_OPTIONS = {
   httpOnly: true,

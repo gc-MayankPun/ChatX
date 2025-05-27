@@ -10,4 +10,10 @@ export const GLITCHED_ROBOT_IMAGE = "/images/glitched-robot.webp";
 
 export const FETCH_PAGE_LIMIT = 10;
 
+export const MAX_MESSAGES = 10;
+
+export const WINDOW_MS = 30 * 1000;
+
+export const MESSAGE_CONTENT_LIMIT = 500;
+
 export const DELETED_USERNAME = "Deleted-User";

@@ -1,11 +1,13 @@
 import { useChatRoomActions } from "../../../context/chatRoomContext";
 import { generateRandomID } from "../../../utils/generateRandomID";
+import { MESSAGE_CONTENT_LIMIT } from "../../../utils/constants";
 import { censorMessage } from "../../../utils/censorMessage";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { useSocket } from "../../../context/socketContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../../../context/userContext";
 import useToast from "../../../hooks/useToast";
+import useRateLimiter from "./useRateLimiter";
 
 const useMessageHandler = () => {
   const { updateRooms } = useChatRoomActions();
@@ -13,6 +15,7 @@ const useMessageHandler = () => {
   const { showToast } = useToast();
   const { socket } = useSocket();
   const { user } = useUser();
+  const { canSendMessage } = useRateLimiter();
 
   const sendGeneralMessage = async (currentChatRoom, messageContent) => {
     const data = await axiosInstance({
@@ -34,9 +37,7 @@ const useMessageHandler = () => {
       messageID: _id,
     };
 
-    // After emitting the socket message
-    // console.log("Sending General Message...");
-
+    // Emitting the socket message
     socket.emit("send_message", newMessage);
   };
 
@@ -47,6 +48,25 @@ const useMessageHandler = () => {
     setSending
   ) => {
     try {
+      // Rate limit check
+      if (!canSendMessage()) {
+        showToast({
+          type: "error",
+          payload: "You're messaging too quickly. Please slow down a little 😊",
+        });
+        return;
+      }
+
+      // Length check
+      if (rawContent.length > MESSAGE_CONTENT_LIMIT) {
+        showToast({
+          type: "error",
+          payload:
+            "That message is a bit too long. Try shortening it a little ✂️",
+        });
+        return;
+      }
+
       if (setSending) setSending(true); // Start sending state
 
       const messageContent = censorMessage(rawContent);
@@ -78,7 +98,7 @@ const useMessageHandler = () => {
         showToast({
           type: "error",
           payload:
-            "Too many messages sent. Please wait a moment before sending more.",
+            "You're messaging too quickly. Please slow down a little 😊",
         });
         return;
       }

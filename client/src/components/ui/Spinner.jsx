@@ -8,3 +8,4 @@ const Spinner = ({ text = null, className = "" }) => {
 };
 
 export default Spinner;
+ 

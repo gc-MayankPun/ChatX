@@ -1,9 +1,16 @@
 import "../../stylesheets/loader.css";
+import "../../stylesheets/spinning-something.css";
+import { ImSpinner9 } from "react-icons/im";
 
 const Loader = () => {
   return (
     <div className="loader-container">
-      <div className="loader"></div>
+      <div className="loading-spinner">
+        <span className="center-icon spin loader-icon">
+          <ImSpinner9 />
+        </span>
+        <p className="loader-text">Loading...</p>
+      </div>
     </div>
   );
 };

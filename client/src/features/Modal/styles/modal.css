@@ -104,7 +104,7 @@
     flex-direction: column;
     font-size: .8rem;
     align-items: center;
-    gap: .5rem;
+    gap: .5rem; 
 }
 
 .background-option:has(.upload-icon) {
@@ -225,7 +225,6 @@
 }
 
 .user-delete__button {
-    background-color: red;
     color: white;
     width: 8rem;
 }
@@ -236,10 +235,6 @@
 @media (max-width: 1024px) {
     .modal-overlay {
         padding: 1rem 2rem;
-    }
-
-    .background-settings {
-        grid-template-columns: repeat(3, 1fr);
     }
 
     .background-option {
@@ -286,7 +281,7 @@
         height: 7rem;
     }
 
-    .user-settings__title{
+    .user-settings__title {
         display: none;
     }
 }

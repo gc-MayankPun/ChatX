@@ -29,14 +29,14 @@ export const RoomContextProvider = ({ children }) => {
     return new Promise(async (resolve) => {
       // Don't allow user to create more room if the limit is hit
       const length = Object.keys(chatRooms).length;
-      if (length > 15) {
+      if (length > 7) {
         showToast({
+          type: "info",
           payload:
-            "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
+            "Easy tiger! Even chat champs hit their limit. Take a breather 🐯⌛️ or ditch the room to free up some space — no hard feelings 😜🚪✨.",
           config: {
             autoClose: false,
             closeButton: true,
-            closeOnClick: false,
           },
         });
         return;
@@ -104,14 +104,13 @@ export const RoomContextProvider = ({ children }) => {
   const joinRoomThroughUrl = async (roomID) => {
     // Don't allow user to create more room if the limit is hit
     const length = Object.keys(chatRooms).length;
-    if (length > 15) {
+    if (length > 7) {
       showToast({
         payload:
-          "We're starting to wonder if you're building a secret chat empire or just really, really lonely. Either way... the limit's hit.",
+          "Easy tiger! Even chat champs hit their limit. Take a breather 🐯⌛️ or ditch the room to free up some space — no hard feelings 😜🚪✨.",
         config: {
           autoClose: false,
           closeButton: true,
-          closeOnClick: false,
         },
       });
       return;

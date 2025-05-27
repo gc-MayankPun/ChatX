@@ -16,8 +16,8 @@ const useBgThemeHandler = (
     if (Object.keys(backgroundThemes).length > 7) {
       showToast({
         type: "info",
-        payload: "Heads up! You can only save 7 background themes for now.",
-        config: { position: "bottom-right" },
+        payload: "Heads up! Your background theme party's capped at 7 🎉🖼️. Pick your faves wisely!.",
+        config: { position: "bottom-right", autoClose: false },
       });
       return;
     }

@@ -19,6 +19,8 @@ const socketHandler = (io) => {
       // console.log(
       //   `User ${socket.user.username} joined a room with id: ${roomID}`
       // );
+
+      // To prevent sending join notification on general chat
       if (roomID !== "🌍 General") {
         socket.to(roomID).emit("user-join", {
           roomID,
@@ -32,6 +34,8 @@ const socketHandler = (io) => {
     socket.on("leaveRoom", (roomID) => {
       socket.leave(roomID);
       // console.log(`User ${socket.user.username} left ${roomID} room`);
+      
+      // To prevent sending leave notification on general chat
       if (roomID !== "🌍 General") {
         socket.to(roomID).emit("user-left", {
           roomID,
