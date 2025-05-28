@@ -7,11 +7,10 @@ require("dotenv").config();
 
 const PORT = process.env.PORT;
 
-const server = http.createServer(app); // Create an HTTP server using the Express app
-const allowedOrigins = JSON.parse(process.env.CORS_ORIGINS);
+const server = http.createServer(app); // Create an HTTP server using the Express app 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: process.env.CORS_ORIGINS,
     credentials: true,
     methods: ["GET", "POST"],
   },
