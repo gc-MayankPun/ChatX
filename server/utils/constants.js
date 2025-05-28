@@ -7,7 +7,7 @@ const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: true,
   maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week in milliseconds
-  sameSite: "lax",
+  sameSite: "none",
 };
 
 const ACCESS_TOKEN_OPTIONS = {
