@@ -1,8 +1,8 @@
-import { SelectGeneralChat } from "../Generalchat/SelectGeneralChat";
+import { SelectGeneralChat } from "../GeneralChat/SelectGeneralChat";
 import { RoomActionButton } from "./components/RoomActionButton";
-import SidebarToggler from "../../components/ui/SidebarToggler";
-import { useSidebar } from "../../context/sidebarContext";
+import SidebarToggler from "../../components/ui/SidebarToggler"; 
 import { SidebarFooter } from "./components/SidebarFooter";
+import { useSidebar } from "../../context/sidebarContext";
 import { SidebarLists } from "./components/SidebarLists";
 import { UserDetails } from "./components/UserDetails";
 import "./styles/sidebar.css";
