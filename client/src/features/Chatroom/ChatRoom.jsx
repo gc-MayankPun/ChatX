@@ -1,8 +1,8 @@
 import { ChatroomMessagesContainer } from "./components/ChatroomMessagesContainer";
 import { useChatRooms, useCurrentRoom } from "../../context/chatRoomContext";
 import useMessageListener from "./hooks/useMessageListener";
-import { ChatRoomTitle } from "./components/ChatroomTitle";
-import { GeneralChat } from "../Generalchat/GeneralChat";
+import { ChatRoomTitle } from "./components/ChatroomTitle"; 
+import { GeneralChat } from "../GeneralChat/GeneralChat";
 import ChatRoomSkeleton from "./ChatRoomSkeleton";
 import ChatForm from "./components/ChatForm";
 import "./styles/chat-room.css"
