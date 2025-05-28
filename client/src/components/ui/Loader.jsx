@@ -1,5 +1,4 @@
-import "../../stylesheets/loader.css";
-import "../../stylesheets/spinning-something.css";
+import "../../stylesheets/loader.css"; 
 import { ImSpinner9 } from "react-icons/im";
 
 const Loader = () => {
