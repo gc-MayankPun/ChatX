@@ -225,6 +225,7 @@
 }
 
 .user-delete__button {
+    background-color: red;
     color: white;
     width: 8rem;
 }
