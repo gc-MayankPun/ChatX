@@ -42,6 +42,7 @@ const useMessageHandler = () => {
   };
 
   const sendMessage = async (
+    inputRef,
     rawContent,
     setInputValue,
     currentChatRoom,
@@ -74,6 +75,7 @@ const useMessageHandler = () => {
       if (currentChatRoom.roomID === "🌍 General") {
         await sendGeneralMessage(currentChatRoom, messageContent);
         await queryClient.invalidateQueries({ queryKey: ["general-messages"] });
+        inputRef.current.value = "";
         setInputValue("");
         return;
       }
@@ -92,13 +94,13 @@ const useMessageHandler = () => {
 
       socket.emit("send_message", newMessage);
       updateRooms(currentChatRoom.roomID, newMessage);
+      inputRef.current.value = "";
       setInputValue("");
     } catch (err) {
       if (err.response?.status === 429) {
         showToast({
           type: "error",
-          payload:
-            "You're messaging too quickly. Please slow down a little 😊",
+          payload: "You're messaging too quickly. Please slow down a little 😊",
         });
         return;
       }

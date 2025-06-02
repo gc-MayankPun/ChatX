@@ -173,7 +173,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 1rem;
+    padding: 1rem;
     background-color: #111;
     min-height: 3rem;
     overflow: hidden;
@@ -181,12 +181,17 @@
     gap: 1rem;
 }
 
-#chat-input::-webkit-scrollbar {
-    display: none;
-}
-
-#chat-input::placeholder {
+.prompt-area {
+    resize: none;
+    width: 100%;
+    outline: none;
+    background-color: transparent;
+    font-size: 1rem;
+    border: none;
     color: white;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.507) transparent;
+    scrollbar-gutter: auto;
 }
 
 .chat-room__send-button {

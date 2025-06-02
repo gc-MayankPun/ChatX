@@ -1,0 +1,12 @@
+.prompt-area {
+    resize: none;
+    width: 100%;
+    outline: none;
+    background-color: transparent;
+    font-size: 1rem;
+    border: none;
+    color: white;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.507) transparent;
+    scrollbar-gutter: auto;
+}
